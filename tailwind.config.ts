@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -18,6 +19,9 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'inter': ['Inter', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -61,7 +65,17 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				'zameen-dark': '#000000',
+				'zameen-light': '#FFFFFF',
+				'zameen-gradient-start': '#7F00FF',
+				'zameen-gradient-end': '#00FFFF',
+				'zameen-neon': '#00FFFF',
+				'zameen-whatsapp': '#25D366',
+			},
+			backgroundImage: {
+				'zameen-gradient': 'linear-gradient(135deg, #7F00FF 0%, #00FFFF 100%)',
+				'zameen-gradient-reverse': 'linear-gradient(135deg, #00FFFF 0%, #7F00FF 100%)',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,11 +98,33 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'fade-in': {
+					'0%': {
+						opacity: '0',
+						transform: 'translateY(10px)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateY(0)'
+					}
+				},
+				'scale-in': {
+					'0%': {
+						transform: 'scale(0.95)',
+						opacity: '0'
+					},
+					'100%': {
+						transform: 'scale(1)',
+						opacity: '1'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.3s ease-out',
+				'scale-in': 'scale-in 0.2s ease-out',
 			}
 		}
 	},
