@@ -34,11 +34,10 @@ const FilterSection = ({
   const [showBHKDropdown, setShowBHKDropdown] = useState(false);
 
   const toggleAmenity = (amenity: string) => {
-    setSelectedAmenities(prev =>
-      prev.includes(amenity)
-        ? prev.filter(a => a !== amenity)
-        : [...prev, amenity]
-    );
+    const newAmenities = selectedAmenities.includes(amenity)
+      ? selectedAmenities.filter(a => a !== amenity)
+      : [...selectedAmenities, amenity];
+    setSelectedAmenities(newAmenities);
   };
 
   return (
