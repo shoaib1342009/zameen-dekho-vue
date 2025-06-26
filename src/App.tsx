@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import Layout from "@/components/Layout";
 import Home from "@/pages/Home";
 import Listings from "@/pages/Listings";
+import PropertyDetails from "@/pages/PropertyDetails";
 import Play from "@/pages/Play";
 import Wishlist from "@/pages/Wishlist";
 import Profile from "@/pages/Profile";
@@ -26,6 +27,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/listings" element={<Listings />} />
+              <Route path="/property/:id" element={<PropertyDetails />} />
               <Route path="/play" element={<Play />} />
               <Route path="/wishlist" element={<Wishlist />} />
               <Route path="/profile" element={<Profile />} />

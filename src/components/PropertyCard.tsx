@@ -1,7 +1,9 @@
 
 import { useState } from 'react';
 import { Heart } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 interface Property {
   id: number;
@@ -24,10 +26,15 @@ interface PropertyCardProps {
 
 const PropertyCard = ({ property }: PropertyCardProps) => {
   const [isLiked, setIsLiked] = useState(property.isLiked);
+  const navigate = useNavigate();
 
   const toggleLike = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsLiked(!isLiked);
+  };
+
+  const handleViewDetails = () => {
+    navigate(`/property/${property.id}`);
   };
 
   return (
@@ -81,6 +88,14 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
         <div className="text-xs text-muted-foreground/80">
           {property.builder}
         </div>
+
+        {/* View Details Button */}
+        <Button 
+          onClick={handleViewDetails}
+          className="w-full mt-3 bg-primary hover:bg-primary/90 text-white"
+        >
+          View Details
+        </Button>
       </div>
     </div>
   );
