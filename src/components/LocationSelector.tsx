@@ -1,4 +1,5 @@
 
+
 const locations = [
   { name: 'Nerul', image: 'https://images.unsplash.com/photo-1524230572899-a752b3835840?w=100&h=100&fit=crop&crop=center' },
   { name: 'Panvel', image: 'https://images.unsplash.com/photo-1493397212122-2b85dda8106b?w=100&h=100&fit=crop&crop=center' },
@@ -12,7 +13,7 @@ const locations = [
 
 const LocationSelector = () => {
   return (
-    <div className="flex gap-4 overflow-x-auto pb-2">
+    <div className="flex gap-4 overflow-x-auto scrollbar-hide">
       {locations.map((location) => (
         <div
           key={location.name}
@@ -35,3 +36,4 @@ const LocationSelector = () => {
 };
 
 export default LocationSelector;
+
