@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Search } from 'lucide-react';
 import LocationSelector from '@/components/LocationSelector';
 import FilterSection from '@/components/FilterSection';
+import FeaturedListings from '@/components/FeaturedListings';
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -49,6 +50,9 @@ const Home = () => {
             Discover amazing properties in your preferred location
           </p>
         </div>
+
+        {/* Featured Listings */}
+        <FeaturedListings />
       </div>
     </div>
   );
