@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+
+import { useState } from 'react';
 import VideoPlayer from '@/components/VideoPlayer';
 import LeadFormModal from '@/components/LeadFormModal';
 
@@ -112,24 +113,26 @@ const Play = () => {
     }
   };
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowDown' && currentVideoIndex < mockVideos.length - 1) {
-        setCurrentVideoIndex(currentVideoIndex + 1);
-      } else if (e.key === 'ArrowUp' && currentVideoIndex > 0) {
-        setCurrentVideoIndex(currentVideoIndex - 1);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentVideoIndex]);
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const container = e.currentTarget;
+    const scrollTop = container.scrollTop;
+    const itemHeight = container.clientHeight;
+    const newIndex = Math.round(scrollTop / itemHeight);
+    
+    if (newIndex !== currentVideoIndex && newIndex >= 0 && newIndex < mockVideos.length) {
+      setCurrentVideoIndex(newIndex);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-black overflow-hidden">
-      <div className="h-screen overflow-y-scroll snap-y snap-mandatory scrollbar-hide">
+    <div className="min-h-screen bg-background">
+      <div 
+        className="h-screen overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
+        onScroll={handleScroll}
+        style={{ scrollBehavior: 'smooth' }}
+      >
         {mockVideos.map((video, index) => (
-          <div key={video.id} className="h-screen w-full snap-start relative">
+          <div key={video.id} className="h-screen w-full snap-start snap-always relative">
             <VideoPlayer
               video={video}
               onContactSeller={() => handleContactSeller(video)}
