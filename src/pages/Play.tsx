@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import VideoPlayer from '@/components/VideoPlayer';
 import LeadFormModal from '@/components/LeadFormModal';
 
@@ -63,104 +63,95 @@ const mockVideos = [
       location: 'Seawoods, Navi Mumbai',
       seller: '+91 43210 98765'
     }
+  },
+  {
+    id: 7,
+    videoUrl: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400&h=700&fit=crop',
+    property: {
+      title: 'Garden View 2BHK',
+      price: '₹3,25,000',
+      location: 'Dombivli, Mumbai',
+      seller: '+91 32109 87654'
+    }
+  },
+  {
+    id: 8,
+    videoUrl: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&h=700&fit=crop',
+    property: {
+      title: 'Sea Facing Apartment',
+      price: '₹7,50,000',
+      location: 'Marine Drive, Mumbai',
+      seller: '+91 21098 76543'
+    }
   }
 ];
 
 const Play = () => {
   const [showLeadForm, setShowLeadForm] = useState(false);
-  const [currentVideo, setCurrentVideo] = useState(0);
-  const [touchStart, setTouchStart] = useState(0);
-  const [touchEnd, setTouchEnd] = useState(0);
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
 
-  const handleContactSeller = () => {
+  const handleContactSeller = (video: typeof mockVideos[0]) => {
     const hasContactInfo = localStorage.getItem('user-contact');
     
     if (hasContactInfo) {
-      const sellerPhone = mockVideos[currentVideo].property.seller;
+      const sellerPhone = video.property.seller;
       window.open(`tel:${sellerPhone}`, '_self');
     } else {
       setShowLeadForm(true);
     }
   };
 
-  const handleWhatsApp = () => {
+  const handleWhatsApp = (video: typeof mockVideos[0]) => {
     const hasContactInfo = localStorage.getItem('user-contact');
     
     if (hasContactInfo) {
-      const sellerPhone = mockVideos[currentVideo].property.seller;
-      const message = `Hi! I'm interested in ${mockVideos[currentVideo].property.title}`;
+      const sellerPhone = video.property.seller;
+      const message = `Hi! I'm interested in ${video.property.title}`;
       window.open(`https://wa.me/${sellerPhone.replace(/\s/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
     } else {
       setShowLeadForm(true);
     }
   };
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStart(e.targetTouches[0].clientY);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientY);
-  };
-
-  const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const container = e.currentTarget;
+    const scrollTop = container.scrollTop;
+    const itemHeight = container.clientHeight;
+    const newIndex = Math.round(scrollTop / itemHeight);
     
-    const distance = touchStart - touchEnd;
-    const isUpSwipe = distance > 50;
-    const isDownSwipe = distance < -50;
-
-    if (isUpSwipe && currentVideo < mockVideos.length - 1) {
-      setCurrentVideo(currentVideo + 1);
-    }
-    if (isDownSwipe && currentVideo > 0) {
-      setCurrentVideo(currentVideo - 1);
+    if (newIndex !== currentVideoIndex && newIndex >= 0 && newIndex < mockVideos.length) {
+      setCurrentVideoIndex(newIndex);
     }
   };
-
-  // Handle keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowUp' && currentVideo > 0) {
-        setCurrentVideo(currentVideo - 1);
-      } else if (e.key === 'ArrowDown' && currentVideo < mockVideos.length - 1) {
-        setCurrentVideo(currentVideo + 1);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentVideo]);
 
   return (
     <div className="min-h-screen bg-background">
       <div 
-        className="relative h-screen overflow-hidden"
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
+        className="h-screen overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
+        onScroll={handleScroll}
+        style={{ scrollBehavior: 'smooth' }}
       >
         {mockVideos.map((video, index) => (
-          <VideoPlayer
-            key={video.id}
-            video={video}
-            isActive={index === currentVideo}
-            onContactSeller={handleContactSeller}
-            onWhatsApp={handleWhatsApp}
+          <div key={video.id} className="h-screen w-full snap-start snap-always relative">
+            <VideoPlayer
+              video={video}
+              onContactSeller={() => handleContactSeller(video)}
+              onWhatsApp={() => handleWhatsApp(video)}
+            />
+          </div>
+        ))}
+      </div>
+      
+      {/* Video indicators */}
+      <div className="fixed right-4 top-1/2 transform -translate-y-1/2 flex flex-col gap-2 z-20">
+        {mockVideos.map((_, index) => (
+          <div
+            key={index}
+            className={`w-1 h-8 rounded-full transition-colors duration-300 ${
+              index === currentVideoIndex ? 'bg-white' : 'bg-white/30'
+            }`}
           />
         ))}
-        
-        {/* Video indicators */}
-        <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col gap-2 z-10">
-          {mockVideos.map((_, index) => (
-            <div
-              key={index}
-              className={`w-1 h-8 rounded-full transition-colors ${
-                index === currentVideo ? 'bg-white' : 'bg-white/30'
-              }`}
-            />
-          ))}
-        </div>
       </div>
 
       <LeadFormModal
