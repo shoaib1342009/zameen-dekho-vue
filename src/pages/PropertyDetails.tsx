@@ -91,7 +91,8 @@ const PropertyDetails = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const property = mockPropertyData[id as keyof typeof mockPropertyData];
+  const propertyId = id ? parseInt(id, 10) : null;
+  const property = propertyId ? mockPropertyData[propertyId as keyof typeof mockPropertyData] : null;
 
   if (!property) {
     return (
