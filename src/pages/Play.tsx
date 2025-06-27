@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import VideoPlayer from '@/components/VideoPlayer';
 import LeadFormModal from '@/components/LeadFormModal';
 
@@ -69,13 +69,13 @@ const mockVideos = [
 const Play = () => {
   const [showLeadForm, setShowLeadForm] = useState(false);
   const [currentVideo, setCurrentVideo] = useState(0);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
 
   const handleContactSeller = () => {
-    // Check if user contact info exists (simulated)
     const hasContactInfo = localStorage.getItem('user-contact');
     
     if (hasContactInfo) {
-      // Redirect to call/WhatsApp
       const sellerPhone = mockVideos[currentVideo].property.seller;
       window.open(`tel:${sellerPhone}`, '_self');
     } else {
@@ -95,9 +95,51 @@ const Play = () => {
     }
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientY);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientY);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isUpSwipe = distance > 50;
+    const isDownSwipe = distance < -50;
+
+    if (isUpSwipe && currentVideo < mockVideos.length - 1) {
+      setCurrentVideo(currentVideo + 1);
+    }
+    if (isDownSwipe && currentVideo > 0) {
+      setCurrentVideo(currentVideo - 1);
+    }
+  };
+
+  // Handle keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowUp' && currentVideo > 0) {
+        setCurrentVideo(currentVideo - 1);
+      } else if (e.key === 'ArrowDown' && currentVideo < mockVideos.length - 1) {
+        setCurrentVideo(currentVideo + 1);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentVideo]);
+
   return (
     <div className="min-h-screen bg-background">
-      <div className="relative h-screen">
+      <div 
+        className="relative h-screen overflow-hidden"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         {mockVideos.map((video, index) => (
           <VideoPlayer
             key={video.id}
@@ -107,6 +149,18 @@ const Play = () => {
             onWhatsApp={handleWhatsApp}
           />
         ))}
+        
+        {/* Video indicators */}
+        <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col gap-2 z-10">
+          {mockVideos.map((_, index) => (
+            <div
+              key={index}
+              className={`w-1 h-8 rounded-full transition-colors ${
+                index === currentVideo ? 'bg-white' : 'bg-white/30'
+              }`}
+            />
+          ))}
+        </div>
       </div>
 
       <LeadFormModal
