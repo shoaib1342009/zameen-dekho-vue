@@ -16,7 +16,7 @@ const BottomNav = () => {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card/90 backdrop-blur-md border-t border-border">
-      <div className="flex items-center justify-around py-2 px-4">
+      <div className="flex items-center justify-around py-1.5 px-4">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
           const IconComponent = item.icon === 'Play' ? PlayIcon : item.icon;
@@ -26,24 +26,24 @@ const BottomNav = () => {
               key={item.path}
               to={item.path}
               className={cn(
-                "flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 tap-scale",
+                "flex flex-col items-center justify-center py-1.5 px-3 rounded-lg transition-all duration-200 tap-scale",
                 isActive 
                   ? "text-accent" 
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
               <div className={cn(
-                "p-2 rounded-full transition-all duration-200",
+                "p-1.5 rounded-full transition-all duration-200",
                 isActive && "bg-zameen-gradient shadow-lg"
               )}>
                 <IconComponent className={cn(
-                  "w-5 h-5 transition-colors",
+                  "w-4 h-4 transition-colors",
                   isActive ? "text-white" : "text-current"
                 )} />
               </div>
-              <span className="text-xs mt-1 font-medium">{item.label}</span>
+              <span className="text-xs mt-0.5 font-medium">{item.label}</span>
               {isActive && (
-                <div className="w-4 h-0.5 bg-zameen-gradient rounded-full mt-1" />
+                <div className="w-3 h-0.5 bg-zameen-gradient rounded-full mt-0.5" />
               )}
             </Link>
           );

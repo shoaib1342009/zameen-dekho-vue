@@ -34,6 +34,36 @@ const mockVideos = [
       seller: '+91 76543 21098'
     }
   },
+  {
+    id: 4,
+    videoUrl: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=400&h=700&fit=crop',
+    property: {
+      title: 'Cozy Studio Apartment',
+      price: '₹1,85,000',
+      location: 'Airoli, Navi Mumbai',
+      seller: '+91 65432 10987'
+    }
+  },
+  {
+    id: 5,
+    videoUrl: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=700&fit=crop',
+    property: {
+      title: 'Spacious 4BHK Penthouse',
+      price: '₹8,95,000',
+      location: 'Kharghar, Navi Mumbai',
+      seller: '+91 54321 09876'
+    }
+  },
+  {
+    id: 6,
+    videoUrl: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=400&h=700&fit=crop',
+    property: {
+      title: 'Contemporary 1BHK',
+      price: '₹2,25,000',
+      location: 'Seawoods, Navi Mumbai',
+      seller: '+91 43210 98765'
+    }
+  }
 ];
 
 const Play = () => {

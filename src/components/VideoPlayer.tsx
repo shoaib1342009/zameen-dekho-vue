@@ -34,14 +34,14 @@ const VideoPlayer = ({ video, isActive, onContactSeller, onWhatsApp }: VideoPlay
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
         
         {/* Property Info */}
-        <div className="absolute bottom-32 left-4 right-4 text-white">
+        <div className="absolute bottom-40 left-4 right-4 text-white">
           <h3 className="text-xl font-bold mb-2">{video.property.title}</h3>
           <p className="text-2xl font-bold text-gradient mb-1">{video.property.price}</p>
           <p className="text-sm opacity-80">{video.property.location}</p>
         </div>
         
-        {/* Action Buttons - Horizontal Layout */}
-        <div className="absolute bottom-24 left-4 right-4 flex items-center justify-between space-x-3">
+        {/* Action Buttons - Positioned above navigation bar */}
+        <div className="absolute bottom-28 left-4 right-4 flex items-center justify-between space-x-3">
           <button className="flex-1 py-3 bg-white/20 backdrop-blur-sm text-white rounded-full font-medium tap-scale text-sm">
             View Details
           </button>
