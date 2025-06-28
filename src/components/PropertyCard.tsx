@@ -24,6 +24,24 @@ interface PropertyCardProps {
   property: Property;
 }
 
+const formatPrice = (priceString: string): string => {
+  const numericValue = parseFloat(priceString.replace(/[₹,]/g, ''));
+  
+  if (isNaN(numericValue)) {
+    return priceString;
+  }
+  
+  if (numericValue >= 10000000) {
+    return `₹${(numericValue / 10000000).toFixed(2)} Cr`;
+  } else if (numericValue >= 100000) {
+    return `₹${(numericValue / 100000).toFixed(2)} L`;
+  } else if (numericValue >= 1000) {
+    return `₹${(numericValue / 1000).toFixed(2)} K`;
+  } else {
+    return `₹${numericValue.toFixed(0)}`;
+  }
+};
+
 const PropertyCard = ({ property }: PropertyCardProps) => {
   const [isLiked, setIsLiked] = useState(property.isLiked);
   const navigate = useNavigate();
@@ -38,7 +56,7 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
   };
 
   return (
-    <div className="bg-card rounded-2xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-300 tap-scale">
+    <div className="bg-card rounded-2xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-300 tap-scale w-full max-w-sm mx-auto sm:max-w-none">
       {/* Image Section */}
       <div className="relative h-48 overflow-hidden">
         <img
@@ -68,7 +86,7 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
       <div className="p-4 space-y-3">
         {/* Price and Tag */}
         <div className="flex items-center justify-between">
-          <span className="text-xl font-bold text-foreground">{property.price}</span>
+          <span className="text-xl font-bold text-foreground">{formatPrice(property.price)}</span>
           <span className="px-2 py-1 bg-zameen-gradient text-white text-xs font-medium rounded-full">
             {property.tag}
           </span>

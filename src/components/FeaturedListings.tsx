@@ -6,7 +6,7 @@ const featuredProperties = [
     id: 1,
     image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop&crop=center',
     label: 'For Sale',
-    price: '₹85 L',
+    price: '8500000',
     tag: 'New',
     beds: 2,
     baths: 2,
@@ -20,7 +20,7 @@ const featuredProperties = [
     id: 2,
     image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&h=300&fit=crop&crop=center',
     label: 'For Rent',
-    price: '₹25 K/month',
+    price: '2500000',
     tag: 'Hot',
     beds: 3,
     baths: 2,
@@ -34,7 +34,7 @@ const featuredProperties = [
     id: 3,
     image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400&h=300&fit=crop&crop=center',
     label: 'For Sale',
-    price: '₹1.2 Cr',
+    price: '120000000',
     tag: 'Premium',
     beds: 3,
     baths: 3,
@@ -50,7 +50,7 @@ const FeaturedListings = () => {
   return (
     <div className="space-y-4">
       <h3 className="text-xl font-bold text-foreground">Featured Properties</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {featuredProperties.map((property) => (
           <PropertyCard key={property.id} property={property} />
         ))}

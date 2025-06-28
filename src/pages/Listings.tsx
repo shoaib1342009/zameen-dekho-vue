@@ -8,7 +8,7 @@ const mockProperties = [
     id: 1,
     image: 'https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=300&fit=crop',
     label: 'Bright Spaces',
-    price: '₹3,71,560',
+    price: '37156000',
     tag: 'Ready Possession',
     beds: 3,
     baths: 2,
@@ -22,7 +22,7 @@ const mockProperties = [
     id: 2,
     image: 'https://images.unsplash.com/photo-1524230572899-a752b3835840?w=400&h=300&fit=crop',
     label: 'Urban Living',
-    price: '₹4,25,800',
+    price: '42580000',
     tag: 'Under Construction',
     beds: 2,
     baths: 2,
@@ -36,7 +36,7 @@ const mockProperties = [
     id: 3,
     image: 'https://images.unsplash.com/photo-1493397212122-2b85dda8106b?w=400&h=300&fit=crop',
     label: 'Sky Heights',
-    price: '₹2,95,000',
+    price: '29500000',
     tag: 'Ready to Move',
     beds: 4,
     baths: 3,
@@ -50,7 +50,7 @@ const mockProperties = [
 
 const Listings = () => {
   const [selectedBHK, setSelectedBHK] = useState('2 BHK');
-  const [priceRange, setPriceRange] = useState([2.55]);
+  const [priceRange, setPriceRange] = useState([255]);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
 
   return (
@@ -71,7 +71,7 @@ const Listings = () => {
           <h3 className="text-lg font-semibold text-foreground">
             Available Properties
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {mockProperties.map((property) => (
               <PropertyCard key={property.id} property={property} />
             ))}

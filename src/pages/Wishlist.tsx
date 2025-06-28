@@ -8,7 +8,7 @@ const mockWishlistProperties = [
     id: 2,
     image: 'https://images.unsplash.com/photo-1524230572899-a752b3835840?w=400&h=300&fit=crop',
     label: 'Urban Living',
-    price: '₹4,25,800',
+    price: '42580000',
     tag: 'Under Construction',
     beds: 2,
     baths: 2,
@@ -32,7 +32,7 @@ const Wishlist = () => {
         </div>
 
         {wishlistProperties.length > 0 ? (
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {wishlistProperties.map((property) => (
               <PropertyCard key={property.id} property={property} />
             ))}

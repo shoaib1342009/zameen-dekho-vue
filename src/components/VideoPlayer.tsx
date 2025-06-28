@@ -1,4 +1,9 @@
 
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Heart } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
 interface Video {
   id: number;
   videoUrl: string;
@@ -16,7 +21,36 @@ interface VideoPlayerProps {
   onWhatsApp: () => void;
 }
 
+const formatPrice = (priceString: string): string => {
+  const numericValue = parseFloat(priceString.replace(/[₹,]/g, ''));
+  
+  if (isNaN(numericValue)) {
+    return priceString;
+  }
+  
+  if (numericValue >= 10000000) {
+    return `₹${(numericValue / 10000000).toFixed(2)} Cr`;
+  } else if (numericValue >= 100000) {
+    return `₹${(numericValue / 100000).toFixed(2)} L`;
+  } else if (numericValue >= 1000) {
+    return `₹${(numericValue / 1000).toFixed(2)} K`;
+  } else {
+    return `₹${numericValue.toFixed(0)}`;
+  }
+};
+
 const VideoPlayer = ({ video, onContactSeller, onWhatsApp }: VideoPlayerProps) => {
+  const navigate = useNavigate();
+  const [isLiked, setIsLiked] = useState(false);
+
+  const handleViewDetails = () => {
+    navigate(`/property/${video.id}`);
+  };
+
+  const toggleLike = () => {
+    setIsLiked(!isLiked);
+  };
+
   return (
     <div className="absolute inset-0 bg-black">
       {/* Video/Image Background */}
@@ -30,16 +64,30 @@ const VideoPlayer = ({ video, onContactSeller, onWhatsApp }: VideoPlayerProps) =
         {/* Overlay gradient */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
         
+        {/* Wishlist Button - Top Right */}
+        <button
+          onClick={toggleLike}
+          className="absolute top-4 right-4 p-3 bg-black/50 backdrop-blur-sm rounded-full tap-scale z-20"
+        >
+          <Heart className={cn(
+            "w-6 h-6 transition-colors",
+            isLiked ? "fill-red-500 text-red-500" : "text-white"
+          )} />
+        </button>
+        
         {/* Property Info */}
         <div className="absolute bottom-32 left-4 right-4 text-white z-10">
           <h3 className="text-xl font-bold mb-2">{video.property.title}</h3>
-          <p className="text-2xl font-bold text-gradient mb-1">{video.property.price}</p>
+          <p className="text-2xl font-bold text-white mb-1">{formatPrice(video.property.price)}</p>
           <p className="text-sm opacity-80">{video.property.location}</p>
         </div>
         
         {/* Action Buttons - Positioned directly above navigation bar */}
-        <div className="absolute bottom-[72px] w-full px-4 z-10 flex justify-around gap-3">
-          <button className="flex-1 py-3 bg-white/20 backdrop-blur-sm text-white rounded-full font-medium tap-scale text-sm max-w-[120px]">
+        <div className="absolute bottom-[80px] w-full px-4 z-10 flex justify-center gap-3">
+          <button 
+            onClick={handleViewDetails}
+            className="flex-1 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full font-medium tap-scale text-sm max-w-[120px]"
+          >
             View Details
           </button>
           
