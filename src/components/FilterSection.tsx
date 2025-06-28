@@ -41,6 +41,14 @@ const FilterSection = ({
     setSelectedAmenities(newAmenities);
   };
 
+  const formatPriceValue = (value: number) => {
+    if (value >= 10) {
+      return `₹${(value).toFixed(2)} Cr`;
+    } else {
+      return `₹${(value * 10).toFixed(2)} L`;
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* BHK Selector and Price Range in Same Row */}
@@ -82,6 +90,8 @@ const FilterSection = ({
             className="relative"
             onMouseEnter={() => setShowPriceBubble(true)}
             onMouseLeave={() => setShowPriceBubble(false)}
+            onTouchStart={() => setShowPriceBubble(true)}
+            onTouchEnd={() => setShowPriceBubble(false)}
           >
             <input
               type="range"
@@ -95,7 +105,7 @@ const FilterSection = ({
                 background: `linear-gradient(to right, #7F00FF 0%, #00FFFF ${(priceRange[0] - 1) / 9 * 100}%, #374151 ${(priceRange[0] - 1) / 9 * 100}%, #374151 100%)`
               }}
             />
-            {/* Price Bubble - Only visible on hover */}
+            {/* Price Bubble - Visible on hover and touch */}
             {showPriceBubble && (
               <div 
                 className="absolute -top-8 bg-black text-white px-2 py-1 rounded text-xs font-medium"
@@ -104,7 +114,7 @@ const FilterSection = ({
                   transform: 'translateX(-50%)'
                 }}
               >
-                ₹{priceRange[0].toFixed(2)} L
+                {formatPriceValue(priceRange[0])}
               </div>
             )}
           </div>

@@ -1,4 +1,9 @@
 
+import { useState } from 'react';
+import { Heart } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { formatPrice } from '@/utils/priceFormatter';
+
 interface Video {
   id: number;
   videoUrl: string;
@@ -17,30 +22,72 @@ interface VideoPlayerProps {
 }
 
 const VideoPlayer = ({ video, onContactSeller, onWhatsApp }: VideoPlayerProps) => {
+  const [isLiked, setIsLiked] = useState(false);
+  const navigate = useNavigate();
+
+  const toggleLike = () => {
+    setIsLiked(!isLiked);
+  };
+
+  const handleViewDetails = () => {
+    navigate(`/property/${video.id}`);
+  };
+
   return (
     <div className="absolute inset-0 bg-black">
       {/* Video/Image Background */}
       <div className="w-full h-full relative">
-        <img
+        <video
           src={video.videoUrl}
-          alt={video.property.title}
+          poster={video.videoUrl}
           className="w-full h-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          onError={(e) => {
+            // Fallback to image if video fails
+            const target = e.target as HTMLVideoElement;
+            const img = document.createElement('img');
+            img.src = video.videoUrl;
+            img.className = 'w-full h-full object-cover';
+            img.alt = video.property.title;
+            target.parentNode?.replaceChild(img, target);
+          }}
         />
         
         {/* Overlay gradient */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
         
+        {/* Wishlist Button */}
+        <button
+          onClick={toggleLike}
+          className="absolute top-6 right-4 p-3 bg-black/30 backdrop-blur-sm rounded-full z-10 tap-scale"
+        >
+          <Heart className={`w-6 h-6 transition-colors ${
+            isLiked ? 'fill-red-500 text-red-500' : 'text-white'
+          }`} />
+        </button>
+        
         {/* Property Info */}
         <div className="absolute bottom-32 left-4 right-4 text-white z-10">
-          <h3 className="text-xl font-bold mb-2">{video.property.title}</h3>
-          <p className="text-2xl font-bold text-gradient mb-1">{video.property.price}</p>
-          <p className="text-sm opacity-80">{video.property.location}</p>
+          <h3 className="text-xl font-bold mb-2 text-white drop-shadow-lg">{video.property.title}</h3>
+          <p className="text-2xl font-bold mb-1 text-white drop-shadow-lg">
+            {formatPrice(video.property.price)}
+          </p>
+          <p className="text-sm opacity-90 text-white drop-shadow-lg">{video.property.location}</p>
         </div>
         
         {/* Action Buttons */}
         <div className="absolute bottom-20 left-4 right-4 z-10">
           <div className="flex justify-center gap-3">
-            <button className="flex-1 max-w-[120px] py-3 bg-white/20 backdrop-blur-sm text-white rounded-full font-medium tap-scale text-sm">
+            <button 
+              onClick={handleViewDetails}
+              className="flex-1 max-w-[120px] py-3 text-white rounded-full font-medium tap-scale text-sm"
+              style={{
+                background: 'linear-gradient(to right, #1e3c72, #2a5298)'
+              }}
+            >
               View Details
             </button>
             

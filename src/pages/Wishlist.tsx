@@ -8,7 +8,7 @@ const mockWishlistProperties = [
     id: 2,
     image: 'https://images.unsplash.com/photo-1524230572899-a752b3835840?w=400&h=300&fit=crop',
     label: 'Urban Living',
-    price: '₹4,25,800',
+    price: '4258000',
     tag: 'Under Construction',
     beds: 2,
     baths: 2,

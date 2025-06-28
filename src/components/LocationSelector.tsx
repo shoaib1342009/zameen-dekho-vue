@@ -1,5 +1,4 @@
 
-
 const locations = [
   { name: 'Nerul', image: 'https://images.unsplash.com/photo-1524230572899-a752b3835840?w=100&h=100&fit=crop&crop=center' },
   { name: 'Panvel', image: 'https://images.unsplash.com/photo-1493397212122-2b85dda8106b?w=100&h=100&fit=crop&crop=center' },
@@ -9,6 +8,12 @@ const locations = [
   { name: 'Kamothe', image: 'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1f?w=100&h=100&fit=crop&crop=center' },
   { name: 'Airoli', image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=100&h=100&fit=crop&crop=center' },
   { name: 'Ghansoli', image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=100&h=100&fit=crop&crop=center' },
+  { name: 'Pune', image: 'https://images.unsplash.com/photo-1595146769045-8b29e94cfee6?w=100&h=100&fit=crop&crop=center' },
+  { name: 'Hyderabad', image: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=100&h=100&fit=crop&crop=center' },
+  { name: 'Kochi', image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=100&h=100&fit=crop&crop=center' },
+  { name: 'Ahmedabad', image: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=100&h=100&fit=crop&crop=center' },
+  { name: 'Chandigarh', image: 'https://images.unsplash.com/photo-1586500036706-ef7b523b2db0?w=100&h=100&fit=crop&crop=center' },
+  { name: 'Indore', image: 'https://images.unsplash.com/photo-1563114773-71ff30f96b1c?w=100&h=100&fit=crop&crop=center' },
 ];
 
 const LocationSelector = () => {
@@ -36,4 +41,3 @@ const LocationSelector = () => {
 };
 
 export default LocationSelector;
-

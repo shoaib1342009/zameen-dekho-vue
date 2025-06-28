@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import VideoPlayer from '@/components/VideoPlayer';
 import LeadFormModal from '@/components/LeadFormModal';
@@ -8,7 +9,7 @@ const mockVideos = [
     videoUrl: 'https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=700&fit=crop',
     property: {
       title: 'Luxury 3BHK Apartment',
-      price: '₹3,71,560',
+      price: '3715600',
       location: 'Nerul, Navi Mumbai',
       seller: '+91 98765 43210'
     }
@@ -18,7 +19,7 @@ const mockVideos = [
     videoUrl: 'https://images.unsplash.com/photo-1524230572899-a752b3835840?w=400&h=700&fit=crop',
     property: {
       title: 'Modern 2BHK Flat',
-      price: '₹2,95,000',
+      price: '2950000',
       location: 'Vashi, Navi Mumbai',
       seller: '+91 87654 32109'
     }
@@ -28,7 +29,7 @@ const mockVideos = [
     videoUrl: 'https://images.unsplash.com/photo-1493397212122-2b85dda8106b?w=400&h=700&fit=crop',
     property: {
       title: 'Premium Villa',
-      price: '₹6,50,000',
+      price: '6500000',
       location: 'Panvel, Navi Mumbai',
       seller: '+91 76543 21098'
     }
@@ -38,7 +39,7 @@ const mockVideos = [
     videoUrl: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=400&h=700&fit=crop',
     property: {
       title: 'Cozy Studio Apartment',
-      price: '₹1,85,000',
+      price: '1850000',
       location: 'Airoli, Navi Mumbai',
       seller: '+91 65432 10987'
     }
@@ -48,7 +49,7 @@ const mockVideos = [
     videoUrl: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=700&fit=crop',
     property: {
       title: 'Spacious 4BHK Penthouse',
-      price: '₹8,95,000',
+      price: '8950000',
       location: 'Kharghar, Navi Mumbai',
       seller: '+91 54321 09876'
     }
@@ -58,7 +59,7 @@ const mockVideos = [
     videoUrl: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=400&h=700&fit=crop',
     property: {
       title: 'Contemporary 1BHK',
-      price: '₹2,25,000',
+      price: '2250000',
       location: 'Seawoods, Navi Mumbai',
       seller: '+91 43210 98765'
     }
@@ -68,7 +69,7 @@ const mockVideos = [
     videoUrl: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400&h=700&fit=crop',
     property: {
       title: 'Garden View 2BHK',
-      price: '₹3,25,000',
+      price: '3250000',
       location: 'Dombivli, Mumbai',
       seller: '+91 32109 87654'
     }
@@ -78,7 +79,7 @@ const mockVideos = [
     videoUrl: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&h=700&fit=crop',
     property: {
       title: 'Sea Facing Apartment',
-      price: '₹7,50,000',
+      price: '7500000',
       location: 'Marine Drive, Mumbai',
       seller: '+91 21098 76543'
     }

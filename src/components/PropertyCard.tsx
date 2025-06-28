@@ -4,6 +4,7 @@ import { Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { formatPrice } from '@/utils/priceFormatter';
 
 interface Property {
   id: number;
@@ -68,7 +69,7 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
       <div className="p-4 space-y-3">
         {/* Price and Tag */}
         <div className="flex items-center justify-between">
-          <span className="text-xl font-bold text-foreground">{property.price}</span>
+          <span className="text-xl font-bold text-foreground">{formatPrice(property.price)}</span>
           <span className="px-2 py-1 bg-zameen-gradient text-white text-xs font-medium rounded-full">
             {property.tag}
           </span>
