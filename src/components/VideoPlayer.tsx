@@ -59,10 +59,10 @@ const VideoPlayer = ({ video, onContactSeller, onWhatsApp }: VideoPlayerProps) =
         {/* Overlay gradient */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
         
-        {/* Wishlist Button */}
+        {/* Wishlist Button - Bottom Right */}
         <button
           onClick={toggleLike}
-          className="absolute top-6 right-4 p-3 bg-black/30 backdrop-blur-sm rounded-full z-10 tap-scale"
+          className="absolute bottom-12 right-12 p-3 bg-black/30 backdrop-blur-sm rounded-full z-10 tap-scale"
         >
           <Heart className={`w-6 h-6 transition-colors ${
             isLiked ? 'fill-red-500 text-red-500' : 'text-white'
@@ -83,7 +83,7 @@ const VideoPlayer = ({ video, onContactSeller, onWhatsApp }: VideoPlayerProps) =
           <div className="flex justify-center gap-3">
             <button 
               onClick={handleViewDetails}
-              className="flex-1 max-w-[120px] py-3 text-white rounded-full font-medium tap-scale text-sm"
+              className="flex-1 max-w-[120px] py-3 text-white rounded-md font-medium tap-scale text-sm"
               style={{
                 background: 'linear-gradient(to right, #1e3c72, #2a5298)'
               }}
@@ -93,7 +93,10 @@ const VideoPlayer = ({ video, onContactSeller, onWhatsApp }: VideoPlayerProps) =
             
             <button
               onClick={onContactSeller}
-              className="flex-1 max-w-[120px] py-3 bg-gradient-to-r from-[#FF6B6B] to-[#4ECDC4] text-white rounded-full font-medium tap-scale text-sm"
+              className="flex-1 max-w-[120px] py-3 text-white rounded-md font-medium tap-scale text-sm"
+              style={{
+                backgroundColor: '#1e3c72'
+              }}
             >
               Contact Seller
             </button>
