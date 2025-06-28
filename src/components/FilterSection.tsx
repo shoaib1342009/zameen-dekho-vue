@@ -1,27 +1,27 @@
 
 import { useState } from 'react';
-import { Slider } from '@/components/ui/slider';
-import { Button } from '@/components/ui/button';
+import { ChevronDown } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface FilterSectionProps {
   selectedBHK: string;
-  setSelectedBHK: (bhk: string) => void;
+  setSelectedBHK: (value: string) => void;
   priceRange: number[];
-  setPriceRange: (range: number[]) => void;
+  setPriceRange: (value: number[]) => void;
   selectedAmenities: string[];
-  setSelectedAmenities: (amenities: string[]) => void;
+  setSelectedAmenities: (value: string[]) => void;
 }
 
-const bhkOptions = ['1 BHK', '2 BHK', '3 BHK', '4+ BHK'];
-const amenities = ['Parking', 'Gym', 'Pool', 'Garden', 'Security', 'Lift'];
+const bhkOptions = ['1 BHK', '2 BHK', '3 BHK', '4 BHK'];
 
-const formatPrice = (value: number) => {
-  if (value >= 100) {
-    return `₹${(value / 100).toFixed(2)} Cr`;
-  } else {
-    return `₹${value.toFixed(2)} L`;
-  }
-};
+const amenities = [
+  { name: 'Pool', icon: '🏊' },
+  { name: 'Gym', icon: '💪' },
+  { name: 'Play Area', icon: '🎮' },
+  { name: 'Bus Stop', icon: '🚌' },
+  { name: 'CCTV', icon: '📹' },
+  { name: 'Lift', icon: '🛗' },
+];
 
 const FilterSection = ({
   selectedBHK,
@@ -29,81 +29,104 @@ const FilterSection = ({
   priceRange,
   setPriceRange,
   selectedAmenities,
-  setSelectedAmenities
+  setSelectedAmenities,
 }: FilterSectionProps) => {
-  const [showPriceTooltip, setShowPriceTooltip] = useState(false);
+  const [showBHKDropdown, setShowBHKDropdown] = useState(false);
+  const [showPriceBubble, setShowPriceBubble] = useState(false);
 
   const toggleAmenity = (amenity: string) => {
-    if (selectedAmenities.includes(amenity)) {
-      setSelectedAmenities(selectedAmenities.filter(a => a !== amenity));
-    } else {
-      setSelectedAmenities([...selectedAmenities, amenity]);
-    }
+    const newAmenities = selectedAmenities.includes(amenity)
+      ? selectedAmenities.filter(a => a !== amenity)
+      : [...selectedAmenities, amenity];
+    setSelectedAmenities(newAmenities);
   };
 
   return (
     <div className="space-y-6">
-      {/* BHK Filter */}
-      <div>
-        <h3 className="text-lg font-semibold text-foreground mb-3">Property Type</h3>
-        <div className="flex flex-wrap gap-2">
-          {bhkOptions.map((bhk) => (
-            <Button
-              key={bhk}
-              variant={selectedBHK === bhk ? "default" : "outline"}
-              onClick={() => setSelectedBHK(bhk)}
-              className="rounded-full"
-            >
-              {bhk}
-            </Button>
-          ))}
+      {/* BHK Selector and Price Range in Same Row */}
+      <div className="flex items-center gap-4">
+        {/* BHK Selector */}
+        <div className="relative flex-shrink-0">
+          <button
+            onClick={() => setShowBHKDropdown(!showBHKDropdown)}
+            className="px-4 py-4 bg-card text-foreground rounded-2xl border border-border flex items-center gap-2 tap-scale min-w-[120px]"
+          >
+            <span className="font-medium">{selectedBHK}</span>
+            <ChevronDown className={cn(
+              "w-5 h-5 transition-transform",
+              showBHKDropdown && "rotate-180"
+            )} />
+          </button>
+          
+          {showBHKDropdown && (
+            <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-2xl shadow-lg z-10 animate-scale-in">
+              {bhkOptions.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => {
+                    setSelectedBHK(option);
+                    setShowBHKDropdown(false);
+                  }}
+                  className="w-full px-4 py-3 text-left hover:bg-muted/20 first:rounded-t-2xl last:rounded-b-2xl transition-colors"
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
-      </div>
 
-      {/* Price Range Filter */}
-      <div>
-        <h3 className="text-lg font-semibold text-foreground mb-3">Price Range</h3>
-        <div className="px-3">
-          <div className="relative">
-            <Slider
-              value={priceRange}
-              onValueChange={setPriceRange}
-              max={1000}
-              min={1}
-              step={1}
-              className="w-full"
-              onPointerDown={() => setShowPriceTooltip(true)}
-              onPointerUp={() => setShowPriceTooltip(false)}
+        {/* Price Range Slider */}
+        <div className="flex-1 relative">
+          <div 
+            className="relative"
+            onMouseEnter={() => setShowPriceBubble(true)}
+            onMouseLeave={() => setShowPriceBubble(false)}
+          >
+            <input
+              type="range"
+              min="1"
+              max="10"
+              step="0.05"
+              value={priceRange[0]}
+              onChange={(e) => setPriceRange([parseFloat(e.target.value)])}
+              className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer slider"
+              style={{
+                background: `linear-gradient(to right, #7F00FF 0%, #00FFFF ${(priceRange[0] - 1) / 9 * 100}%, #374151 ${(priceRange[0] - 1) / 9 * 100}%, #374151 100%)`
+              }}
             />
-            {(showPriceTooltip || 'ontouchstart' in window) && (
-              <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground px-3 py-1 rounded-lg text-sm font-medium z-10">
-                {formatPrice(priceRange[0])}
+            {/* Price Bubble - Only visible on hover */}
+            {showPriceBubble && (
+              <div 
+                className="absolute -top-8 bg-black text-white px-2 py-1 rounded text-xs font-medium"
+                style={{
+                  left: `${(priceRange[0] - 1) / 9 * 100}%`,
+                  transform: 'translateX(-50%)'
+                }}
+              >
+                ₹{priceRange[0].toFixed(2)} L
               </div>
             )}
           </div>
-          <div className="flex justify-between text-sm text-muted-foreground mt-2">
-            <span>₹1 L</span>
-            <span className="font-medium text-foreground">{formatPrice(priceRange[0])}</span>
-            <span>₹10 Cr</span>
-          </div>
         </div>
       </div>
 
-      {/* Amenities Filter */}
-      <div>
-        <h3 className="text-lg font-semibold text-foreground mb-3">Amenities</h3>
-        <div className="flex flex-wrap gap-2">
-          {amenities.map((amenity) => (
-            <Button
-              key={amenity}
-              variant={selectedAmenities.includes(amenity) ? "default" : "outline"}
-              onClick={() => toggleAmenity(amenity)}
-              className="rounded-full text-sm"
-            >
-              {amenity}
-            </Button>
-          ))}
-        </div>
+      {/* Amenities - Minimalistic Icons Only */}
+      <div className="flex items-center justify-between">
+        {amenities.map((amenity) => (
+          <button
+            key={amenity.name}
+            onClick={() => toggleAmenity(amenity.name)}
+            className={cn(
+              "w-12 h-12 rounded-full flex items-center justify-center transition-all tap-scale",
+              selectedAmenities.includes(amenity.name)
+                ? "bg-blue-500 text-white"
+                : "bg-white text-black border border-gray-200"
+            )}
+          >
+            <span className="text-lg">{amenity.icon}</span>
+          </button>
+        ))}
       </div>
     </div>
   );

@@ -96,10 +96,6 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
-
-  .reel-container {
-    scroll-behavior: smooth;
-  }
 }
 
 @layer utilities {

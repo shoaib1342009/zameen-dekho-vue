@@ -9,7 +9,7 @@ const Header = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="flex items-center justify-between px-4 py-3">
-        <Link to="/" className="text-xl font-bold text-blue-600 tap-scale">
+        <Link to="/" className="text-xl font-bold text-gradient tap-scale">
           Zameen Dekho
         </Link>
         <div className="flex items-center gap-2">

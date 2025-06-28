@@ -1,20 +1,17 @@
 
-import { useLocation } from 'react-router-dom';
+import { ReactNode } from 'react';
 import Header from './Header';
 import BottomNav from './BottomNav';
 
 interface LayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const Layout = ({ children }: LayoutProps) => {
-  const location = useLocation();
-  const showHeader = location.pathname === '/';
-
   return (
-    <div className="min-h-screen bg-background">
-      {showHeader && <Header />}
-      <main className={showHeader ? "pt-16 pb-20" : "pb-20"}>
+    <div className="min-h-screen bg-background text-foreground">
+      <Header />
+      <main className="pb-20 pt-16">
         {children}
       </main>
       <BottomNav />

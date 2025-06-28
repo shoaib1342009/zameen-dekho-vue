@@ -1,5 +1,4 @@
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import VideoPlayer from '@/components/VideoPlayer';
 import LeadFormModal from '@/components/LeadFormModal';
 
@@ -9,7 +8,7 @@ const mockVideos = [
     videoUrl: 'https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=700&fit=crop',
     property: {
       title: 'Luxury 3BHK Apartment',
-      price: '37156000',
+      price: '₹3,71,560',
       location: 'Nerul, Navi Mumbai',
       seller: '+91 98765 43210'
     }
@@ -19,7 +18,7 @@ const mockVideos = [
     videoUrl: 'https://images.unsplash.com/photo-1524230572899-a752b3835840?w=400&h=700&fit=crop',
     property: {
       title: 'Modern 2BHK Flat',
-      price: '2950000',
+      price: '₹2,95,000',
       location: 'Vashi, Navi Mumbai',
       seller: '+91 87654 32109'
     }
@@ -29,7 +28,7 @@ const mockVideos = [
     videoUrl: 'https://images.unsplash.com/photo-1493397212122-2b85dda8106b?w=400&h=700&fit=crop',
     property: {
       title: 'Premium Villa',
-      price: '65000000',
+      price: '₹6,50,000',
       location: 'Panvel, Navi Mumbai',
       seller: '+91 76543 21098'
     }
@@ -39,7 +38,7 @@ const mockVideos = [
     videoUrl: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=400&h=700&fit=crop',
     property: {
       title: 'Cozy Studio Apartment',
-      price: '1850000',
+      price: '₹1,85,000',
       location: 'Airoli, Navi Mumbai',
       seller: '+91 65432 10987'
     }
@@ -49,7 +48,7 @@ const mockVideos = [
     videoUrl: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=700&fit=crop',
     property: {
       title: 'Spacious 4BHK Penthouse',
-      price: '89500000',
+      price: '₹8,95,000',
       location: 'Kharghar, Navi Mumbai',
       seller: '+91 54321 09876'
     }
@@ -59,7 +58,7 @@ const mockVideos = [
     videoUrl: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=400&h=700&fit=crop',
     property: {
       title: 'Contemporary 1BHK',
-      price: '2250000',
+      price: '₹2,25,000',
       location: 'Seawoods, Navi Mumbai',
       seller: '+91 43210 98765'
     }
@@ -69,7 +68,7 @@ const mockVideos = [
     videoUrl: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400&h=700&fit=crop',
     property: {
       title: 'Garden View 2BHK',
-      price: '3250000',
+      price: '₹3,25,000',
       location: 'Dombivli, Mumbai',
       seller: '+91 32109 87654'
     }
@@ -79,7 +78,7 @@ const mockVideos = [
     videoUrl: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&h=700&fit=crop',
     property: {
       title: 'Sea Facing Apartment',
-      price: '75000000',
+      price: '₹7,50,000',
       location: 'Marine Drive, Mumbai',
       seller: '+91 21098 76543'
     }
@@ -113,25 +112,24 @@ const Play = () => {
     }
   };
 
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const container = e.currentTarget;
-    const scrollTop = container.scrollTop;
-    const itemHeight = container.clientHeight;
-    const newIndex = Math.round(scrollTop / itemHeight);
-    
-    if (newIndex !== currentVideoIndex && newIndex >= 0 && newIndex < mockVideos.length) {
-      setCurrentVideoIndex(newIndex);
-    }
-  };
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowDown' && currentVideoIndex < mockVideos.length - 1) {
+        setCurrentVideoIndex(currentVideoIndex + 1);
+      } else if (e.key === 'ArrowUp' && currentVideoIndex > 0) {
+        setCurrentVideoIndex(currentVideoIndex - 1);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentVideoIndex]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <div 
-        className="h-screen overflow-y-scroll snap-y snap-mandatory scrollbar-hide reel-container"
-        onScroll={handleScroll}
-      >
+    <div className="min-h-screen bg-black overflow-hidden">
+      <div className="h-screen overflow-y-scroll snap-y snap-mandatory scrollbar-hide">
         {mockVideos.map((video, index) => (
-          <div key={video.id} className="h-screen w-full snap-start snap-always relative">
+          <div key={video.id} className="h-screen w-full snap-start relative">
             <VideoPlayer
               video={video}
               onContactSeller={() => handleContactSeller(video)}
