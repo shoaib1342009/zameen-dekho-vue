@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import VideoPlayer from '@/components/VideoPlayer';
 import LeadFormModal from '@/components/LeadFormModal';
@@ -137,18 +136,6 @@ const Play = () => {
               onWhatsApp={() => handleWhatsApp(video)}
             />
           </div>
-        ))}
-      </div>
-      
-      {/* Video indicators */}
-      <div className="fixed right-4 top-1/2 transform -translate-y-1/2 flex flex-col gap-2 z-20">
-        {mockVideos.map((_, index) => (
-          <div
-            key={index}
-            className={`w-1 h-8 rounded-full transition-colors duration-300 ${
-              index === currentVideoIndex ? 'bg-white' : 'bg-white/30'
-            }`}
-          />
         ))}
       </div>
 

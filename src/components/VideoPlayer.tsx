@@ -59,16 +59,6 @@ const VideoPlayer = ({ video, onContactSeller, onWhatsApp }: VideoPlayerProps) =
         {/* Overlay gradient */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
         
-        {/* Wishlist Button - Bottom Right */}
-        <button
-          onClick={toggleLike}
-          className="absolute bottom-12 right-12 p-3 bg-black/30 backdrop-blur-sm rounded-full z-10 tap-scale"
-        >
-          <Heart className={`w-6 h-6 transition-colors ${
-            isLiked ? 'fill-red-500 text-red-500' : 'text-white'
-          }`} />
-        </button>
-        
         {/* Property Info */}
         <div className="absolute bottom-32 left-4 right-4 text-white z-10">
           <h3 className="text-xl font-bold mb-2 text-white drop-shadow-lg">{video.property.title}</h3>
@@ -79,7 +69,7 @@ const VideoPlayer = ({ video, onContactSeller, onWhatsApp }: VideoPlayerProps) =
         </div>
         
         {/* Action Buttons */}
-        <div className="absolute bottom-20 left-4 right-4 z-10">
+        <div className="absolute bottom-20 left-4 right-20 z-10">
           <div className="flex justify-center gap-3">
             <button 
               onClick={handleViewDetails}
@@ -111,6 +101,16 @@ const VideoPlayer = ({ video, onContactSeller, onWhatsApp }: VideoPlayerProps) =
             </button>
           </div>
         </div>
+        
+        {/* Wishlist Button - Bottom Right */}
+        <button
+          onClick={toggleLike}
+          className="absolute bottom-16 right-16 p-3 bg-black/30 backdrop-blur-sm rounded-full z-10 tap-scale"
+        >
+          <Heart className={`w-6 h-6 transition-colors ${
+            isLiked ? 'fill-red-500 text-red-500' : 'text-white'
+          }`} />
+        </button>
       </div>
     </div>
   );

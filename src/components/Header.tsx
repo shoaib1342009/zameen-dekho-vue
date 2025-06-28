@@ -11,9 +11,12 @@ const Header = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="flex items-center justify-between px-4 py-3">
-        <Link to="/" className="text-xl font-bold tap-scale" style={{ color: '#1e3c72' }}>
-          Zameen Dekho
-        </Link>
+        {isHomePage && (
+          <Link to="/" className="text-xl font-bold tap-scale" style={{ color: '#1e3c72' }}>
+            Zameen Dekho
+          </Link>
+        )}
+        {!isHomePage && <div></div>}
         {isHomePage && (
           <div className="flex items-center gap-2">
             <button 
