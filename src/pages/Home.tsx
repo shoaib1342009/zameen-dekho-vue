@@ -6,7 +6,7 @@ import FeaturedListings from '@/components/FeaturedListings';
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedBHK, setSelectedBHK] = useState('2 BHK');
+  const [selectedBHK, setSelectedBHK] = useState('1 BHK'); // Changed default to 1 BHK
   const [priceRange, setPriceRange] = useState([2.55]);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
 

@@ -4,7 +4,7 @@ import PropertyCard from '@/components/PropertyCard';
 import { mockProperties } from '@/data/mockData';
 
 const Listings = () => {
-  const [selectedBHK, setSelectedBHK] = useState('2 BHK');
+  const [selectedBHK, setSelectedBHK] = useState('1 BHK'); // Changed default to 1 BHK
   const [priceRange, setPriceRange] = useState([2.55]);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
 

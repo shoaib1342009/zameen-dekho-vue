@@ -62,17 +62,17 @@ const FilterSection = ({
 
   return (
     <div className="space-y-4 sm:space-y-6 w-full">
-      {/* BHK Selector and Price Range */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full">
-        {/* BHK Selector */}
-        <div className="relative flex-shrink-0 w-full sm:w-auto">
+      {/* BHK Selector and Price Range - Always in same row */}
+      <div className="flex items-center gap-3 w-full">
+        {/* BHK Selector - Takes 1/3 space */}
+        <div className="relative w-1/3 flex-shrink-0">
           <button
             onClick={() => setShowBHKDropdown(!showBHKDropdown)}
-            className="w-full sm:w-auto px-3 sm:px-4 py-3 sm:py-4 bg-card text-foreground rounded-xl sm:rounded-2xl border border-border flex items-center justify-between sm:justify-center gap-2 tap-scale min-w-[100px] sm:min-w-[120px] text-sm sm:text-base"
+            className="w-full px-2 sm:px-3 py-3 sm:py-4 bg-card text-foreground rounded-xl sm:rounded-2xl border border-border flex items-center justify-between gap-1 sm:gap-2 tap-scale text-sm sm:text-base"
           >
-            <span className="font-medium">{selectedBHK}</span>
+            <span className="font-medium truncate">{selectedBHK}</span>
             <ChevronDown className={cn(
-              "w-4 h-4 sm:w-5 sm:h-5 transition-transform",
+              "w-4 h-4 sm:w-5 sm:h-5 transition-transform flex-shrink-0",
               showBHKDropdown && "rotate-180"
             )} />
           </button>
@@ -86,7 +86,7 @@ const FilterSection = ({
                     setSelectedBHK(option);
                     setShowBHKDropdown(false);
                   }}
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left hover:bg-muted/20 first:rounded-t-xl first:sm:rounded-t-2xl last:rounded-b-xl last:sm:rounded-b-2xl transition-colors text-sm sm:text-base"
+                  className="w-full px-2 sm:px-3 py-2.5 sm:py-3 text-left hover:bg-muted/20 first:rounded-t-xl first:sm:rounded-t-2xl last:rounded-b-xl last:sm:rounded-b-2xl transition-colors text-sm sm:text-base"
                 >
                   {option}
                 </button>
@@ -95,8 +95,8 @@ const FilterSection = ({
           )}
         </div>
 
-        {/* Price Range Slider */}
-        <div className="flex-1 relative w-full">
+        {/* Price Range Slider - Takes 2/3 space */}
+        <div className="flex-1 w-2/3 relative">
           <div 
             className="relative"
             onMouseEnter={() => setShowPriceBubble(true)}
