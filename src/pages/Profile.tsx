@@ -1,3 +1,4 @@
+```
 import { useState } from 'react';
 import { User, Edit, LogOut, Phone, Mail, Plus, Building, Bell, Download, Calendar, Filter } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -58,8 +59,11 @@ const Profile = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-background">
-        <div className="px-4 py-6 space-y-6">
+      <div className="min-h-screen bg-background relative">
+        {/* Gradient overlay at top */}
+        <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-background to-transparent pointer-events-none z-10" />
+        
+        <div className="px-4 pt-2 space-y-6">
           {/* Profile Header */}
           <div className="bg-card rounded-2xl p-6 border border-border">
             <div className="flex items-center gap-4 mb-4">
@@ -259,3 +263,4 @@ const Profile = () => {
 };
 
 export default Profile;
+```

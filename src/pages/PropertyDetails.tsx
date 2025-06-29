@@ -1,3 +1,4 @@
+```
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, MapPin, Bed, Bath, Square, Phone, MessageCircle, Wifi, Car, Dumbbell, Shield, TreePine, Waves, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -101,9 +102,12 @@ const PropertyDetails = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background relative">
+        {/* Gradient overlay at top */}
+        <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-background to-transparent pointer-events-none z-10" />
+        
         {/* Header */}
-        <div className="sticky top-16 z-10 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3">
+        <div className="sticky top-16 z-20 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3">
           <div className="flex items-center justify-between">
             <button
               onClick={() => navigate(-1)}
@@ -286,3 +290,4 @@ const PropertyDetails = () => {
 };
 
 export default PropertyDetails;
+```
