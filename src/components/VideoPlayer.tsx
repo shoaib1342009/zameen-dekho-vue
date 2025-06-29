@@ -86,10 +86,7 @@ const VideoPlayer = ({ video, onContactSeller, onWhatsApp }: VideoPlayerProps) =
               
               <button
                 onClick={onContactSeller}
-                className="flex-1 min-w-0 py-2 px-3 text-white rounded-md font-medium tap-scale text-xs sm:text-sm"
-                style={{
-                  backgroundColor: '#1e3c72'
-                }}
+                className="flex-1 min-w-0 py-2 px-3 text-white rounded-md font-medium tap-scale text-xs sm:text-sm bg-blue-600 hover:bg-blue-700"
               >
                 Contact Seller
               </button>
