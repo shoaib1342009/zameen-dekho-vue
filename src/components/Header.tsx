@@ -4,6 +4,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useState } from 'react';
 import AuthModal from './AuthModal';
+import NotificationPanel from './NotificationPanel';
 
 const Header = () => {
   const { theme, toggleTheme } = useTheme();
@@ -11,9 +12,18 @@ const Header = () => {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showNotificationPanel, setShowNotificationPanel] = useState(false);
 
   const handleUserClick = () => {
     if (!isAuthenticated) {
+      setShowAuthModal(true);
+    }
+  };
+
+  const handleNotificationClick = () => {
+    if (isAuthenticated) {
+      setShowNotificationPanel(true);
+    } else {
       setShowAuthModal(true);
     }
   };
@@ -40,8 +50,16 @@ const Header = () => {
                   <Moon className="w-6 h-6 text-foreground" />
                 )}
               </button>
-              <button className="p-2 rounded-full hover:bg-muted/20 transition-colors tap-scale">
+              <button 
+                onClick={handleNotificationClick}
+                className="p-2 rounded-full hover:bg-muted/20 transition-colors tap-scale relative"
+              >
                 <Bell className="w-6 h-6 text-foreground" />
+                {isAuthenticated && (
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full flex items-center justify-center">
+                    <span className="text-white text-xs">3</span>
+                  </div>
+                )}
               </button>
               <button 
                 onClick={handleUserClick}
@@ -63,6 +81,7 @@ const Header = () => {
       </header>
 
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
+      <NotificationPanel isOpen={showNotificationPanel} onClose={() => setShowNotificationPanel(false)} />
     </>
   );
 };
