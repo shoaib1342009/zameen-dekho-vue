@@ -1,10 +1,10 @@
-```
 import { useState } from 'react';
 import { User, Edit, LogOut, Phone, Mail, Plus, Building, Bell, Download, Calendar, Filter } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 import AuthModal from '@/components/AuthModal';
 import ListPropertyModal from '@/components/ListPropertyModal';
 import NotificationPanel from '@/components/NotificationPanel';
@@ -211,14 +211,16 @@ const Profile = () => {
               </span>
               <button
                 onClick={toggleTheme}
-                className={\`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
+                className={cn(
+                  "relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none",
                   theme === 'dark' ? 'bg-zameen-gradient' : 'bg-muted'
-                }`}
+                )}
               >
                 <span
-                  className={\`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                  className={cn(
+                    "inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
                     theme === 'dark' ? 'translate-x-6' : 'translate-x-1'
-                  }`}
+                  )}
                 />
               </button>
             </div>
@@ -263,4 +265,3 @@ const Profile = () => {
 };
 
 export default Profile;
-```
