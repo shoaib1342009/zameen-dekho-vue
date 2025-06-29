@@ -35,31 +35,16 @@ const LocationSelector = () => {
             className="flex-shrink-0 flex flex-col items-center cursor-pointer tap-scale"
             onClick={() => handleLocationClick(location.name)}
           >
-            <div className={`relative w-16 h-16 rounded-full overflow-hidden mb-2 hover-scale transition-all duration-300 ${
+            <div className={`w-16 h-16 rounded-full overflow-hidden mb-2 hover-scale transition-all duration-300 ${
               isSelected 
-                ? 'ring-4 ring-blue-500 shadow-lg shadow-blue-500/25' 
+                ? 'ring-2 ring-blue-500 shadow-lg shadow-blue-500/25' 
                 : 'border-2 border-transparent'
             }`}>
-              {/* Blue gradient ring for selected location */}
-              {isSelected && (
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 p-1">
-                  <div className="w-full h-full rounded-full overflow-hidden">
-                    <img
-                      src={location.image}
-                      alt={location.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
-              )}
-              {/* Regular image for non-selected locations */}
-              {!isSelected && (
-                <img
-                  src={location.image}
-                  alt={location.name}
-                  className="w-full h-full object-cover"
-                />
-              )}
+              <img
+                src={location.image}
+                alt={location.name}
+                className="w-full h-full object-cover"
+              />
             </div>
             <span className={`text-sm font-medium text-center transition-colors ${
               isSelected 

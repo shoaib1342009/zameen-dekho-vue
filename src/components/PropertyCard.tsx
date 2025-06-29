@@ -105,10 +105,10 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
           {property.builder}
         </div>
 
-        {/* View Details Button */}
+        {/* View Details Button - Now Blue */}
         <Button 
           onClick={handleViewDetails}
-          className="w-full mt-3 bg-primary hover:bg-primary/90 text-white"
+          className="w-full mt-3 bg-blue-600 hover:bg-blue-700 text-white"
         >
           View Details
         </Button>
