@@ -1,4 +1,3 @@
-```
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, MapPin, Bed, Bath, Square, Phone, MessageCircle, Wifi, Car, Dumbbell, Shield, TreePine, Waves, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -290,4 +289,3 @@ const PropertyDetails = () => {
 };
 
 export default PropertyDetails;
-```
