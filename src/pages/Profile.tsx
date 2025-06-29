@@ -59,7 +59,7 @@ const Profile = () => {
   return (
     <>
       <div className="min-h-screen bg-background">
-        <div className="px-3 sm:px-4 py-3 sm:py-4 space-y-4 sm:space-y-6">
+        <div className="px-3 sm:px-4 py-2 sm:py-3 space-y-3 sm:space-y-4">
           {/* Profile Header */}
           <div className="bg-card rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-border">
             <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">

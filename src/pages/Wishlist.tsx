@@ -40,8 +40,8 @@ const Wishlist = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="px-3 sm:px-4 py-3 sm:py-4">
-        <div className="flex items-center gap-3 mb-4 sm:mb-6">
+      <div className="px-3 sm:px-4 py-2 sm:py-3">
+        <div className="flex items-center gap-3 mb-3 sm:mb-4">
           <Heart className="w-6 h-6 text-red-500 fill-current" />
           <h1 className="text-xl sm:text-2xl font-bold text-foreground">My Wishlist</h1>
           <span className="text-sm text-muted-foreground">

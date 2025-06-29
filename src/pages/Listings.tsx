@@ -22,7 +22,7 @@ const Listings = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="px-3 sm:px-4 py-3 sm:py-4 space-y-4 sm:space-y-6">
+      <div className="px-3 sm:px-4 py-2 sm:py-3 space-y-3 sm:space-y-4">
         {/* Filter Section */}
         <FilterSection
           selectedBHK={selectedBHK}
