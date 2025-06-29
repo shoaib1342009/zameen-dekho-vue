@@ -1,3 +1,4 @@
+```
 import { useState } from 'react';
 import FilterSection from '@/components/FilterSection';
 import PropertyCard from '@/components/PropertyCard';
@@ -65,3 +66,4 @@ const Listings = () => {
 };
 
 export default Listings;
+```
