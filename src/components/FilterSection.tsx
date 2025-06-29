@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown, Waves, Dumbbell, Gamepad2, Bus, Camera, Zap } from 'lucide-react';
+import { ChevronDown, Waves, Dumbbell, Gamepad2, Bus, Camera, Zap, Wifi, Car, Shield, TreePine, Coffee, Utensils, Wind, Sun, Users, Baby, Dog, Music } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface FilterSectionProps {
@@ -20,6 +20,18 @@ const amenities = [
   { name: 'Bus Stop', icon: Bus },
   { name: 'CCTV', icon: Camera },
   { name: 'Lift', icon: Zap },
+  { name: 'WiFi', icon: Wifi },
+  { name: 'Parking', icon: Car },
+  { name: 'Security', icon: Shield },
+  { name: 'Garden', icon: TreePine },
+  { name: 'Cafe', icon: Coffee },
+  { name: 'Restaurant', icon: Utensils },
+  { name: 'AC', icon: Wind },
+  { name: 'Solar', icon: Sun },
+  { name: 'Club', icon: Users },
+  { name: 'Daycare', icon: Baby },
+  { name: 'Pet Area', icon: Dog },
+  { name: 'Music Room', icon: Music },
 ];
 
 const FilterSection = ({
@@ -120,28 +132,43 @@ const FilterSection = ({
         </div>
       </div>
 
-      {/* Amenities - Responsive Grid with Multiple Selection */}
-      <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-3 w-full">
-        {amenities.map((amenity) => {
-          const IconComponent = amenity.icon;
-          const isSelected = selectedAmenities.includes(amenity.name);
-          
-          return (
-            <button
-              key={amenity.name}
-              onClick={() => toggleAmenity(amenity.name)}
-              className={cn(
-                "w-full aspect-square rounded-full flex flex-col items-center justify-center transition-all tap-scale border-2 p-1.5 sm:p-2",
-                isSelected
-                  ? "bg-blue-500/10 border-blue-500 text-blue-500 shadow-lg shadow-blue-500/25"
-                  : "bg-card border-border text-muted-foreground hover:border-muted-foreground/50 dark:bg-card dark:border-border dark:text-muted-foreground"
-              )}
-            >
-              <IconComponent className="w-3 h-3 sm:w-4 sm:h-4 mb-0.5 sm:mb-1" strokeWidth={2} />
-              <span className="text-[10px] sm:text-xs font-medium text-center leading-tight">{amenity.name}</span>
-            </button>
-          );
-        })}
+      {/* Amenities - Horizontal Scroll with Small Icons */}
+      <div className="w-full">
+        <div className="flex gap-3 sm:gap-4 overflow-x-auto scrollbar-hide pb-2">
+          {amenities.map((amenity) => {
+            const IconComponent = amenity.icon;
+            const isSelected = selectedAmenities.includes(amenity.name);
+            
+            return (
+              <button
+                key={amenity.name}
+                onClick={() => toggleAmenity(amenity.name)}
+                className={cn(
+                  "flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-all tap-scale border-2",
+                  isSelected
+                    ? "bg-blue-500/10 border-blue-500 text-blue-500 shadow-lg shadow-blue-500/25"
+                    : "bg-card border-border text-muted-foreground hover:border-muted-foreground/50 dark:bg-card dark:border-border dark:text-muted-foreground"
+                )}
+              >
+                <IconComponent className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2} />
+              </button>
+            );
+          })}
+        </div>
+        
+        {/* Selected amenities indicator */}
+        {selectedAmenities.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-1">
+            {selectedAmenities.map((amenity) => (
+              <span
+                key={amenity}
+                className="px-2 py-1 bg-blue-500/10 text-blue-500 text-xs rounded-full border border-blue-500/20"
+              >
+                {amenity}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
