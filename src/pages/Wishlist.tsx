@@ -1,16 +1,20 @@
-import { useState, useEffect } from 'react';
 import { Heart } from 'lucide-react';
 import PropertyCard from '@/components/PropertyCard';
 import { useAuth } from '@/contexts/AuthContext';
+import { useWishlist } from '@/contexts/WishlistContext';
 import { Button } from '@/components/ui/button';
 import AuthModal from '@/components/AuthModal';
 import { mockProperties } from '@/data/mockData';
+import { useState } from 'react';
 
 const Wishlist = () => {
   const { isAuthenticated } = useAuth();
+  const { wishlistItems } = useWishlist();
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [wishlistProperties, setWishlistProperties] = useState(
-    mockProperties.filter(p => p.isLiked)
+
+  // Get properties that are in the wishlist
+  const wishlistProperties = mockProperties.filter(property => 
+    wishlistItems.includes(property.id)
   );
 
   if (!isAuthenticated) {

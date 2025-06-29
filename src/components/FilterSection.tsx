@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { ChevronDown, Waves, Dumbbell, Gamepad2, Bus, Camera, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -135,7 +134,7 @@ const FilterSection = ({
                 "w-12 h-12 rounded-full flex items-center justify-center transition-all tap-scale border-2",
                 isSelected
                   ? "bg-blue-500/10 border-blue-500 text-blue-500 shadow-lg shadow-blue-500/25"
-                  : "bg-white border-gray-200 text-gray-600 hover:border-gray-300"
+                  : "bg-card border-border text-muted-foreground hover:border-muted-foreground/50 dark:bg-card dark:border-border dark:text-muted-foreground"
               )}
             >
               <IconComponent className="w-5 h-5" strokeWidth={2} />

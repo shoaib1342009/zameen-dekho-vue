@@ -1,8 +1,8 @@
-import { useState } from 'react';
 import { Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { formatPrice } from '@/utils/priceFormatter';
 import { useAuth } from '@/contexts/AuthContext';
+import { useWishlist } from '@/contexts/WishlistContext';
 
 interface Video {
   id: number;
@@ -22,15 +22,17 @@ interface VideoPlayerProps {
 }
 
 const VideoPlayer = ({ video, onContactSeller, onWhatsApp }: VideoPlayerProps) => {
-  const [isLiked, setIsLiked] = useState(false);
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+  const { isInWishlist, toggleWishlist } = useWishlist();
+
+  const isLiked = isInWishlist(video.id);
 
   const toggleLike = () => {
     if (!isAuthenticated) {
       return;
     }
-    setIsLiked(!isLiked);
+    toggleWishlist(video.id);
   };
 
   const handleViewDetails = () => {

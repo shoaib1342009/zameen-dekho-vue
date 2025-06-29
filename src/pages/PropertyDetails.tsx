@@ -1,11 +1,12 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Heart, MapPin, Bed, Bath, Square, Phone, MessageCircle, Wifi, Car, Dumbbell, Shield, TreePine, Waves } from 'lucide-react';
-import { useState } from 'react';
+import { ArrowLeft, Heart, MapPin, Bed, Bath, Square, Phone, MessageCircle, Wifi, Car, Dumbbell, Shield, TreePine, Waves, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { mockProperties } from '@/data/mockData';
 import { formatPrice, formatRentPrice } from '@/utils/priceFormatter';
 import { useAuth } from '@/contexts/AuthContext';
+import { useWishlist } from '@/contexts/WishlistContext';
 import AuthModal from '@/components/AuthModal';
 
 const amenityIcons = {
@@ -30,12 +31,19 @@ const PropertyDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
-  const [isLiked, setIsLiked] = useState(false);
+  const { isInWishlist, toggleWishlist } = useWishlist();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   const propertyId = id ? parseInt(id, 10) : null;
   const property = propertyId ? mockProperties.find(p => p.id === propertyId) : null;
+
+  const isLiked = property ? isInWishlist(property.id) : false;
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   if (!property) {
     return (
@@ -53,7 +61,7 @@ const PropertyDetails = () => {
       setShowAuthModal(true);
       return;
     }
-    setIsLiked(!isLiked);
+    toggleWishlist(property.id);
   };
 
   const handleCall = () => {
@@ -77,6 +85,18 @@ const PropertyDetails = () => {
       return formatRentPrice(price);
     }
     return formatPrice(price);
+  };
+
+  const nextImage = () => {
+    if (property.images && currentImageIndex < property.images.length - 1) {
+      setCurrentImageIndex(currentImageIndex + 1);
+    }
+  };
+
+  const prevImage = () => {
+    if (currentImageIndex > 0) {
+      setCurrentImageIndex(currentImageIndex - 1);
+    }
   };
 
   return (
@@ -112,6 +132,33 @@ const PropertyDetails = () => {
             className="w-full h-full object-cover"
           />
           
+          {/* Navigation Arrows */}
+          {property.images && property.images.length > 1 && (
+            <>
+              <button
+                onClick={prevImage}
+                disabled={currentImageIndex === 0}
+                className={cn(
+                  "absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 backdrop-blur-sm rounded-full text-white transition-opacity",
+                  currentImageIndex === 0 ? "opacity-50" : "opacity-100 hover:bg-black/70"
+                )}
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              
+              <button
+                onClick={nextImage}
+                disabled={currentImageIndex === property.images.length - 1}
+                className={cn(
+                  "absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 backdrop-blur-sm rounded-full text-white transition-opacity",
+                  currentImageIndex === property.images.length - 1 ? "opacity-50" : "opacity-100 hover:bg-black/70"
+                )}
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+            </>
+          )}
+          
           {/* Image Navigation Dots */}
           {property.images && property.images.length > 1 && (
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
@@ -135,6 +182,15 @@ const PropertyDetails = () => {
           <div className="absolute top-4 right-4 px-2 py-1 bg-zameen-gradient rounded-full">
             <span className="text-white text-xs font-medium">{property.tag}</span>
           </div>
+
+          {/* Image Counter */}
+          {property.images && property.images.length > 1 && (
+            <div className="absolute top-16 right-4 px-2 py-1 bg-black/70 backdrop-blur-sm rounded-full">
+              <span className="text-white text-xs">
+                {currentImageIndex + 1} / {property.images.length}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Property Information */}
@@ -181,7 +237,7 @@ const PropertyDetails = () => {
               {property.amenities?.map((amenity) => {
                 const IconComponent = amenityIcons[amenity as keyof typeof amenityIcons];
                 return (
-                  <div key={amenity} className="flex items-center gap-3 p-3 bg-card rounded-lg border border-border">
+                  <div key={amenity} className="flex items-center gap-3 p-3 bg-card rounded-lg border border-border dark:bg-card dark:border-border">
                     <IconComponent className="w-5 h-5 text-primary" />
                     <span className="text-sm font-medium text-foreground">
                       {amenityLabels[amenity as keyof typeof amenityLabels]}
