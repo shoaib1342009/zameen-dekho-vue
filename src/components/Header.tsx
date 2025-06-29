@@ -33,7 +33,7 @@ const Header = () => {
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
         <div className="flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3">
           {isHomePage && (
-            <Link to="/" className="text-lg sm:text-xl font-bold tap-scale" style={{ color: '#1e3c72' }}>
+            <Link to="/" className="text-lg sm:text-xl font-bold tap-scale text-blue-600">
               Zameen Dekho
             </Link>
           )}

@@ -46,7 +46,7 @@ const Home = () => {
 
         {/* Welcome Message */}
         <div className="mt-6 sm:mt-8 text-center px-2">
-          <h2 className="text-xl sm:text-2xl font-bold text-gradient mb-2">
+          <h2 className="text-xl sm:text-2xl font-bold text-blue-600 mb-2">
             Find Your Dream Home
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground">
