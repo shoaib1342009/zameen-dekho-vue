@@ -18,44 +18,54 @@ const locations = [
 ];
 
 const LocationSelector = () => {
-  const [selectedLocation, setSelectedLocation] = useState('Nerul');
+  const [selectedLocations, setSelectedLocations] = useState<string[]>(['Nerul']);
 
   const handleLocationClick = (locationName: string) => {
-    setSelectedLocation(locationName);
+    setSelectedLocations(prev => {
+      if (prev.includes(locationName)) {
+        // Remove if already selected (allow deselection)
+        return prev.filter(loc => loc !== locationName);
+      } else {
+        // Add to selection (multiple selection allowed)
+        return [...prev, locationName];
+      }
+    });
   };
 
   return (
-    <div className="flex gap-4 overflow-x-auto scrollbar-hide">
-      {locations.map((location) => {
-        const isSelected = selectedLocation === location.name;
-        
-        return (
-          <div
-            key={location.name}
-            className="flex-shrink-0 flex flex-col items-center cursor-pointer tap-scale"
-            onClick={() => handleLocationClick(location.name)}
-          >
-            <div className={`w-16 h-16 rounded-full overflow-hidden mb-2 hover-scale transition-all duration-300 ${
-              isSelected 
-                ? 'ring-2 ring-blue-500 shadow-lg shadow-blue-500/25' 
-                : 'border-2 border-transparent'
-            }`}>
-              <img
-                src={location.image}
-                alt={location.name}
-                className="w-full h-full object-cover"
-              />
+    <div className="py-2">
+      <div className="flex gap-3 sm:gap-4 overflow-x-auto scrollbar-hide px-1">
+        {locations.map((location) => {
+          const isSelected = selectedLocations.includes(location.name);
+          
+          return (
+            <div
+              key={location.name}
+              className="flex-shrink-0 flex flex-col items-center cursor-pointer tap-scale"
+              onClick={() => handleLocationClick(location.name)}
+            >
+              <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden mb-2 transition-all duration-300 ${
+                isSelected 
+                  ? 'ring-2 ring-blue-500 shadow-lg shadow-blue-500/25 scale-105' 
+                  : 'border-2 border-transparent hover:scale-105'
+              }`}>
+                <img
+                  src={location.image}
+                  alt={location.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <span className={`text-xs sm:text-sm font-medium text-center transition-colors max-w-[60px] sm:max-w-[70px] truncate ${
+                isSelected 
+                  ? 'text-blue-500 font-semibold' 
+                  : 'text-foreground'
+              }`}>
+                {location.name}
+              </span>
             </div>
-            <span className={`text-sm font-medium text-center transition-colors ${
-              isSelected 
-                ? 'text-blue-500 font-semibold' 
-                : 'text-foreground'
-            }`}>
-              {location.name}
-            </span>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 };

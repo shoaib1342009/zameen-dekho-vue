@@ -57,9 +57,9 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
 
   return (
     <>
-      <div className="bg-card rounded-2xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-300 tap-scale">
+      <div className="bg-card rounded-xl sm:rounded-2xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-300 tap-scale w-full">
         {/* Image Section */}
-        <div className="relative h-48 overflow-hidden">
+        <div className="relative h-40 sm:h-48 overflow-hidden">
           <img
             src={property.image}
             alt={property.label}
@@ -67,27 +67,27 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
           />
           
           {/* Label */}
-          <div className="absolute top-3 left-3 px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full">
-            <span className="text-white text-sm font-medium">{property.label}</span>
+          <div className="absolute top-2 sm:top-3 left-2 sm:left-3 px-2 sm:px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full">
+            <span className="text-white text-xs sm:text-sm font-medium">{property.label}</span>
           </div>
           
           {/* Heart Icon */}
           <button
             onClick={toggleLike}
-            className="absolute top-3 right-3 p-2 bg-black/70 backdrop-blur-sm rounded-full tap-scale"
+            className="absolute top-2 sm:top-3 right-2 sm:right-3 p-1.5 sm:p-2 bg-black/70 backdrop-blur-sm rounded-full tap-scale"
           >
             <Heart className={cn(
-              "w-5 h-5 transition-colors",
+              "w-4 h-4 sm:w-5 sm:h-5 transition-colors",
               isLiked ? "fill-red-500 text-red-500" : "text-white"
             )} />
           </button>
         </div>
 
         {/* Content Section */}
-        <div className="p-4 space-y-3">
+        <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
           {/* Price and Tag */}
           <div className="flex items-center justify-between">
-            <span className="text-xl font-bold text-foreground">
+            <span className="text-lg sm:text-xl font-bold text-foreground">
               {formatPropertyPrice(property.price, property.label)}
             </span>
             <span className="px-2 py-1 bg-zameen-gradient text-white text-xs font-medium rounded-full">
@@ -96,12 +96,12 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
           </div>
 
           {/* Property Details */}
-          <div className="text-sm text-muted-foreground">
+          <div className="text-xs sm:text-sm text-muted-foreground">
             {property.beds} bds | {property.baths} ba | {property.sqft.toLocaleString()} sqft - {property.type}
           </div>
 
           {/* Address */}
-          <div className="text-sm text-muted-foreground">
+          <div className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
             {property.address}
           </div>
 
@@ -110,10 +110,11 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
             {property.builder}
           </div>
 
-          {/* View Details Button - Now Blue */}
+          {/* View Details Button */}
           <Button 
             onClick={handleViewDetails}
-            className="w-full mt-3 bg-blue-600 hover:bg-blue-700 text-white"
+            className="w-full mt-2 sm:mt-3 bg-blue-600 hover:bg-blue-700 text-white text-sm"
+            size="sm"
           >
             View Details
           </Button>

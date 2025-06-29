@@ -49,24 +49,24 @@ const FilterSection = ({
   };
 
   return (
-    <div className="space-y-4 sm:space-y-6">
-      {/* BHK Selector and Price Range in Same Row */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+    <div className="space-y-4 sm:space-y-6 w-full">
+      {/* BHK Selector and Price Range */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full">
         {/* BHK Selector */}
         <div className="relative flex-shrink-0 w-full sm:w-auto">
           <button
             onClick={() => setShowBHKDropdown(!showBHKDropdown)}
-            className="w-full sm:w-auto px-4 py-3 sm:py-4 bg-card text-foreground rounded-2xl border border-border flex items-center justify-between sm:justify-center gap-2 tap-scale min-w-[120px]"
+            className="w-full sm:w-auto px-3 sm:px-4 py-3 sm:py-4 bg-card text-foreground rounded-xl sm:rounded-2xl border border-border flex items-center justify-between sm:justify-center gap-2 tap-scale min-w-[100px] sm:min-w-[120px] text-sm sm:text-base"
           >
             <span className="font-medium">{selectedBHK}</span>
             <ChevronDown className={cn(
-              "w-5 h-5 transition-transform",
+              "w-4 h-4 sm:w-5 sm:h-5 transition-transform",
               showBHKDropdown && "rotate-180"
             )} />
           </button>
           
           {showBHKDropdown && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-2xl shadow-lg z-10 animate-scale-in">
+            <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl sm:rounded-2xl shadow-lg z-10 animate-scale-in">
               {bhkOptions.map((option) => (
                 <button
                   key={option}
@@ -74,7 +74,7 @@ const FilterSection = ({
                     setSelectedBHK(option);
                     setShowBHKDropdown(false);
                   }}
-                  className="w-full px-4 py-3 text-left hover:bg-muted/20 first:rounded-t-2xl last:rounded-b-2xl transition-colors"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left hover:bg-muted/20 first:rounded-t-xl first:sm:rounded-t-2xl last:rounded-b-xl last:sm:rounded-b-2xl transition-colors text-sm sm:text-base"
                 >
                   {option}
                 </button>
@@ -84,7 +84,7 @@ const FilterSection = ({
         </div>
 
         {/* Price Range Slider */}
-        <div className="flex-1 relative">
+        <div className="flex-1 relative w-full">
           <div 
             className="relative"
             onMouseEnter={() => setShowPriceBubble(true)}
@@ -121,7 +121,7 @@ const FilterSection = ({
       </div>
 
       {/* Amenities - Responsive Grid with Multiple Selection */}
-      <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 sm:gap-4">
+      <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-3 w-full">
         {amenities.map((amenity) => {
           const IconComponent = amenity.icon;
           const isSelected = selectedAmenities.includes(amenity.name);
@@ -131,14 +131,14 @@ const FilterSection = ({
               key={amenity.name}
               onClick={() => toggleAmenity(amenity.name)}
               className={cn(
-                "w-full aspect-square rounded-full flex flex-col items-center justify-center transition-all tap-scale border-2 p-2 sm:p-3",
+                "w-full aspect-square rounded-full flex flex-col items-center justify-center transition-all tap-scale border-2 p-1.5 sm:p-2",
                 isSelected
                   ? "bg-blue-500/10 border-blue-500 text-blue-500 shadow-lg shadow-blue-500/25"
                   : "bg-card border-border text-muted-foreground hover:border-muted-foreground/50 dark:bg-card dark:border-border dark:text-muted-foreground"
               )}
             >
-              <IconComponent className="w-4 h-4 sm:w-5 sm:h-5 mb-1" strokeWidth={2} />
-              <span className="text-xs font-medium text-center leading-tight">{amenity.name}</span>
+              <IconComponent className="w-3 h-3 sm:w-4 sm:h-4 mb-0.5 sm:mb-1" strokeWidth={2} />
+              <span className="text-[10px] sm:text-xs font-medium text-center leading-tight">{amenity.name}</span>
             </button>
           );
         })}

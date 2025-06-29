@@ -90,19 +90,19 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
-      <div className="bg-card rounded-2xl p-6 w-full max-w-md animate-scale-in">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 animate-fade-in">
+      <div className="bg-card rounded-xl sm:rounded-2xl p-4 sm:p-6 w-full max-w-sm sm:max-w-md animate-scale-in">
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
+          <div className="flex items-center gap-2 sm:gap-3">
             {step !== 'phone' && (
               <button
                 onClick={handleBack}
                 className="p-1 hover:bg-muted/20 rounded-full transition-colors"
               >
-                <ArrowLeft className="w-5 h-5 text-muted-foreground" />
+                <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
               </button>
             )}
-            <h3 className="text-xl font-bold text-foreground">
+            <h3 className="text-lg sm:text-xl font-bold text-foreground">
               {step === 'phone' && 'Welcome to Zameen Dekho'}
               {step === 'details' && 'Complete Your Profile'}
               {step === 'otp' && 'Verify Your Phone'}
@@ -110,20 +110,20 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-muted/20 rounded-full transition-colors tap-scale"
+            className="p-1.5 sm:p-2 hover:bg-muted/20 rounded-full transition-colors tap-scale"
           >
-            <X className="w-5 h-5 text-muted-foreground" />
+            <X className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
           </button>
         </div>
 
         {step === 'phone' && (
-          <form onSubmit={handlePhoneSubmit} className="space-y-4">
+          <form onSubmit={handlePhoneSubmit} className="space-y-3 sm:space-y-4">
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
                 Phone Number
               </label>
               <div className="flex">
-                <div className="flex items-center px-3 bg-muted rounded-l-xl border border-r-0 border-border">
+                <div className="flex items-center px-2 sm:px-3 bg-muted rounded-l-xl border border-r-0 border-border">
                   <span className="text-sm text-foreground">+91</span>
                 </div>
                 <Input
@@ -132,7 +132,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   maxLength={10}
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value.replace(/\D/g, '') })}
-                  className="rounded-l-none"
+                  className="rounded-l-none text-sm sm:text-base"
                   placeholder="Enter 10-digit mobile number"
                 />
               </div>
@@ -140,7 +140,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
             <Button
               type="submit"
               disabled={formData.phone.length !== 10 || isLoading}
-              className="w-full bg-zameen-gradient text-white"
+              className="w-full bg-zameen-gradient text-white text-sm sm:text-base"
             >
               {isLoading ? 'Sending OTP...' : 'Send OTP'}
             </Button>
@@ -148,7 +148,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         )}
 
         {step === 'details' && (
-          <form onSubmit={handleDetailsSubmit} className="space-y-4">
+          <form onSubmit={handleDetailsSubmit} className="space-y-3 sm:space-y-4">
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
                 Full Name
@@ -159,6 +159,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="Enter your full name"
+                className="text-sm sm:text-base"
               />
             </div>
             <div>
@@ -171,12 +172,13 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 placeholder="Enter your email"
+                className="text-sm sm:text-base"
               />
             </div>
             <Button
               type="submit"
               disabled={!formData.name || !formData.email || isLoading}
-              className="w-full bg-zameen-gradient text-white"
+              className="w-full bg-zameen-gradient text-white text-sm sm:text-base"
             >
               {isLoading ? 'Processing...' : 'Continue'}
             </Button>
@@ -184,7 +186,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         )}
 
         {step === 'otp' && (
-          <form onSubmit={handleOTPSubmit} className="space-y-4">
+          <form onSubmit={handleOTPSubmit} className="space-y-3 sm:space-y-4">
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
                 Enter OTP
@@ -199,13 +201,13 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                 value={formData.otp}
                 onChange={(e) => setFormData({ ...formData, otp: e.target.value.replace(/\D/g, '') })}
                 placeholder="Enter 6-digit OTP"
-                className="text-center text-lg tracking-widest"
+                className="text-center text-base sm:text-lg tracking-widest"
               />
             </div>
             <Button
               type="submit"
               disabled={formData.otp.length !== 6 || isLoading}
-              className="w-full bg-zameen-gradient text-white"
+              className="w-full bg-zameen-gradient text-white text-sm sm:text-base"
             >
               {isLoading ? 'Verifying...' : 'Verify & Continue'}
             </Button>
