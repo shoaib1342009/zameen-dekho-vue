@@ -40,23 +40,23 @@ const Wishlist = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="px-4 py-6">
-        <div className="flex items-center gap-3 mb-6">
+      <div className="px-3 sm:px-4 py-3 sm:py-4">
+        <div className="flex items-center gap-3 mb-4 sm:mb-6">
           <Heart className="w-6 h-6 text-red-500 fill-current" />
-          <h1 className="text-2xl font-bold text-foreground">My Wishlist</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground">My Wishlist</h1>
           <span className="text-sm text-muted-foreground">
             ({wishlistProperties.length} properties)
           </span>
         </div>
 
         {wishlistProperties.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {wishlistProperties.map((property) => (
               <PropertyCard key={property.id} property={property} />
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-16 text-center">
+          <div className="flex flex-col items-center justify-center py-12 sm:py-16 text-center">
             <Heart className="w-16 h-16 text-muted-foreground/30 mb-4" />
             <h3 className="text-lg font-medium text-muted-foreground mb-2">
               No properties wishlisted yet

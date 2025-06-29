@@ -22,7 +22,7 @@ const Listings = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="px-4 py-6 space-y-6">
+      <div className="px-3 sm:px-4 py-3 sm:py-4 space-y-4 sm:space-y-6">
         {/* Filter Section */}
         <FilterSection
           selectedBHK={selectedBHK}
@@ -34,7 +34,7 @@ const Listings = () => {
         />
 
         {/* Property Cards */}
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-foreground">
               Available Properties
@@ -43,13 +43,13 @@ const Listings = () => {
               {filteredProperties.length} properties found
             </span>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {filteredProperties.map((property) => (
               <PropertyCard key={property.id} property={property} />
             ))}
           </div>
           {filteredProperties.length === 0 && (
-            <div className="text-center py-12">
+            <div className="text-center py-8 sm:py-12">
               <p className="text-muted-foreground">No properties match your filters. Try adjusting your search criteria.</p>
             </div>
           )}
