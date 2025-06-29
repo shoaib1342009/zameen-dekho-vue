@@ -1,8 +1,8 @@
-
 import { useState } from 'react';
 import { Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { formatPrice } from '@/utils/priceFormatter';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Video {
   id: number;
@@ -24,8 +24,12 @@ interface VideoPlayerProps {
 const VideoPlayer = ({ video, onContactSeller, onWhatsApp }: VideoPlayerProps) => {
   const [isLiked, setIsLiked] = useState(false);
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   const toggleLike = () => {
+    if (!isAuthenticated) {
+      return;
+    }
     setIsLiked(!isLiked);
   };
 
@@ -111,7 +115,7 @@ const VideoPlayer = ({ video, onContactSeller, onWhatsApp }: VideoPlayerProps) =
               >
                 <Heart className={`w-6 h-6 transition-colors ${
                   isLiked ? 'fill-red-500 text-red-500' : 'text-white'
-                }`} />
+                } ${!isAuthenticated ? 'opacity-50' : ''}`} />
               </button>
             </div>
           </div>

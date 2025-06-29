@@ -1,15 +1,25 @@
-
 export const formatPrice = (price: string): string => {
-  // Remove currency symbol and convert to number
-  const numericPrice = parseFloat(price.replace(/[₹,]/g, ''));
+  const numPrice = parseInt(price);
   
-  if (numericPrice >= 10000000) { // 1 Cr or more
-    return `₹${(numericPrice / 10000000).toFixed(2)} Cr`;
-  } else if (numericPrice >= 100000) { // 1 L or more
-    return `₹${(numericPrice / 100000).toFixed(2)} L`;
-  } else if (numericPrice >= 1000) { // 1 K or more
-    return `₹${(numericPrice / 1000).toFixed(2)} K`;
+  if (numPrice >= 10000000) {
+    return `₹${(numPrice / 10000000).toFixed(2)} Cr`;
+  } else if (numPrice >= 100000) {
+    return `₹${(numPrice / 100000).toFixed(2)} L`;
+  } else if (numPrice >= 1000) {
+    return `₹${(numPrice / 1000).toFixed(0)} K`;
+  } else {
+    return `₹${numPrice.toLocaleString()}`;
   }
+};
+
+export const formatRentPrice = (price: string): string => {
+  const numPrice = parseInt(price);
   
-  return `₹${numericPrice.toLocaleString()}`;
+  if (numPrice >= 100000) {
+    return `₹${(numPrice / 100000).toFixed(2)} L/month`;
+  } else if (numPrice >= 1000) {
+    return `₹${(numPrice / 1000).toFixed(0)} K/month`;
+  } else {
+    return `₹${numPrice.toLocaleString()}/month`;
+  }
 };

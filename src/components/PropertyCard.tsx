@@ -1,10 +1,10 @@
-
 import { useState } from 'react';
 import { Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { formatPrice } from '@/utils/priceFormatter';
+import { formatPrice, formatRentPrice } from '@/utils/priceFormatter';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Property {
   id: number;
@@ -28,14 +28,27 @@ interface PropertyCardProps {
 const PropertyCard = ({ property }: PropertyCardProps) => {
   const [isLiked, setIsLiked] = useState(property.isLiked);
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   const toggleLike = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (!isAuthenticated) {
+      // Show auth modal or redirect to login
+      return;
+    }
     setIsLiked(!isLiked);
+    // In a real app, this would update the backend
   };
 
   const handleViewDetails = () => {
     navigate(`/property/${property.id}`);
+  };
+
+  const formatPropertyPrice = (price: string, label: string) => {
+    if (label.toLowerCase().includes('rent')) {
+      return formatRentPrice(price);
+    }
+    return formatPrice(price);
   };
 
   return (
@@ -69,7 +82,9 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
       <div className="p-4 space-y-3">
         {/* Price and Tag */}
         <div className="flex items-center justify-between">
-          <span className="text-xl font-bold text-foreground">{formatPrice(property.price)}</span>
+          <span className="text-xl font-bold text-foreground">
+            {formatPropertyPrice(property.price, property.label)}
+          </span>
           <span className="px-2 py-1 bg-zameen-gradient text-white text-xs font-medium rounded-full">
             {property.tag}
           </span>

@@ -1,20 +1,61 @@
-
 import { useState } from 'react';
-import { User, Edit, ChevronDown, LogOut } from 'lucide-react';
+import { User, Edit, ChevronDown, LogOut, Phone, Mail } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import AuthModal from '@/components/AuthModal';
 
 const Profile = () => {
   const { theme, toggleTheme } = useTheme();
-  const [userInfo, setUserInfo] = useState({
-    name: 'John Doe',
-    phone: '+91 98765 43210',
-    email: 'john.doe@example.com',
+  const { user, isAuthenticated, logout, updateUser } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({
+    name: user?.name || '',
+    email: user?.email || '',
   });
 
   const menuItems = [
     { label: 'My listing leads', icon: ChevronDown },
     { label: 'My Submissions', icon: ChevronDown },
+    { label: 'Saved Searches', icon: ChevronDown },
+    { label: 'Property Alerts', icon: ChevronDown },
   ];
+
+  const handleSaveProfile = () => {
+    if (user) {
+      updateUser(editForm);
+      setIsEditing(false);
+    }
+  };
+
+  const handleLogout = () => {
+    logout();
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <>
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <div className="text-center p-6">
+            <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+              <User className="w-12 h-12 text-muted-foreground" />
+            </div>
+            <h2 className="text-2xl font-bold text-foreground mb-2">Welcome to Zameen Dekho</h2>
+            <p className="text-muted-foreground mb-6">Please login to access your profile and saved properties</p>
+            <Button 
+              onClick={() => setShowAuthModal(true)}
+              className="bg-zameen-gradient text-white"
+            >
+              Login / Sign Up
+            </Button>
+          </div>
+        </div>
+        <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
+      </>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -23,16 +64,66 @@ const Profile = () => {
         <div className="bg-card rounded-2xl p-6 border border-border">
           <div className="flex items-center gap-4 mb-4">
             <div className="w-16 h-16 bg-zameen-gradient rounded-full flex items-center justify-center">
-              <User className="w-8 h-8 text-white" />
+              <span className="text-white text-xl font-bold">
+                {user?.name?.charAt(0).toUpperCase()}
+              </span>
             </div>
             <div className="flex-1">
-              <h2 className="text-xl font-bold text-foreground">{userInfo.name}</h2>
-              <p className="text-sm text-muted-foreground">{userInfo.phone}</p>
-              <p className="text-sm text-muted-foreground">{userInfo.email}</p>
+              {isEditing ? (
+                <div className="space-y-2">
+                  <Input
+                    value={editForm.name}
+                    onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                    placeholder="Full Name"
+                  />
+                  <Input
+                    value={editForm.email}
+                    onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                    placeholder="Email"
+                    type="email"
+                  />
+                </div>
+              ) : (
+                <>
+                  <h2 className="text-xl font-bold text-foreground">{user?.name}</h2>
+                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                    <Phone className="w-4 h-4" />
+                    <span>{user?.phone}</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                    <Mail className="w-4 h-4" />
+                    <span>{user?.email}</span>
+                  </div>
+                </>
+              )}
             </div>
-            <button className="p-2 hover:bg-muted/20 rounded-full transition-colors tap-scale">
-              <Edit className="w-5 h-5 text-muted-foreground" />
-            </button>
+            <div className="flex gap-2">
+              {isEditing ? (
+                <>
+                  <Button
+                    onClick={handleSaveProfile}
+                    size="sm"
+                    className="bg-zameen-gradient text-white"
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    onClick={() => setIsEditing(false)}
+                    size="sm"
+                    variant="outline"
+                  >
+                    Cancel
+                  </Button>
+                </>
+              ) : (
+                <button 
+                  onClick={() => setIsEditing(true)}
+                  className="p-2 hover:bg-muted/20 rounded-full transition-colors tap-scale"
+                >
+                  <Edit className="w-5 h-5 text-muted-foreground" />
+                </button>
+              )}
+            </div>
           </div>
 
           {/* List Property Button */}
@@ -78,7 +169,10 @@ const Profile = () => {
           ))}
 
           {/* Logout */}
-          <button className="flex items-center gap-3 w-full p-4 text-red-500 hover:bg-red-500/10 transition-colors">
+          <button 
+            onClick={handleLogout}
+            className="flex items-center gap-3 w-full p-4 text-red-500 hover:bg-red-500/10 transition-colors"
+          >
             <LogOut className="w-5 h-5" />
             <span className="font-medium">Logout</span>
           </button>
