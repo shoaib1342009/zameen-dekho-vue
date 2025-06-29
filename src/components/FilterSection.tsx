@@ -49,14 +49,14 @@ const FilterSection = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* BHK Selector and Price Range in Same Row */}
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
         {/* BHK Selector */}
-        <div className="relative flex-shrink-0">
+        <div className="relative flex-shrink-0 w-full sm:w-auto">
           <button
             onClick={() => setShowBHKDropdown(!showBHKDropdown)}
-            className="px-4 py-4 bg-card text-foreground rounded-2xl border border-border flex items-center gap-2 tap-scale min-w-[120px]"
+            className="w-full sm:w-auto px-4 py-3 sm:py-4 bg-card text-foreground rounded-2xl border border-border flex items-center justify-between sm:justify-center gap-2 tap-scale min-w-[120px]"
           >
             <span className="font-medium">{selectedBHK}</span>
             <ChevronDown className={cn(
@@ -107,7 +107,7 @@ const FilterSection = ({
             {/* Price Bubble - Visible on hover and touch */}
             {showPriceBubble && (
               <div 
-                className="absolute -top-8 bg-black text-white px-2 py-1 rounded text-xs font-medium"
+                className="absolute -top-8 bg-black text-white px-2 py-1 rounded text-xs font-medium z-20"
                 style={{
                   left: `${(priceRange[0] - 1) / 9 * 100}%`,
                   transform: 'translateX(-50%)'
@@ -120,8 +120,8 @@ const FilterSection = ({
         </div>
       </div>
 
-      {/* Amenities - Line Icons with Blue Glow */}
-      <div className="grid grid-cols-6 gap-4">
+      {/* Amenities - Responsive Grid with Multiple Selection */}
+      <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 sm:gap-4">
         {amenities.map((amenity) => {
           const IconComponent = amenity.icon;
           const isSelected = selectedAmenities.includes(amenity.name);
@@ -131,13 +131,14 @@ const FilterSection = ({
               key={amenity.name}
               onClick={() => toggleAmenity(amenity.name)}
               className={cn(
-                "w-12 h-12 rounded-full flex items-center justify-center transition-all tap-scale border-2",
+                "w-full aspect-square rounded-full flex flex-col items-center justify-center transition-all tap-scale border-2 p-2 sm:p-3",
                 isSelected
                   ? "bg-blue-500/10 border-blue-500 text-blue-500 shadow-lg shadow-blue-500/25"
                   : "bg-card border-border text-muted-foreground hover:border-muted-foreground/50 dark:bg-card dark:border-border dark:text-muted-foreground"
               )}
             >
-              <IconComponent className="w-5 h-5" strokeWidth={2} />
+              <IconComponent className="w-4 h-4 sm:w-5 sm:h-5 mb-1" strokeWidth={2} />
+              <span className="text-xs font-medium text-center leading-tight">{amenity.name}</span>
             </button>
           );
         })}
