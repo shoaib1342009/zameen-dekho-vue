@@ -1,4 +1,3 @@
-```
 import { useState } from 'react';
 import { User, Edit, LogOut, Phone, Mail, Plus, Building, Bell, Download, Calendar, Filter } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -59,11 +58,8 @@ const Profile = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-background relative">
-        {/* Gradient overlay at top */}
-        <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-background to-transparent pointer-events-none z-10" />
-        
-        <div className="px-4 pt-2 space-y-6">
+      <div className="min-h-screen bg-background">
+        <div className="px-4 py-6 space-y-6">
           {/* Profile Header */}
           <div className="bg-card rounded-2xl p-6 border border-border">
             <div className="flex items-center gap-4 mb-4">
@@ -211,12 +207,12 @@ const Profile = () => {
               </span>
               <button
                 onClick={toggleTheme}
-                className={\`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
                   theme === 'dark' ? 'bg-zameen-gradient' : 'bg-muted'
                 }`}
               >
                 <span
-                  className={\`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
                     theme === 'dark' ? 'translate-x-6' : 'translate-x-1'
                   }`}
                 />
@@ -263,4 +259,3 @@ const Profile = () => {
 };
 
 export default Profile;
-```

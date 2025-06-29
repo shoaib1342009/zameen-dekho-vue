@@ -1,4 +1,3 @@
-```
 import { useState } from 'react';
 import FilterSection from '@/components/FilterSection';
 import PropertyCard from '@/components/PropertyCard';
@@ -22,25 +21,20 @@ const Listings = () => {
   });
 
   return (
-    <div className="min-h-screen bg-background relative">
-      {/* Gradient overlay at top */}
-      <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-background to-transparent pointer-events-none z-10" />
-      
-      <div className="space-y-6">
-        {/* Filter Section - No padding */}
-        <div className="px-4 pt-2">
-          <FilterSection
-            selectedBHK={selectedBHK}
-            setSelectedBHK={setSelectedBHK}
-            priceRange={priceRange}
-            setPriceRange={setPriceRange}
-            selectedAmenities={selectedAmenities}
-            setSelectedAmenities={setSelectedAmenities}
-          />
-        </div>
+    <div className="min-h-screen bg-background">
+      <div className="px-4 py-6 space-y-6">
+        {/* Filter Section */}
+        <FilterSection
+          selectedBHK={selectedBHK}
+          setSelectedBHK={setSelectedBHK}
+          priceRange={priceRange}
+          setPriceRange={setPriceRange}
+          selectedAmenities={selectedAmenities}
+          setSelectedAmenities={setSelectedAmenities}
+        />
 
         {/* Property Cards */}
-        <div className="px-4 space-y-4">
+        <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-foreground">
               Available Properties
@@ -66,4 +60,3 @@ const Listings = () => {
 };
 
 export default Listings;
-```

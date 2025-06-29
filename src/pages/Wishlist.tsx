@@ -1,4 +1,3 @@
-```
 import { Heart } from 'lucide-react';
 import PropertyCard from '@/components/PropertyCard';
 import { useAuth } from '@/contexts/AuthContext';
@@ -40,11 +39,8 @@ const Wishlist = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background relative">
-      {/* Gradient overlay at top */}
-      <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-background to-transparent pointer-events-none z-10" />
-      
-      <div className="px-4 pt-2">
+    <div className="min-h-screen bg-background">
+      <div className="px-4 py-6">
         <div className="flex items-center gap-3 mb-6">
           <Heart className="w-6 h-6 text-red-500 fill-current" />
           <h1 className="text-2xl font-bold text-foreground">My Wishlist</h1>
@@ -82,4 +78,3 @@ const Wishlist = () => {
 };
 
 export default Wishlist;
-```
