@@ -1,3 +1,4 @@
+import { useState } from 'react';
 
 const locations = [
   { name: 'Nerul', image: 'https://images.unsplash.com/photo-1524230572899-a752b3835840?w=100&h=100&fit=crop&crop=center' },
@@ -17,25 +18,59 @@ const locations = [
 ];
 
 const LocationSelector = () => {
+  const [selectedLocation, setSelectedLocation] = useState('Nerul');
+
+  const handleLocationClick = (locationName: string) => {
+    setSelectedLocation(locationName);
+  };
+
   return (
     <div className="flex gap-4 overflow-x-auto scrollbar-hide">
-      {locations.map((location) => (
-        <div
-          key={location.name}
-          className="flex-shrink-0 flex flex-col items-center cursor-pointer tap-scale"
-        >
-          <div className="w-16 h-16 rounded-full border-2 border-gradient overflow-hidden mb-2 hover-scale">
-            <img
-              src={location.image}
-              alt={location.name}
-              className="w-full h-full object-cover"
-            />
+      {locations.map((location) => {
+        const isSelected = selectedLocation === location.name;
+        
+        return (
+          <div
+            key={location.name}
+            className="flex-shrink-0 flex flex-col items-center cursor-pointer tap-scale"
+            onClick={() => handleLocationClick(location.name)}
+          >
+            <div className={`relative w-16 h-16 rounded-full overflow-hidden mb-2 hover-scale transition-all duration-300 ${
+              isSelected 
+                ? 'ring-4 ring-blue-500 shadow-lg shadow-blue-500/25' 
+                : 'border-2 border-transparent'
+            }`}>
+              {/* Blue gradient ring for selected location */}
+              {isSelected && (
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 p-1">
+                  <div className="w-full h-full rounded-full overflow-hidden">
+                    <img
+                      src={location.image}
+                      alt={location.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              )}
+              {/* Regular image for non-selected locations */}
+              {!isSelected && (
+                <img
+                  src={location.image}
+                  alt={location.name}
+                  className="w-full h-full object-cover"
+                />
+              )}
+            </div>
+            <span className={`text-sm font-medium text-center transition-colors ${
+              isSelected 
+                ? 'text-blue-500 font-semibold' 
+                : 'text-foreground'
+            }`}>
+              {location.name}
+            </span>
           </div>
-          <span className="text-sm font-medium text-foreground text-center">
-            {location.name}
-          </span>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };
