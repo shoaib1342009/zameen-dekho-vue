@@ -91,9 +91,9 @@ const LeadDownloadModal = ({ isOpen, onClose }: LeadDownloadModalProps) => {
   const [filters, setFilters] = useState({
     startDate: '',
     endDate: '',
-    propertyId: '',
-    status: '',
-    source: ''
+    propertyId: 'all',
+    status: 'all',
+    source: 'all'
   });
 
   if (!isOpen) return null;
@@ -101,9 +101,9 @@ const LeadDownloadModal = ({ isOpen, onClose }: LeadDownloadModalProps) => {
   const filteredLeads = mockLeads.filter(lead => {
     if (filters.startDate && lead.inquiryDate < filters.startDate) return false;
     if (filters.endDate && lead.inquiryDate > filters.endDate) return false;
-    if (filters.propertyId && lead.propertyId !== filters.propertyId) return false;
-    if (filters.status && lead.status !== filters.status) return false;
-    if (filters.source && lead.source !== filters.source) return false;
+    if (filters.propertyId !== 'all' && lead.propertyId !== filters.propertyId) return false;
+    if (filters.status !== 'all' && lead.status !== filters.status) return false;
+    if (filters.source !== 'all' && lead.source !== filters.source) return false;
     return true;
   });
 
@@ -142,9 +142,9 @@ const LeadDownloadModal = ({ isOpen, onClose }: LeadDownloadModalProps) => {
     setFilters({
       startDate: '',
       endDate: '',
-      propertyId: '',
-      status: '',
-      source: ''
+      propertyId: 'all',
+      status: 'all',
+      source: 'all'
     });
   };
 
@@ -203,7 +203,7 @@ const LeadDownloadModal = ({ isOpen, onClose }: LeadDownloadModalProps) => {
                 <SelectValue placeholder="All Properties" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Properties</SelectItem>
+                <SelectItem value="all">All Properties</SelectItem>
                 {mockProperties.map((property) => (
                   <SelectItem key={property.id} value={property.id}>
                     {property.title}
@@ -222,7 +222,7 @@ const LeadDownloadModal = ({ isOpen, onClose }: LeadDownloadModalProps) => {
                   <SelectValue placeholder="All Status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Status</SelectItem>
+                  <SelectItem value="all">All Status</SelectItem>
                   <SelectItem value="new">New</SelectItem>
                   <SelectItem value="contacted">Contacted</SelectItem>
                   <SelectItem value="visited">Visited</SelectItem>
@@ -237,7 +237,7 @@ const LeadDownloadModal = ({ isOpen, onClose }: LeadDownloadModalProps) => {
                   <SelectValue placeholder="All Sources" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Sources</SelectItem>
+                  <SelectItem value="all">All Sources</SelectItem>
                   <SelectItem value="website">Website</SelectItem>
                   <SelectItem value="whatsapp">WhatsApp</SelectItem>
                   <SelectItem value="call">Call</SelectItem>
@@ -267,9 +267,9 @@ const LeadDownloadModal = ({ isOpen, onClose }: LeadDownloadModalProps) => {
             <div className="text-sm text-muted-foreground space-y-1">
               <p><strong>Total Leads:</strong> {filteredLeads.length}</p>
               <p><strong>Date Range:</strong> {filters.startDate || 'All'} to {filters.endDate || 'All'}</p>
-              <p><strong>Property:</strong> {filters.propertyId ? mockProperties.find(p => p.id === filters.propertyId)?.title : 'All Properties'}</p>
-              <p><strong>Status:</strong> {filters.status || 'All'}</p>
-              <p><strong>Source:</strong> {filters.source || 'All'}</p>
+              <p><strong>Property:</strong> {filters.propertyId === 'all' ? 'All Properties' : mockProperties.find(p => p.id === filters.propertyId)?.title}</p>
+              <p><strong>Status:</strong> {filters.status === 'all' ? 'All' : filters.status}</p>
+              <p><strong>Source:</strong> {filters.source === 'all' ? 'All' : filters.source}</p>
             </div>
           </div>
         </div>
