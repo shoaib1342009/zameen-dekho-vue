@@ -57,7 +57,7 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
 
   return (
     <>
-      <div className="bg-card rounded-xl sm:rounded-2xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-300 tap-scale w-full">
+      <div className="bg-card rounded-xl sm:rounded-2xl overflow-hidden border border-border hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300 tap-scale w-full">
         {/* Image Section */}
         <div className="relative h-40 sm:h-48 overflow-hidden">
           <img
