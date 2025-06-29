@@ -258,4 +258,154 @@ export const mockVideos = [
       seller: '+91 87654 98765'
     }
   },
+  {
+    id: 11,
+    videoUrl: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=700&fit=crop',
+    property: {
+      title: 'Elegant 3BHK Townhouse',
+      price: '5500000',
+      location: 'Powai, Mumbai',
+      seller: '+91 76543 12098'
+    }
+  },
+  {
+    id: 12,
+    videoUrl: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=700&fit=crop',
+    property: {
+      title: 'Minimalist 2BHK Flat',
+      price: '3800000',
+      location: 'Andheri East, Mumbai',
+      seller: '+91 65432 87109'
+    }
+  },
+  {
+    id: 13,
+    videoUrl: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=400&h=700&fit=crop',
+    property: {
+      title: 'Spacious Family Villa',
+      price: '12500000',
+      location: 'Juhu, Mumbai',
+      seller: '+91 54321 76098'
+    }
+  },
+  {
+    id: 14,
+    videoUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=700&fit=crop',
+    property: {
+      title: 'Compact 1BHK Studio',
+      price: '1950000',
+      location: 'Malad West, Mumbai',
+      seller: '+91 43210 65987'
+    }
+  },
+  {
+    id: 15,
+    videoUrl: 'https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=400&h=700&fit=crop',
+    property: {
+      title: 'Premium Loft Apartment',
+      price: '6800000',
+      location: 'Lower Parel, Mumbai',
+      seller: '+91 32109 54876'
+    }
+  },
+  {
+    id: 16,
+    videoUrl: 'https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=400&h=700&fit=crop',
+    property: {
+      title: 'Modern 4BHK Duplex',
+      price: '11200000',
+      location: 'Worli, Mumbai',
+      seller: '+91 21098 43765'
+    }
+  },
+  {
+    id: 17,
+    videoUrl: 'https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=400&h=700&fit=crop',
+    property: {
+      title: 'Cozy 2BHK Apartment',
+      price: '2800000',
+      location: 'Borivali West, Mumbai',
+      seller: '+91 10987 32654'
+    }
+  },
+  {
+    id: 18,
+    videoUrl: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=400&h=700&fit=crop',
+    property: {
+      title: 'Luxury Beachfront Villa',
+      price: '18500000',
+      location: 'Versova, Mumbai',
+      seller: '+91 98765 21043'
+    }
+  },
+  {
+    id: 19,
+    videoUrl: 'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=400&h=700&fit=crop',
+    property: {
+      title: 'Contemporary 3BHK Flat',
+      price: '4200000',
+      location: 'Kandivali East, Mumbai',
+      seller: '+91 87654 10932'
+    }
+  },
+  {
+    id: 20,
+    videoUrl: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=400&h=700&fit=crop',
+    property: {
+      title: 'Executive Studio Suite',
+      price: '2100000',
+      location: 'Goregaon West, Mumbai',
+      seller: '+91 76543 98210'
+    }
+  },
+  {
+    id: 21,
+    videoUrl: 'https://images.unsplash.com/photo-1600566752734-d1d394c41b7c?w=400&h=700&fit=crop',
+    property: {
+      title: 'Penthouse with Terrace',
+      price: '14800000',
+      location: 'Bandra Kurla Complex, Mumbai',
+      seller: '+91 65432 87654'
+    }
+  },
+  {
+    id: 22,
+    videoUrl: 'https://images.unsplash.com/photo-1600585154084-4e5fe7c39198?w=400&h=700&fit=crop',
+    property: {
+      title: 'Garden View 3BHK',
+      price: '5200000',
+      location: 'Chembur, Mumbai',
+      seller: '+91 54321 76543'
+    }
+  },
+  {
+    id: 23,
+    videoUrl: 'https://images.unsplash.com/photo-1600566753051-6057c2ec5d0d?w=400&h=700&fit=crop',
+    property: {
+      title: 'Modern Townhouse',
+      price: '7300000',
+      location: 'Santacruz West, Mumbai',
+      seller: '+91 43210 65432'
+    }
+  },
+  {
+    id: 24,
+    videoUrl: 'https://images.unsplash.com/photo-1600607688969-a5bfcd646154?w=400&h=700&fit=crop',
+    property: {
+      title: 'Luxury 2BHK with Balcony',
+      price: '3600000',
+      location: 'Khar West, Mumbai',
+      seller: '+91 32109 54321'
+    }
+  },
+  {
+    id: 25,
+    videoUrl: 'https://images.unsplash.com/photo-1600566752229-450a38458c85?w=400&h=700&fit=crop',
+    property: {
+      title: 'Spacious 5BHK Villa',
+      price: '22000000',
+      location: 'Malabar Hill, Mumbai',
+      seller: '+91 21098 43210'
+    }
+  },
 ];
