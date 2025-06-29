@@ -1,3 +1,4 @@
+
 import { Home, List, Heart, User } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -36,7 +37,7 @@ const BottomNav = () => {
                 isActive && "bg-zameen-gradient shadow-lg"
               )}>
                 <IconComponent className={cn(
-                  "w-3.5 h-3.5 sm:w-4 sm:h-4 transition-colors",
+                  "w-5 h-5 sm:w-6 sm:h-6 transition-colors",
                   isActive ? "text-white" : "text-current"
                 )} />
               </div>
