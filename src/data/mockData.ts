@@ -525,6 +525,153 @@ export const mockProperties = [
       'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&h=600&fit=crop',
     ],
   },
+  {
+    id: 26,
+    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80"
+    ],
+    label: "For Sale",
+    price: "12500000",
+    tag: "Premium",
+    beds: 4,
+    baths: 3,
+    sqft: 2800,
+    type: "Villa",
+    address: "Sector 50, Gurgaon, Haryana",
+    builder: "Premium Homes",
+    isLiked: false
+  },
+  {
+    id: 27,
+    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?auto=format&fit=crop&w=800&q=80"
+    ],
+    label: "For Rent",
+    price: "45000",
+    tag: "Luxury",
+    beds: 3,
+    baths: 2,
+    sqft: 1800,
+    type: "Apartment",
+    address: "Bandra West, Mumbai, Maharashtra",
+    builder: "Luxury Living",
+    isLiked: false
+  },
+  {
+    id: 28,
+    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1600585154084-4e5fe7c39198?auto=format&fit=crop&w=800&q=80"
+    ],
+    label: "For Sale",
+    price: "8500000",
+    tag: "New Launch",
+    beds: 2,
+    baths: 2,
+    sqft: 1200,
+    type: "Apartment",
+    address: "Electronic City, Bangalore, Karnataka",
+    builder: "Tech Homes",
+    isLiked: false
+  },
+  {
+    id: 29,
+    image: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=800&q=80"
+    ],
+    label: "For Sale",
+    price: "15000000",
+    tag: "Premium",
+    beds: 5,
+    baths: 4,
+    sqft: 3500,
+    type: "Villa",
+    address: "Whitefield, Bangalore, Karnataka",
+    builder: "Elite Builders",
+    isLiked: false
+  },
+  {
+    id: 30,
+    image: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=800&q=80"
+    ],
+    label: "For Rent",
+    price: "25000",
+    tag: "Furnished",
+    beds: 1,
+    baths: 1,
+    sqft: 650,
+    type: "Studio",
+    address: "Koramangala, Bangalore, Karnataka",
+    builder: "Urban Spaces",
+    isLiked: false
+  },
+  {
+    id: 31,
+    image: "https://images.unsplash.com/photo-1600563438938-a42d098d11be?auto=format&fit=crop&w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1600563438938-a42d098d11be?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1600563438901-8b8d38ba2b86?auto=format&fit=crop&w=800&q=80"
+    ],
+    label: "For Sale",
+    price: "9500000",
+    tag: "Ready to Move",
+    beds: 3,
+    baths: 2,
+    sqft: 1650,
+    type: "Apartment",
+    address: "Powai, Mumbai, Maharashtra",
+    builder: "Skyline Properties",
+    isLiked: false
+  },
+  {
+    id: 32,
+    image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?auto=format&fit=crop&w=800&q=80"
+    ],
+    label: "For Rent",
+    price: "35000",
+    tag: "Furnished",
+    beds: 2,
+    baths: 2,
+    sqft: 1100,
+    type: "Apartment",
+    address: "Cyber City, Gurgaon, Haryana",
+    builder: "Modern Living",
+    isLiked: false
+  },
+  {
+    id: 33,
+    image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1600585154084-4e5fe7c39198?auto=format&fit=crop&w=800&q=80"
+    ],
+    label: "For Sale",
+    price: "18000000",
+    tag: "Luxury",
+    beds: 4,
+    baths: 3,
+    sqft: 2500,
+    type: "Penthouse",
+    address: "Juhu, Mumbai, Maharashtra",
+    builder: "Luxury Developers",
+    isLiked: false
+  }
 ];
 
 export const mockVideos = [

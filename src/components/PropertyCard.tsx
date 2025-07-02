@@ -1,3 +1,4 @@
+
 import { Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -7,10 +8,12 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useState } from 'react';
 import AuthModal from './AuthModal';
+import PropertyImageCarousel from './PropertyImageCarousel';
 
 interface Property {
   id: number;
   image: string;
+  images?: string[];
   label: string;
   price: string;
   tag: string;
@@ -35,6 +38,9 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
 
   const isLiked = isInWishlist(property.id);
 
+  // Create array of images for carousel
+  const propertyImages = property.images || [property.image];
+
   const toggleLike = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!isAuthenticated) {
@@ -58,23 +64,24 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
   return (
     <>
       <div className="bg-card rounded-xl sm:rounded-2xl overflow-hidden border border-border hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300 tap-scale w-full">
-        {/* Image Section */}
-        <div className="relative h-40 sm:h-48 overflow-hidden">
-          <img
-            src={property.image}
+        {/* Image Section with Carousel */}
+        <div className="relative">
+          <PropertyImageCarousel
+            images={propertyImages}
             alt={property.label}
-            className="w-full h-full object-cover"
+            autoPlay={true}
+            className="h-40 sm:h-48"
           />
           
           {/* Label */}
-          <div className="absolute top-2 sm:top-3 left-2 sm:left-3 px-2 sm:px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full">
+          <div className="absolute top-2 sm:top-3 left-2 sm:left-3 px-2 sm:px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full z-10">
             <span className="text-white text-xs sm:text-sm font-medium">{property.label}</span>
           </div>
           
           {/* Heart Icon */}
           <button
             onClick={toggleLike}
-            className="absolute top-2 sm:top-3 right-2 sm:right-3 p-1.5 sm:p-2 bg-black/70 backdrop-blur-sm rounded-full tap-scale"
+            className="absolute top-2 sm:top-3 right-2 sm:right-3 p-1.5 sm:p-2 bg-black/70 backdrop-blur-sm rounded-full tap-scale z-10"
           >
             <Heart className={cn(
               "w-4 h-4 sm:w-5 sm:h-5 transition-colors",

@@ -1,12 +1,17 @@
+
 import { useState } from 'react';
+import { Grid, Map as MapIcon } from 'lucide-react';
 import FilterSection from '@/components/FilterSection';
 import PropertyCard from '@/components/PropertyCard';
+import MapView from '@/components/MapView';
+import { Button } from '@/components/ui/button';
 import { mockProperties } from '@/data/mockData';
 
 const Listings = () => {
-  const [selectedBHK, setSelectedBHK] = useState('1 BHK'); // Changed default to 1 BHK
+  const [selectedBHK, setSelectedBHK] = useState('1 BHK');
   const [priceRange, setPriceRange] = useState([2.55]);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
+  const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
 
   // Filter properties based on selected filters
   const filteredProperties = mockProperties.filter(property => {
@@ -33,27 +38,55 @@ const Listings = () => {
           setSelectedAmenities={setSelectedAmenities}
         />
 
-        {/* Property Cards */}
-        <div className="space-y-3 sm:space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-foreground">
-              Available Properties
-            </h3>
-            <span className="text-sm text-muted-foreground">
+        {/* View Toggle */}
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-foreground">
+            Available Properties
+          </h3>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground mr-2">
               {filteredProperties.length} properties found
             </span>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-            {filteredProperties.map((property) => (
-              <PropertyCard key={property.id} property={property} />
-            ))}
-          </div>
-          {filteredProperties.length === 0 && (
-            <div className="text-center py-8 sm:py-12">
-              <p className="text-muted-foreground">No properties match your filters. Try adjusting your search criteria.</p>
+            <div className="flex bg-muted rounded-lg p-1">
+              <Button
+                variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('grid')}
+                className="flex items-center gap-2 px-3 py-1.5"
+              >
+                <Grid className="w-4 h-4" />
+                <span className="hidden sm:inline">Grid</span>
+              </Button>
+              <Button
+                variant={viewMode === 'map' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('map')}
+                className="flex items-center gap-2 px-3 py-1.5"
+              >
+                <MapIcon className="w-4 h-4" />
+                <span className="hidden sm:inline">Map</span>
+              </Button>
             </div>
-          )}
+          </div>
         </div>
+
+        {/* Content Based on View Mode */}
+        {viewMode === 'grid' ? (
+          <div className="space-y-3 sm:space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+              {filteredProperties.map((property) => (
+                <PropertyCard key={property.id} property={property} />
+              ))}
+            </div>
+            {filteredProperties.length === 0 && (
+              <div className="text-center py-8 sm:py-12">
+                <p className="text-muted-foreground">No properties match your filters. Try adjusting your search criteria.</p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <MapView />
+        )}
       </div>
     </div>
   );
