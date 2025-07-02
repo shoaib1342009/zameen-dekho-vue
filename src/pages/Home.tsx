@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Search } from 'lucide-react';
 import LocationSelector from '@/components/LocationSelector';
@@ -7,6 +8,7 @@ import FeaturedListings from '@/components/FeaturedListings';
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBHK, setSelectedBHK] = useState('1 BHK'); // Changed default to 1 BHK
+  const [selectedPropertyType, setSelectedPropertyType] = useState('Apartment/Flat');
   const [priceRange, setPriceRange] = useState([2.55]);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
 
@@ -37,6 +39,8 @@ const Home = () => {
           <FilterSection
             selectedBHK={selectedBHK}
             setSelectedBHK={setSelectedBHK}
+            selectedPropertyType={selectedPropertyType}
+            setSelectedPropertyType={setSelectedPropertyType}
             priceRange={priceRange}
             setPriceRange={setPriceRange}
             selectedAmenities={selectedAmenities}
