@@ -4,10 +4,14 @@ import { Search } from 'lucide-react';
 import LocationSelector from '@/components/LocationSelector';
 import FilterSection from '@/components/FilterSection';
 import FeaturedListings from '@/components/FeaturedListings';
+import TrustBadges from '@/components/TrustBadges';
+import AppReviews from '@/components/AppReviews';
+import NewsUpdates from '@/components/NewsUpdates';
+import Footer from '@/components/Footer';
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedBHK, setSelectedBHK] = useState('1 BHK'); // Changed default to 1 BHK
+  const [selectedBHK, setSelectedBHK] = useState('1 BHK');
   const [selectedPropertyType, setSelectedPropertyType] = useState('Apartment/Flat');
   const [priceRange, setPriceRange] = useState([2.55]);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
@@ -62,7 +66,25 @@ const Home = () => {
         <div className="w-full">
           <FeaturedListings />
         </div>
+
+        {/* Trust Badges */}
+        <div className="w-full">
+          <TrustBadges />
+        </div>
+
+        {/* App Reviews */}
+        <div className="w-full">
+          <AppReviews />
+        </div>
+
+        {/* News Updates */}
+        <div className="w-full">
+          <NewsUpdates />
+        </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };

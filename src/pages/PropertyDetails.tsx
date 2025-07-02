@@ -1,5 +1,6 @@
+
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Heart, MapPin, Bed, Bath, Square, Phone, MessageCircle, Wifi, Car, Dumbbell, Shield, TreePine, Waves, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Heart, MapPin, Bed, Bath, Square, Phone, MessageCircle, Wifi, Car, Dumbbell, Shield, TreePine, Waves } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -8,6 +9,7 @@ import { formatPrice, formatRentPrice } from '@/utils/priceFormatter';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import AuthModal from '@/components/AuthModal';
+import PropertyImageCarousel from '@/components/PropertyImageCarousel';
 
 const amenityIcons = {
   wifi: Wifi,
@@ -32,7 +34,6 @@ const PropertyDetails = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const { isInWishlist, toggleWishlist } = useWishlist();
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   const propertyId = id ? parseInt(id, 10) : null;
@@ -87,17 +88,7 @@ const PropertyDetails = () => {
     return formatPrice(price);
   };
 
-  const nextImage = () => {
-    if (property.images && currentImageIndex < property.images.length - 1) {
-      setCurrentImageIndex(currentImageIndex + 1);
-    }
-  };
-
-  const prevImage = () => {
-    if (currentImageIndex > 0) {
-      setCurrentImageIndex(currentImageIndex - 1);
-    }
-  };
+  const images = property.images || [property.image];
 
   return (
     <>
@@ -124,73 +115,21 @@ const PropertyDetails = () => {
           </div>
         </div>
 
-        {/* Image Gallery */}
+        {/* Image Gallery with proper spacing */}
         <div className="relative h-80 overflow-hidden">
-          <img
-            src={property.images?.[currentImageIndex] || property.image}
+          <PropertyImageCarousel 
+            images={images} 
             alt="Property"
-            className="w-full h-full object-cover"
+            className="w-full h-full"
           />
           
-          {/* Navigation Arrows */}
-          {property.images && property.images.length > 1 && (
-            <>
-              <button
-                onClick={prevImage}
-                disabled={currentImageIndex === 0}
-                className={cn(
-                  "absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 backdrop-blur-sm rounded-full text-white transition-opacity",
-                  currentImageIndex === 0 ? "opacity-50" : "opacity-100 hover:bg-black/70"
-                )}
-              >
-                <ChevronLeft className="w-6 h-6" />
-              </button>
-              
-              <button
-                onClick={nextImage}
-                disabled={currentImageIndex === property.images.length - 1}
-                className={cn(
-                  "absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 backdrop-blur-sm rounded-full text-white transition-opacity",
-                  currentImageIndex === property.images.length - 1 ? "opacity-50" : "opacity-100 hover:bg-black/70"
-                )}
-              >
-                <ChevronRight className="w-6 h-6" />
-              </button>
-            </>
-          )}
-          
-          {/* Image Navigation Dots */}
-          {property.images && property.images.length > 1 && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-              {property.images.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentImageIndex(index)}
-                  className={cn(
-                    "w-2 h-2 rounded-full transition-colors",
-                    index === currentImageIndex ? "bg-white" : "bg-white/50"
-                  )}
-                />
-              ))}
-            </div>
-          )}
-
-          {/* Labels */}
+          {/* Labels with proper spacing */}
           <div className="absolute top-4 left-4 px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full">
             <span className="text-white text-sm font-medium">{property.label}</span>
           </div>
           <div className="absolute top-4 right-4 px-2 py-1 bg-zameen-gradient rounded-full">
             <span className="text-white text-xs font-medium">{property.tag}</span>
           </div>
-
-          {/* Image Counter */}
-          {property.images && property.images.length > 1 && (
-            <div className="absolute top-16 right-4 px-2 py-1 bg-black/70 backdrop-blur-sm rounded-full">
-              <span className="text-white text-xs">
-                {currentImageIndex + 1} / {property.images.length}
-              </span>
-            </div>
-          )}
         </div>
 
         {/* Property Information */}

@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { ChevronDown, Waves, Dumbbell, Gamepad2, Bus, Camera, Zap, Wifi, Car, Shield, TreePine, Coffee, Utensils, Wind, Sun, Users, Baby, Dog, Music } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -68,76 +69,112 @@ const FilterSection = ({
 
   return (
     <div className="space-y-4 sm:space-y-6 w-full">
-      {/* Property Type, BHK Selector and Price Range - Always in same row */}
-      <div className="flex items-center gap-3 w-full">
-        {/* Property Type Selector - Takes 1/4 space */}
-        <div className="relative w-1/4 flex-shrink-0">
-          <button
-            onClick={() => setShowPropertyTypeDropdown(!showPropertyTypeDropdown)}
-            className="w-full px-2 sm:px-3 py-3 sm:py-4 bg-card text-foreground rounded-xl sm:rounded-2xl border border-border flex items-center justify-between gap-1 sm:gap-2 tap-scale text-sm sm:text-base"
-          >
-            <span className="font-medium truncate">{selectedPropertyType}</span>
-            <ChevronDown className={cn(
-              "w-4 h-4 sm:w-5 sm:h-5 transition-transform flex-shrink-0",
-              showPropertyTypeDropdown && "rotate-180"
-            )} />
-          </button>
-          
-          {showPropertyTypeDropdown && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl sm:rounded-2xl shadow-lg z-10 animate-scale-in">
-              {propertyTypes.map((type) => (
-                <button
-                  key={type}
-                  onClick={() => {
-                    setSelectedPropertyType(type);
-                    setShowPropertyTypeDropdown(false);
+      {/* Mobile: Two rows, Desktop: One row */}
+      <div className="space-y-3 sm:space-y-0">
+        {/* First row: Property Type and BHK - Mobile stacked, Desktop side by side */}
+        <div className="flex items-center gap-3 w-full">
+          {/* Property Type Selector */}
+          <div className="relative flex-1 sm:w-1/3">
+            <button
+              onClick={() => setShowPropertyTypeDropdown(!showPropertyTypeDropdown)}
+              className="w-full px-2 sm:px-3 py-3 sm:py-4 bg-card text-foreground rounded-xl sm:rounded-2xl border border-border flex items-center justify-between gap-1 sm:gap-2 tap-scale text-sm sm:text-base"
+            >
+              <span className="font-medium truncate">{selectedPropertyType}</span>
+              <ChevronDown className={cn(
+                "w-4 h-4 sm:w-5 sm:h-5 transition-transform flex-shrink-0",
+                showPropertyTypeDropdown && "rotate-180"
+              )} />
+            </button>
+            
+            {showPropertyTypeDropdown && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl sm:rounded-2xl shadow-lg z-10 animate-scale-in">
+                {propertyTypes.map((type) => (
+                  <button
+                    key={type}
+                    onClick={() => {
+                      setSelectedPropertyType(type);
+                      setShowPropertyTypeDropdown(false);
+                    }}
+                    className="w-full px-2 sm:px-3 py-2.5 sm:py-3 text-left hover:bg-muted/20 first:rounded-t-xl first:sm:rounded-t-2xl last:rounded-b-xl last:sm:rounded-b-2xl transition-colors text-sm sm:text-base"
+                  >
+                    {type}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* BHK Selector */}
+          <div className="relative flex-1 sm:w-1/3">
+            <button
+              onClick={() => setShowBHKDropdown(!showBHKDropdown)}
+              className="w-full px-2 sm:px-3 py-3 sm:py-4 bg-card text-foreground rounded-xl sm:rounded-2xl border border-border flex items-center justify-between gap-1 sm:gap-2 tap-scale text-sm sm:text-base"
+            >
+              <span className="font-medium truncate">{selectedBHK}</span>
+              <ChevronDown className={cn(
+                "w-4 h-4 sm:w-5 sm:h-5 transition-transform flex-shrink-0",
+                showBHKDropdown && "rotate-180"
+              )} />
+            </button>
+            
+            {showBHKDropdown && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl sm:rounded-2xl shadow-lg z-10 animate-scale-in">
+                {bhkOptions.map((option) => (
+                  <button
+                    key={option}
+                    onClick={() => {
+                      setSelectedBHK(option);
+                      setShowBHKDropdown(false);
+                    }}
+                    className="w-full px-2 sm:px-3 py-2.5 sm:py-3 text-left hover:bg-muted/20 first:rounded-t-xl first:sm:rounded-t-2xl last:rounded-b-xl last:sm:rounded-b-2xl transition-colors text-sm sm:text-base"
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Price Range Slider - Hidden on mobile, shown on desktop */}
+          <div className="hidden sm:block flex-1 w-1/3 relative">
+            <div 
+              className="relative px-2 sm:px-3 py-3 sm:py-4 bg-card rounded-xl sm:rounded-2xl border border-border"
+              onMouseEnter={() => setShowPriceBubble(true)}
+              onMouseLeave={() => setShowPriceBubble(false)}
+              onTouchStart={() => setShowPriceBubble(true)}
+              onTouchEnd={() => setShowPriceBubble(false)}
+            >
+              <input
+                type="range"
+                min="1"
+                max="10"
+                step="0.05"
+                value={priceRange[0]}
+                onChange={(e) => setPriceRange([parseFloat(e.target.value)])}
+                className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer slider"
+                style={{
+                  background: `linear-gradient(to right, #7F00FF 0%, #00FFFF ${(priceRange[0] - 1) / 9 * 100}%, #374151 ${(priceRange[0] - 1) / 9 * 100}%, #374151 100%)`
+                }}
+              />
+              {showPriceBubble && (
+                <div 
+                  className="absolute -top-8 bg-black text-white px-2 py-1 rounded text-xs font-medium z-20"
+                  style={{
+                    left: `${(priceRange[0] - 1) / 9 * 100}%`,
+                    transform: 'translateX(-50%)'
                   }}
-                  className="w-full px-2 sm:px-3 py-2.5 sm:py-3 text-left hover:bg-muted/20 first:rounded-t-xl first:sm:rounded-t-2xl last:rounded-b-xl last:sm:rounded-b-2xl transition-colors text-sm sm:text-base"
                 >
-                  {type}
-                </button>
-              ))}
+                  {formatPriceValue(priceRange[0])}
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
 
-        {/* BHK Selector - Takes 1/4 space */}
-        <div className="relative w-1/4 flex-shrink-0">
-          <button
-            onClick={() => setShowBHKDropdown(!showBHKDropdown)}
-            className="w-full px-2 sm:px-3 py-3 sm:py-4 bg-card text-foreground rounded-xl sm:rounded-2xl border border-border flex items-center justify-between gap-1 sm:gap-2 tap-scale text-sm sm:text-base"
-          >
-            <span className="font-medium truncate">{selectedBHK}</span>
-            <ChevronDown className={cn(
-              "w-4 h-4 sm:w-5 sm:h-5 transition-transform flex-shrink-0",
-              showBHKDropdown && "rotate-180"
-            )} />
-          </button>
-          
-          {showBHKDropdown && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl sm:rounded-2xl shadow-lg z-10 animate-scale-in">
-              {bhkOptions.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => {
-                    setSelectedBHK(option);
-                    setShowBHKDropdown(false);
-                  }}
-                  className="w-full px-2 sm:px-3 py-2.5 sm:py-3 text-left hover:bg-muted/20 first:rounded-t-xl first:sm:rounded-t-2xl last:rounded-b-xl last:sm:rounded-b-2xl transition-colors text-sm sm:text-base"
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Price Range Slider - Takes 1/2 space with border */}
-        <div className="flex-1 w-1/2 relative">
+        {/* Second row: Price Range Slider - Mobile only */}
+        <div className="sm:hidden w-full">
           <div 
             className="relative px-2 sm:px-3 py-3 sm:py-4 bg-card rounded-xl sm:rounded-2xl border border-border"
-            onMouseEnter={() => setShowPriceBubble(true)}
-            onMouseLeave={() => setShowPriceBubble(false)}
             onTouchStart={() => setShowPriceBubble(true)}
             onTouchEnd={() => setShowPriceBubble(false)}
           >
@@ -153,7 +190,6 @@ const FilterSection = ({
                 background: `linear-gradient(to right, #7F00FF 0%, #00FFFF ${(priceRange[0] - 1) / 9 * 100}%, #374151 ${(priceRange[0] - 1) / 9 * 100}%, #374151 100%)`
               }}
             />
-            {/* Price Bubble - Visible on hover and touch */}
             {showPriceBubble && (
               <div 
                 className="absolute -top-8 bg-black text-white px-2 py-1 rounded text-xs font-medium z-20"
@@ -193,7 +229,6 @@ const FilterSection = ({
           })}
         </div>
         
-        {/* Selected amenities indicator */}
         {selectedAmenities.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-1">
             {selectedAmenities.map((amenity) => (
