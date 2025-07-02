@@ -9,6 +9,7 @@ import { mockProperties } from '@/data/mockData';
 
 const Listings = () => {
   const [selectedBHK, setSelectedBHK] = useState('1 BHK');
+  const [selectedPropertyType, setSelectedPropertyType] = useState('Apartment/Flat');
   const [priceRange, setPriceRange] = useState([2.55]);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
@@ -32,6 +33,8 @@ const Listings = () => {
         <FilterSection
           selectedBHK={selectedBHK}
           setSelectedBHK={setSelectedBHK}
+          selectedPropertyType={selectedPropertyType}
+          setSelectedPropertyType={setSelectedPropertyType}
           priceRange={priceRange}
           setPriceRange={setPriceRange}
           selectedAmenities={selectedAmenities}

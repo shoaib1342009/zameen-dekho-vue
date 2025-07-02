@@ -5,6 +5,8 @@ import { cn } from '@/lib/utils';
 interface FilterSectionProps {
   selectedBHK: string;
   setSelectedBHK: (value: string) => void;
+  selectedPropertyType: string;
+  setSelectedPropertyType: (value: string) => void;
   priceRange: number[];
   setPriceRange: (value: number[]) => void;
   selectedAmenities: string[];
@@ -12,6 +14,7 @@ interface FilterSectionProps {
 }
 
 const bhkOptions = ['1 BHK', '2 BHK', '3 BHK', '4 BHK'];
+const propertyTypes = ['Apartment/Flat', 'Bungalow', 'Land', 'Villa', 'Townhouse', 'Studio'];
 
 const amenities = [
   { name: 'Pool', icon: Waves },
@@ -37,12 +40,15 @@ const amenities = [
 const FilterSection = ({
   selectedBHK,
   setSelectedBHK,
+  selectedPropertyType,
+  setSelectedPropertyType,
   priceRange,
   setPriceRange,
   selectedAmenities,
   setSelectedAmenities,
 }: FilterSectionProps) => {
   const [showBHKDropdown, setShowBHKDropdown] = useState(false);
+  const [showPropertyTypeDropdown, setShowPropertyTypeDropdown] = useState(false);
   const [showPriceBubble, setShowPriceBubble] = useState(false);
 
   const toggleAmenity = (amenity: string) => {
@@ -62,10 +68,41 @@ const FilterSection = ({
 
   return (
     <div className="space-y-4 sm:space-y-6 w-full">
-      {/* BHK Selector and Price Range - Always in same row */}
+      {/* Property Type, BHK Selector and Price Range - Always in same row */}
       <div className="flex items-center gap-3 w-full">
-        {/* BHK Selector - Takes 1/3 space */}
-        <div className="relative w-1/3 flex-shrink-0">
+        {/* Property Type Selector - Takes 1/4 space */}
+        <div className="relative w-1/4 flex-shrink-0">
+          <button
+            onClick={() => setShowPropertyTypeDropdown(!showPropertyTypeDropdown)}
+            className="w-full px-2 sm:px-3 py-3 sm:py-4 bg-card text-foreground rounded-xl sm:rounded-2xl border border-border flex items-center justify-between gap-1 sm:gap-2 tap-scale text-sm sm:text-base"
+          >
+            <span className="font-medium truncate">{selectedPropertyType}</span>
+            <ChevronDown className={cn(
+              "w-4 h-4 sm:w-5 sm:h-5 transition-transform flex-shrink-0",
+              showPropertyTypeDropdown && "rotate-180"
+            )} />
+          </button>
+          
+          {showPropertyTypeDropdown && (
+            <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl sm:rounded-2xl shadow-lg z-10 animate-scale-in">
+              {propertyTypes.map((type) => (
+                <button
+                  key={type}
+                  onClick={() => {
+                    setSelectedPropertyType(type);
+                    setShowPropertyTypeDropdown(false);
+                  }}
+                  className="w-full px-2 sm:px-3 py-2.5 sm:py-3 text-left hover:bg-muted/20 first:rounded-t-xl first:sm:rounded-t-2xl last:rounded-b-xl last:sm:rounded-b-2xl transition-colors text-sm sm:text-base"
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* BHK Selector - Takes 1/4 space */}
+        <div className="relative w-1/4 flex-shrink-0">
           <button
             onClick={() => setShowBHKDropdown(!showBHKDropdown)}
             className="w-full px-2 sm:px-3 py-3 sm:py-4 bg-card text-foreground rounded-xl sm:rounded-2xl border border-border flex items-center justify-between gap-1 sm:gap-2 tap-scale text-sm sm:text-base"
@@ -95,10 +132,10 @@ const FilterSection = ({
           )}
         </div>
 
-        {/* Price Range Slider - Takes 2/3 space */}
-        <div className="flex-1 w-2/3 relative">
+        {/* Price Range Slider - Takes 1/2 space with border */}
+        <div className="flex-1 w-1/2 relative">
           <div 
-            className="relative"
+            className="relative px-2 sm:px-3 py-3 sm:py-4 bg-card rounded-xl sm:rounded-2xl border border-border"
             onMouseEnter={() => setShowPriceBubble(true)}
             onMouseLeave={() => setShowPriceBubble(false)}
             onTouchStart={() => setShowPriceBubble(true)}
