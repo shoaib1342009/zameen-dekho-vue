@@ -18,7 +18,6 @@ const PropertyImageCarousel = ({
 }: PropertyImageCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  const [touchStart, setTouchStart] = useState<number | null>(null);
 
   useEffect(() => {
     if (!autoPlay || !isHovered || images.length <= 1) return;
@@ -59,9 +58,11 @@ const PropertyImageCarousel = ({
     setTouchStart(null);
   };
 
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+
   if (images.length === 0) {
     return (
-      <div className={cn("relative bg-gray-200 flex items-center justify-center", className)}>
+      <div className={cn("relative h-40 sm:h-48 bg-gray-200 flex items-center justify-center", className)}>
         <span className="text-gray-500">No Image</span>
       </div>
     );
@@ -69,7 +70,7 @@ const PropertyImageCarousel = ({
 
   return (
     <div 
-      className={cn("relative overflow-hidden group", className)}
+      className={cn("relative h-40 sm:h-48 overflow-hidden group", className)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onTouchStart={handleTouchStart}
@@ -79,7 +80,7 @@ const PropertyImageCarousel = ({
       <img
         src={images[currentIndex]}
         alt={alt}
-        className="w-full h-full object-cover"
+        className="w-full h-full object-cover transition-transform duration-300"
       />
       
       {/* Navigation Arrows - Desktop Only */}

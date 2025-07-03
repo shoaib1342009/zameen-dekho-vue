@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, MapPin, Bed, Bath, Square, Phone, MessageCircle, Wifi, Car, Dumbbell, Shield, TreePine, Waves } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -115,8 +114,8 @@ const PropertyDetails = () => {
           </div>
         </div>
 
-        {/* Image Gallery - 16:9 desktop, 4:5 mobile */}
-        <div className="relative w-full aspect-[4/5] sm:aspect-[16/9] overflow-hidden">
+        {/* Image Gallery - increased height for better proportions */}
+        <div className="relative h-56 sm:h-64 overflow-hidden">
           <PropertyImageCarousel 
             images={images} 
             alt="Property"
@@ -124,16 +123,16 @@ const PropertyDetails = () => {
           />
           
           {/* Labels with proper spacing from top */}
-          <div className="absolute top-4 left-4 px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full">
+          <div className="absolute top-6 left-4 px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full">
             <span className="text-white text-sm font-medium">{property.label}</span>
           </div>
-          <div className="absolute top-4 right-4 px-2 py-1 bg-zameen-gradient rounded-full">
+          <div className="absolute top-6 right-4 px-2 py-1 bg-zameen-gradient rounded-full">
             <span className="text-white text-xs font-medium">{property.tag}</span>
           </div>
         </div>
 
-        {/* Property Information - tight spacing */}
-        <div className="p-4 pt-3 space-y-6">
+        {/* Property Information - minimal top spacing */}
+        <div className="p-4 pt-2 space-y-6">
           {/* Price and Basic Info */}
           <div>
             <div className="flex items-center justify-between mb-2">
