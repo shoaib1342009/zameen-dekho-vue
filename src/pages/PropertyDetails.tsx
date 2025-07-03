@@ -115,8 +115,8 @@ const PropertyDetails = () => {
           </div>
         </div>
 
-        {/* Image Gallery with better aspect ratio and proper spacing */}
-        <div className="relative h-64 sm:h-72 overflow-hidden">
+        {/* Image Gallery - more rectangular aspect ratio */}
+        <div className="relative h-48 sm:h-56 overflow-hidden">
           <PropertyImageCarousel 
             images={images} 
             alt="Property"
@@ -132,8 +132,8 @@ const PropertyDetails = () => {
           </div>
         </div>
 
-        {/* Property Information with reduced top spacing */}
-        <div className="p-4 pt-3 space-y-6">
+        {/* Property Information - minimal top spacing */}
+        <div className="p-4 pt-2 space-y-6">
           {/* Price and Basic Info */}
           <div>
             <div className="flex items-center justify-between mb-2">
