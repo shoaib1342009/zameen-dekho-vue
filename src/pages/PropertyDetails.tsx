@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, MapPin, Bed, Bath, Square, Phone, MessageCircle, Wifi, Car, Dumbbell, Shield, TreePine, Waves } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -115,8 +114,8 @@ const PropertyDetails = () => {
           </div>
         </div>
 
-        {/* Image Gallery - more rectangular aspect ratio */}
-        <div className="relative h-48 sm:h-56 overflow-hidden">
+        {/* Image Gallery - increased height for better proportions */}
+        <div className="relative h-56 sm:h-64 overflow-hidden">
           <PropertyImageCarousel 
             images={images} 
             alt="Property"
