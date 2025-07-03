@@ -115,25 +115,25 @@ const PropertyDetails = () => {
           </div>
         </div>
 
-        {/* Image Gallery with proper spacing */}
-        <div className="relative h-80 overflow-hidden">
+        {/* Image Gallery with better aspect ratio and proper spacing */}
+        <div className="relative h-64 sm:h-72 overflow-hidden">
           <PropertyImageCarousel 
             images={images} 
             alt="Property"
             className="w-full h-full"
           />
           
-          {/* Labels with proper spacing */}
-          <div className="absolute top-4 left-4 px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full">
+          {/* Labels with proper spacing from top */}
+          <div className="absolute top-6 left-4 px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full">
             <span className="text-white text-sm font-medium">{property.label}</span>
           </div>
-          <div className="absolute top-4 right-4 px-2 py-1 bg-zameen-gradient rounded-full">
+          <div className="absolute top-6 right-4 px-2 py-1 bg-zameen-gradient rounded-full">
             <span className="text-white text-xs font-medium">{property.tag}</span>
           </div>
         </div>
 
-        {/* Property Information */}
-        <div className="p-4 space-y-6">
+        {/* Property Information with reduced top spacing */}
+        <div className="p-4 pt-3 space-y-6">
           {/* Price and Basic Info */}
           <div>
             <div className="flex items-center justify-between mb-2">
