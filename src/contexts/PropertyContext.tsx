@@ -19,11 +19,12 @@ interface Property {
   description: string;
   amenities?: string[];
   videoUrl?: string;
+  isLiked: boolean;
 }
 
 interface PropertyContextType {
   userProperties: Property[];
-  addProperty: (property: Omit<Property, 'id'>) => void;
+  addProperty: (property: Omit<Property, 'id' | 'isLiked'>) => void;
   getAllProperties: () => Property[];
 }
 
@@ -47,7 +48,8 @@ const initialProperties: Property[] = [
     address: "Andheri West, Mumbai, Maharashtra",
     builder: "Lodha Developers",
     description: "Premium 3BHK apartment with modern amenities",
-    amenities: ["Swimming Pool", "Gym", "Parking"]
+    amenities: ["Swimming Pool", "Gym", "Parking"],
+    isLiked: false
   },
   {
     id: 1002,
@@ -65,7 +67,8 @@ const initialProperties: Property[] = [
     address: "Panvel, Navi Mumbai, Maharashtra",
     builder: "Tata Housing",
     description: "Well-planned 2BHK with great connectivity",
-    amenities: ["Parking", "Security", "Garden"]
+    amenities: ["Parking", "Security", "Garden"],
+    isLiked: false
   },
   {
     id: 1003,
@@ -83,7 +86,8 @@ const initialProperties: Property[] = [
     address: "Ulwe, Navi Mumbai, Maharashtra",
     builder: "Godrej Properties",
     description: "Contemporary living in upcoming area",
-    amenities: ["Gym", "Swimming Pool", "Club House"]
+    amenities: ["Gym", "Swimming Pool", "Club House"],
+    isLiked: false
   },
   {
     id: 1004,
@@ -101,7 +105,8 @@ const initialProperties: Property[] = [
     address: "Colaba, Mumbai, Maharashtra",
     builder: "Oberoi Realty",
     description: "Premium sea-facing apartment in South Mumbai",
-    amenities: ["Sea View", "Concierge", "Valet Parking"]
+    amenities: ["Sea View", "Concierge", "Valet Parking"],
+    isLiked: false
   },
   {
     id: 1005,
@@ -119,7 +124,8 @@ const initialProperties: Property[] = [
     address: "Kurla, Mumbai, Maharashtra",
     builder: "Hiranandani Group",
     description: "Perfect family home with spacious rooms",
-    amenities: ["Garden", "Parking", "Security"]
+    amenities: ["Garden", "Parking", "Security"],
+    isLiked: false
   },
   {
     id: 1006,
@@ -137,7 +143,8 @@ const initialProperties: Property[] = [
     address: "Seawoods, Navi Mumbai, Maharashtra",
     builder: "DLF Limited",
     description: "Well-designed apartment in prime location",
-    amenities: ["Swimming Pool", "Gym", "Mall Access"]
+    amenities: ["Swimming Pool", "Gym", "Mall Access"],
+    isLiked: false
   },
   {
     id: 1007,
@@ -155,7 +162,8 @@ const initialProperties: Property[] = [
     address: "Rasayni, Navi Mumbai, Maharashtra",
     builder: "Kalpataru Group",
     description: "Spacious apartment with great amenities",
-    amenities: ["Club House", "Swimming Pool", "Parking"]
+    amenities: ["Club House", "Swimming Pool", "Parking"],
+    isLiked: false
   },
   {
     id: 1008,
@@ -173,7 +181,8 @@ const initialProperties: Property[] = [
     address: "Taloja MIDC, Navi Mumbai, Maharashtra",
     builder: "MIDC",
     description: "Prime industrial plot for development",
-    amenities: ["Road Access", "Utilities", "MIDC Approved"]
+    amenities: ["Road Access", "Utilities", "MIDC Approved"],
+    isLiked: false
   },
   {
     id: 1009,
@@ -191,7 +200,8 @@ const initialProperties: Property[] = [
     address: "Uran, Navi Mumbai, Maharashtra",
     builder: "Prestige Group",
     description: "Luxurious waterfront villa with private beach access",
-    amenities: ["Private Beach", "Garden", "Boat Parking"]
+    amenities: ["Private Beach", "Garden", "Boat Parking"],
+    isLiked: false
   }
 ];
 
@@ -201,13 +211,19 @@ export const PropertyProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     // Load properties from localStorage on mount
     const storedProperties = JSON.parse(localStorage.getItem('userProperties') || '[]');
-    setUserProperties(storedProperties);
+    // Ensure loaded properties have isLiked field
+    const propertiesWithLiked = storedProperties.map((prop: any) => ({
+      ...prop,
+      isLiked: prop.isLiked ?? false
+    }));
+    setUserProperties(propertiesWithLiked);
   }, []);
 
-  const addProperty = (property: Omit<Property, 'id'>) => {
+  const addProperty = (property: Omit<Property, 'id' | 'isLiked'>) => {
     const newProperty = {
       ...property,
       id: Date.now(), // Simple ID generation
+      isLiked: false,
     };
     
     const updatedProperties = [...userProperties, newProperty];
