@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { mockProperties } from '@/data/mockData';
+import { useProperty } from '@/contexts/PropertyContext';
 import { useNavigate } from 'react-router-dom';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -36,37 +37,59 @@ interface MapProperty {
   address: string;
 }
 
+// Location coordinates for Mumbai areas
+const locationCoordinates: Record<string, { lat: number; lng: number }> = {
+  'Andheri West': { lat: 19.1334, lng: 72.8267 },
+  'Panvel': { lat: 18.9894, lng: 73.1113 },
+  'Ulwe': { lat: 18.9515, lng: 73.0374 },
+  'Uran': { lat: 18.8773, lng: 72.9386 },
+  'Colaba': { lat: 18.9067, lng: 72.8147 },
+  'Kurla': { lat: 19.0728, lng: 72.8826 },
+  'Seawoods': { lat: 19.0197, lng: 73.0169 },
+  'Rasayni': { lat: 18.9064, lng: 73.0033 },
+  'Taloja': { lat: 19.0518, lng: 73.1040 }
+};
+
 const MapView = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<L.MarkerClusterGroup | null>(null);
   const [selectedProperty, setSelectedProperty] = useState<MapProperty | null>(null);
   const navigate = useNavigate();
+  const { getAllProperties } = useProperty();
 
-  // Convert mock properties to map format
-  const mapProperties: MapProperty[] = mockProperties.map((prop, index) => ({
-    id: prop.id,
-    name: `${prop.builder} ${prop.type}`,
-    developer: prop.builder,
-    lat: 28.6139 + (Math.random() - 0.5) * 0.5, // Delhi area with random offset
-    lng: 77.2090 + (Math.random() - 0.5) * 0.5,
-    price_range: prop.price,
-    type: prop.type,
-    city: prop.address.split(',').pop()?.trim() || 'Delhi',
-    rera_status: Math.random() > 0.3 ? 'Registered' : 'Pending',
-    status: Math.random() > 0.4 ? 'Under Construction' : 'Ready',
-    thumbnail: prop.image || prop.images?.[0] || '',
-    beds: prop.beds,
-    baths: prop.baths,
-    sqft: prop.sqft,
-    address: prop.address
-  }));
+  // Get all properties (mock + user added)
+  const allProperties = [...mockProperties, ...getAllProperties()];
+
+  // Convert properties to map format
+  const mapProperties: MapProperty[] = allProperties.map((prop) => {
+    const locationKey = prop.location || prop.address.split(',')[0];
+    const coordinates = locationCoordinates[locationKey] || { lat: 19.0760 + (Math.random() - 0.5) * 0.1, lng: 72.8777 + (Math.random() - 0.5) * 0.1 };
+    
+    return {
+      id: prop.id,
+      name: `${prop.builder} ${prop.type}`,
+      developer: prop.builder,
+      lat: coordinates.lat + (Math.random() - 0.5) * 0.01, // Small random offset
+      lng: coordinates.lng + (Math.random() - 0.5) * 0.01,
+      price_range: prop.price,
+      type: prop.type,
+      city: prop.location || prop.address.split(',').pop()?.trim() || 'Mumbai',
+      rera_status: Math.random() > 0.3 ? 'Registered' : 'Pending',
+      status: Math.random() > 0.4 ? 'Under Construction' : 'Ready',
+      thumbnail: prop.image || prop.images?.[0] || '',
+      beds: prop.beds,
+      baths: prop.baths,
+      sqft: prop.sqft,
+      address: prop.address
+    };
+  });
 
   useEffect(() => {
     if (!mapContainer.current) return;
 
-    // Initialize map
-    const map = L.map(mapContainer.current).setView([20.5937, 78.9629], 5); // India center
+    // Initialize map centered on Mumbai
+    const map = L.map(mapContainer.current).setView([19.0760, 72.8777], 11);
     mapRef.current = map;
 
     // Add tile layer
@@ -93,7 +116,7 @@ const MapView = () => {
             <span class="px-2 py-1 text-xs rounded ${property.rera_status === 'Registered' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">${property.rera_status}</span>
             <span class="px-2 py-1 text-xs rounded bg-blue-100 text-blue-800">${property.status}</span>
           </div>
-          <div class="text-lg font-bold text-blue-600 mb-2">${property.price_range}</div>
+          <div class="text-lg font-bold text-blue-600 mb-2">₹${parseInt(property.price_range).toLocaleString()}</div>
           <button onclick="window.viewPropertyDetails(${property.id})" class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
             View Details
           </button>
@@ -118,7 +141,7 @@ const MapView = () => {
       }
       delete (window as any).viewPropertyDetails;
     };
-  }, [navigate]);
+  }, [navigate, mapProperties.length]);
 
   const handleViewDetails = (propertyId: number) => {
     navigate(`/property/${propertyId}`);
@@ -163,7 +186,7 @@ const MapView = () => {
                       {property.rera_status}
                     </Badge>
                   </div>
-                  <p className="font-semibold text-blue-600 text-sm">{property.price_range}</p>
+                  <p className="font-semibold text-blue-600 text-sm">₹{parseInt(property.price_range).toLocaleString()}</p>
                   <Button 
                     onClick={(e) => {
                       e.stopPropagation();

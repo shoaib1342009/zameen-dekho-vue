@@ -6,6 +6,7 @@ import PropertyCard from '@/components/PropertyCard';
 import MapView from '@/components/MapView';
 import { Button } from '@/components/ui/button';
 import { mockProperties } from '@/data/mockData';
+import { useProperty } from '@/contexts/PropertyContext';
 
 const Listings = () => {
   const [selectedBHK, setSelectedBHK] = useState('1 BHK');
@@ -13,9 +14,15 @@ const Listings = () => {
   const [priceRange, setPriceRange] = useState([2.55]);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
+  
+  const { getAllProperties } = useProperty();
+  const allProperties = getAllProperties();
+
+  // Combine mock properties with user properties
+  const combinedProperties = [...mockProperties, ...allProperties];
 
   // Filter properties based on selected filters
-  const filteredProperties = mockProperties.filter(property => {
+  const filteredProperties = combinedProperties.filter(property => {
     // BHK filter
     const bhkMatch = selectedBHK === 'All' || property.beds.toString() === selectedBHK.charAt(0);
     

@@ -2,17 +2,22 @@
 import { useState } from 'react';
 import PropertyCard from './PropertyCard';
 import { mockProperties } from '@/data/mockData';
+import { useProperty } from '@/contexts/PropertyContext';
 import { Button } from '@/components/ui/button';
 
 const FeaturedListings = () => {
   const [visibleCount, setVisibleCount] = useState(4);
+  const { getAllProperties } = useProperty();
   
-  // Show first 4 properties as featured initially
-  const featuredProperties = mockProperties.slice(0, visibleCount);
-  const hasMore = visibleCount < mockProperties.length;
+  // Combine mock properties with user properties
+  const allProperties = [...mockProperties, ...getAllProperties()];
+  
+  // Show first properties as featured initially
+  const featuredProperties = allProperties.slice(0, visibleCount);
+  const hasMore = visibleCount < allProperties.length;
 
   const loadMore = () => {
-    setVisibleCount(prev => Math.min(prev + 4, mockProperties.length));
+    setVisibleCount(prev => Math.min(prev + 4, allProperties.length));
   };
 
   return (
