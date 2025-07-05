@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AuthModal from '@/components/AuthModal';
-import ListPropertyModal from '@/components/ListPropertyModal';
+import EnhancedListPropertyModal from '@/components/EnhancedListPropertyModal';
 import NotificationPanel from '@/components/NotificationPanel';
 import LeadDownloadModal from '@/components/LeadDownloadModal';
 
@@ -245,7 +245,7 @@ const Profile = () => {
       </div>
 
       {/* Modals */}
-      <ListPropertyModal 
+      <EnhancedListPropertyModal 
         isOpen={showListPropertyModal} 
         onClose={() => setShowListPropertyModal(false)} 
       />
