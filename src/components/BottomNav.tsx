@@ -1,4 +1,3 @@
-
 import { Home, List, Heart, User } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -15,7 +14,7 @@ const BottomNav = () => {
   const location = useLocation();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card/90 backdrop-blur-md border-t border-border">
+    <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-card/90 backdrop-blur-md border-t border-border">
       <div className="flex items-center justify-around py-1 sm:py-1.5 px-2 sm:px-4">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
