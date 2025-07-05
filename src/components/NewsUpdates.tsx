@@ -20,13 +20,19 @@ const NewsUpdates = () => {
       date: "2 weeks ago",
       category: "Investment",
       coverImage: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=400&h=200&fit=crop"
+    },
+    {
+      title: "Smart Home Technology Trends",
+      date: "3 weeks ago",
+      category: "Technology",
+      coverImage: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=200&fit=crop"
     }
   ];
 
   return (
     <div className="w-full">
       <h3 className="text-lg sm:text-xl font-bold text-foreground mb-4">Latest News</h3>
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
         {news.map((item, index) => (
           <div key={index} className="bg-card rounded-xl overflow-hidden border border-border">
             <img 
