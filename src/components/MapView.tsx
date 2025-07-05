@@ -63,7 +63,8 @@ const MapView = () => {
 
   // Convert properties to map format
   const mapProperties: MapProperty[] = allProperties.map((prop) => {
-    const locationKey = prop.location || prop.address.split(',')[0];
+    // Handle both location and address properties safely
+    const locationKey = ('location' in prop && prop.location) || prop.address.split(',')[0];
     const coordinates = locationCoordinates[locationKey] || { lat: 19.0760 + (Math.random() - 0.5) * 0.1, lng: 72.8777 + (Math.random() - 0.5) * 0.1 };
     
     return {
@@ -74,10 +75,10 @@ const MapView = () => {
       lng: coordinates.lng + (Math.random() - 0.5) * 0.01,
       price_range: prop.price,
       type: prop.type,
-      city: prop.location || prop.address.split(',').pop()?.trim() || 'Mumbai',
+      city: ('location' in prop && prop.location) || prop.address.split(',').pop()?.trim() || 'Mumbai',
       rera_status: Math.random() > 0.3 ? 'Registered' : 'Pending',
       status: Math.random() > 0.4 ? 'Under Construction' : 'Ready',
-      thumbnail: prop.image || prop.images?.[0] || '',
+      thumbnail: prop.image || (prop.images && prop.images[0]) || '',
       beds: prop.beds,
       baths: prop.baths,
       sqft: prop.sqft,

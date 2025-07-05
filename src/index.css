@@ -1,3 +1,4 @@
+
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 @tailwind base;
 @tailwind components;
@@ -107,6 +108,27 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+
+  /* Filter section override for hero banner */
+  .filter-section-override .bg-card {
+    @apply bg-white/20 backdrop-blur-sm border-white/30;
+  }
+  
+  .filter-section-override .text-foreground {
+    @apply text-white;
+  }
+  
+  .filter-section-override .text-muted-foreground {
+    @apply text-white/70;
+  }
+  
+  .filter-section-override .border-border {
+    @apply border-white/30;
+  }
+  
+  .filter-section-override .hover\:bg-muted\/20:hover {
+    @apply bg-white/10;
   }
 }
 

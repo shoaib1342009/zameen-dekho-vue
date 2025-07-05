@@ -146,18 +146,20 @@ const HeroBanner = ({
             </button>
           </div>
 
-          {/* Filter Section */}
-          <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6">
-            <FilterSection
-              selectedBHK={selectedBHK}
-              setSelectedBHK={setSelectedBHK}
-              selectedPropertyType={selectedPropertyType}
-              setSelectedPropertyType={setSelectedPropertyType}
-              priceRange={priceRange}
-              setPriceRange={setPriceRange}
-              selectedAmenities={selectedAmenities}
-              setSelectedAmenities={setSelectedAmenities}
-            />
+          {/* Filter Section - Updated with proper dark theme support */}
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+            <div className="filter-section-override">
+              <FilterSection
+                selectedBHK={selectedBHK}
+                setSelectedBHK={setSelectedBHK}
+                selectedPropertyType={selectedPropertyType}
+                setSelectedPropertyType={setSelectedPropertyType}
+                priceRange={priceRange}
+                setPriceRange={setPriceRange}
+                selectedAmenities={selectedAmenities}
+                setSelectedAmenities={setSelectedAmenities}
+              />
+            </div>
           </div>
         </div>
       </div>
