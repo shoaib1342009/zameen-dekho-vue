@@ -1,8 +1,7 @@
-
 import { useState, useEffect } from 'react';
-import { Search, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
-import FilterSection from '@/components/FilterSection';
+import { Search, ChevronLeft, ChevronRight, Filter, ChevronDown } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { cn } from '@/lib/utils';
 
 const bannerImages = [
   {
@@ -44,6 +43,9 @@ interface HeroBannerProps {
   setSelectedAmenities: (value: string[]) => void;
 }
 
+const propertyTypes = ['Apartment/Flat', 'Bungalow', 'Land', 'Villa', 'Townhouse', 'Studio'];
+const bhkOptions = ['1 BHK', '2 BHK', '3 BHK', '4 BHK'];
+
 const HeroBanner = ({
   searchQuery,
   setSearchQuery,
@@ -58,6 +60,9 @@ const HeroBanner = ({
 }: HeroBannerProps) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [showPropertyTypeDropdown, setShowPropertyTypeDropdown] = useState(false);
+  const [showBHKDropdown, setShowBHKDropdown] = useState(false);
+  const [showPriceBubble, setShowPriceBubble] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -73,6 +78,14 @@ const HeroBanner = ({
 
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + bannerImages.length) % bannerImages.length);
+  };
+
+  const formatPriceValue = (value: number) => {
+    if (value >= 10) {
+      return `₹${(value).toFixed(2)} Cr`;
+    } else {
+      return `₹${(value * 10).toFixed(2)} L`;
+    }
   };
 
   return (
@@ -134,82 +147,136 @@ const HeroBanner = ({
             </p>
           </div>
 
-          {/* Combined Search and Filter Section */}
-          <div className="bg-white rounded-2xl p-6 shadow-lg">
+          {/* Combined Search and Filter Section - Frosted Glass */}
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 shadow-lg border border-white/20">
             <Collapsible open={isFilterOpen} onOpenChange={setIsFilterOpen}>
               {/* Search Bar - Always Visible */}
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search properties..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-6 py-4 pr-24 bg-gray-50 text-gray-900 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
-                />
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 flex gap-2">
-                  <CollapsibleTrigger asChild>
-                    <button className="p-2 bg-gray-600 rounded-lg hover:bg-gray-700 transition-colors">
-                      <Filter className="w-5 h-5 text-white" />
+              <div className="flex items-center gap-2">
+                {/* Property Type - 1/5 width - Only show when filter is open */}
+                {isFilterOpen && (
+                  <div className="relative flex-1 max-w-[20%]">
+                    <button
+                      onClick={() => setShowPropertyTypeDropdown(!showPropertyTypeDropdown)}
+                      className="w-full px-2 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg border border-white/30 flex items-center justify-between text-sm"
+                    >
+                      <span className="font-medium truncate">Property Type</span>
+                      <ChevronDown className={cn(
+                        "w-4 h-4 transition-transform flex-shrink-0",
+                        showPropertyTypeDropdown && "rotate-180"
+                      )} />
                     </button>
-                  </CollapsibleTrigger>
-                  <button className="p-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
-                    <Search className="w-5 h-5 text-white" />
-                  </button>
+                    
+                    {showPropertyTypeDropdown && (
+                      <div className="absolute top-full left-0 right-0 mt-1 bg-white/90 backdrop-blur-md border border-white/30 rounded-lg shadow-lg z-20">
+                        {propertyTypes.map((type) => (
+                          <button
+                            key={type}
+                            onClick={() => {
+                              setSelectedPropertyType(type);
+                              setShowPropertyTypeDropdown(false);
+                            }}
+                            className="w-full px-2 py-2 text-left hover:bg-white/20 first:rounded-t-lg last:rounded-b-lg transition-colors text-sm text-gray-800"
+                          >
+                            {type}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* BHK - 1/5 width - Only show when filter is open */}
+                {isFilterOpen && (
+                  <div className="relative flex-1 max-w-[20%]">
+                    <button
+                      onClick={() => setShowBHKDropdown(!showBHKDropdown)}
+                      className="w-full px-2 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg border border-white/30 flex items-center justify-between text-sm"
+                    >
+                      <span className="font-medium truncate">{selectedBHK}</span>
+                      <ChevronDown className={cn(
+                        "w-4 h-4 transition-transform flex-shrink-0",
+                        showBHKDropdown && "rotate-180"
+                      )} />
+                    </button>
+                    
+                    {showBHKDropdown && (
+                      <div className="absolute top-full left-0 right-0 mt-1 bg-white/90 backdrop-blur-md border border-white/30 rounded-lg shadow-lg z-20">
+                        {bhkOptions.map((option) => (
+                          <button
+                            key={option}
+                            onClick={() => {
+                              setSelectedBHK(option);
+                              setShowBHKDropdown(false);
+                            }}
+                            className="w-full px-2 py-2 text-left hover:bg-white/20 first:rounded-t-lg last:rounded-b-lg transition-colors text-sm text-gray-800"
+                          >
+                            {option}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Search Bar - 3/5 width */}
+                <div className={`relative ${isFilterOpen ? 'flex-1 max-w-[60%]' : 'flex-1'}`}>
+                  <input
+                    type="text"
+                    placeholder="Search properties..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full px-4 py-2 pr-20 bg-white/20 backdrop-blur-sm text-white placeholder-white/70 rounded-lg border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/50 text-sm"
+                  />
+                  <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1">
+                    <CollapsibleTrigger asChild>
+                      <button className="p-1.5 bg-white/20 backdrop-blur-sm rounded-md hover:bg-white/30 transition-colors">
+                        <Filter className="w-4 h-4 text-white" />
+                      </button>
+                    </CollapsibleTrigger>
+                    <button className="p-1.5 bg-blue-600/80 backdrop-blur-sm rounded-md hover:bg-blue-700/80 transition-colors">
+                      <Search className="w-4 h-4 text-white" />
+                    </button>
+                  </div>
                 </div>
               </div>
 
-              {/* Collapsible Filter Content */}
-              <CollapsibleContent className="space-y-4">
-                <div className="border-t border-gray-200 pt-6 mt-6">
-                  {/* Property Type and BHK Row */}
-                  <div className="flex items-center gap-4 mb-6">
-                    {/* Property Type - 1/5 width */}
-                    <div className="flex-1 max-w-[20%]">
-                      <select
-                        value={selectedPropertyType}
-                        onChange={(e) => setSelectedPropertyType(e.target.value)}
-                        className="w-full px-3 py-4 bg-gray-50 text-gray-900 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                      >
-                        <option value="Apartment/Flat">Property Type</option>
-                        <option value="Apartment/Flat">Apartment/Flat</option>
-                        <option value="Bungalow">Bungalow</option>
-                        <option value="Land">Land</option>
-                        <option value="Villa">Villa</option>
-                        <option value="Townhouse">Townhouse</option>
-                        <option value="Studio">Studio</option>
-                      </select>
+              {/* Collapsible Filter Content - Price Range */}
+              <CollapsibleContent>
+                {isFilterOpen && (
+                  <div className="mt-3 pt-3 border-t border-white/20">
+                    <div 
+                      className="relative px-3 py-2 bg-white/20 backdrop-blur-sm rounded-lg border border-white/30"
+                      onMouseEnter={() => setShowPriceBubble(true)}
+                      onMouseLeave={() => setShowPriceBubble(false)}
+                      onTouchStart={() => setShowPriceBubble(true)}
+                      onTouchEnd={() => setShowPriceBubble(false)}
+                    >
+                      <input
+                        type="range"
+                        min="1"
+                        max="10"
+                        step="0.05"
+                        value={priceRange[0]}
+                        onChange={(e) => setPriceRange([parseFloat(e.target.value)])}
+                        className="w-full h-2 bg-white/30 rounded-lg appearance-none cursor-pointer slider"
+                        style={{
+                          background: `linear-gradient(to right, #7F00FF 0%, #00FFFF ${(priceRange[0] - 1) / 9 * 100}%, rgba(255,255,255,0.3) ${(priceRange[0] - 1) / 9 * 100}%, rgba(255,255,255,0.3) 100%)`
+                        }}
+                      />
+                      {showPriceBubble && (
+                        <div 
+                          className="absolute -top-8 bg-black/80 backdrop-blur-sm text-white px-2 py-1 rounded text-xs font-medium z-20"
+                          style={{
+                            left: `${(priceRange[0] - 1) / 9 * 100}%`,
+                            transform: 'translateX(-50%)'
+                          }}
+                        >
+                          {formatPriceValue(priceRange[0])}
+                        </div>
+                      )}
                     </div>
-
-                    {/* BHK - 1/5 width */}
-                    <div className="flex-1 max-w-[20%]">
-                      <select
-                        value={selectedBHK}
-                        onChange={(e) => setSelectedBHK(e.target.value)}
-                        className="w-full px-3 py-4 bg-gray-50 text-gray-900 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                      >
-                        <option value="1 BHK">1 BHK</option>
-                        <option value="2 BHK">2 BHK</option>
-                        <option value="3 BHK">3 BHK</option>
-                        <option value="4 BHK">4 BHK</option>
-                      </select>
-                    </div>
-
-                    {/* Empty space to maintain 3/5 proportion for search bar above */}
-                    <div className="flex-1 max-w-[60%]"></div>
                   </div>
-
-                  {/* Full Filter Section */}
-                  <FilterSection
-                    selectedBHK={selectedBHK}
-                    setSelectedBHK={setSelectedBHK}
-                    selectedPropertyType={selectedPropertyType}
-                    setSelectedPropertyType={setSelectedPropertyType}
-                    priceRange={priceRange}
-                    setPriceRange={setPriceRange}
-                    selectedAmenities={selectedAmenities}
-                    setSelectedAmenities={setSelectedAmenities}
-                  />
-                </div>
+                )}
               </CollapsibleContent>
             </Collapsible>
           </div>
