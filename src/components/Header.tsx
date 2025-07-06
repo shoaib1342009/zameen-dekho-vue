@@ -27,12 +27,16 @@ const Header = () => {
     <>
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
         <div className="flex items-center justify-between px-3 sm:px-4 py-1.5 sm:py-2">
+          {/* Mobile only logo */}
           {isHomePage && (
-            <Link to="/" className="text-lg sm:text-xl font-bold tap-scale text-blue-600">
+            <Link to="/" className="text-lg font-bold tap-scale text-blue-600 sm:hidden">
               Zameen Dekho
             </Link>
           )}
+          {/* Desktop - empty space for logo (handled by TopNav) */}
+          {isHomePage && <div className="hidden sm:block"></div>}
           {!isHomePage && <div></div>}
+          
           {isHomePage && (
             <div className="flex items-center gap-1 sm:gap-2">
               <button 
