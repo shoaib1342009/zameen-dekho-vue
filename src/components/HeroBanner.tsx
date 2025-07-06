@@ -1,7 +1,8 @@
 
 import { useState, useEffect } from 'react';
-import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
 import FilterSection from '@/components/FilterSection';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 const bannerImages = [
   {
@@ -56,6 +57,7 @@ const HeroBanner = ({
   setSelectedAmenities,
 }: HeroBannerProps) => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -132,34 +134,82 @@ const HeroBanner = ({
             </p>
           </div>
 
-          {/* Search Bar */}
-          <div className="relative mb-8">
-            <input
-              type="text"
-              placeholder="Search properties..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-6 py-4 pr-16 bg-white/95 backdrop-blur-sm text-gray-900 rounded-2xl border-0 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
-            />
-            <button className="absolute right-3 top-1/2 -translate-y-1/2 p-3 bg-blue-600 rounded-xl hover:bg-blue-700 transition-colors">
-              <Search className="w-6 h-6 text-white" />
-            </button>
-          </div>
-
-          {/* Filter Section - Updated with proper dark theme support */}
+          {/* Combined Search and Filter Section */}
           <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
-            <div className="filter-section-override">
-              <FilterSection
-                selectedBHK={selectedBHK}
-                setSelectedBHK={setSelectedBHK}
-                selectedPropertyType={selectedPropertyType}
-                setSelectedPropertyType={setSelectedPropertyType}
-                priceRange={priceRange}
-                setPriceRange={setPriceRange}
-                selectedAmenities={selectedAmenities}
-                setSelectedAmenities={setSelectedAmenities}
-              />
-            </div>
+            <Collapsible open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+              {/* Top Row - Property Type, BHK, and Search Bar */}
+              <div className="flex items-center gap-4 mb-4">
+                {/* Property Type - 1/5 width */}
+                <div className="flex-1 max-w-[20%]">
+                  <select
+                    value={selectedPropertyType}
+                    onChange={(e) => setSelectedPropertyType(e.target.value)}
+                    className="w-full px-3 py-4 bg-white/95 backdrop-blur-sm text-gray-900 rounded-xl border-0 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  >
+                    <option value="Apartment/Flat">Property Type</option>
+                    <option value="Apartment/Flat">Apartment/Flat</option>
+                    <option value="Bungalow">Bungalow</option>
+                    <option value="Land">Land</option>
+                    <option value="Villa">Villa</option>
+                    <option value="Townhouse">Townhouse</option>
+                    <option value="Studio">Studio</option>
+                  </select>
+                </div>
+
+                {/* BHK - 1/5 width */}
+                <div className="flex-1 max-w-[20%]">
+                  <select
+                    value={selectedBHK}
+                    onChange={(e) => setSelectedBHK(e.target.value)}
+                    className="w-full px-3 py-4 bg-white/95 backdrop-blur-sm text-gray-900 rounded-xl border-0 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  >
+                    <option value="1 BHK">1 BHK</option>
+                    <option value="2 BHK">2 BHK</option>
+                    <option value="3 BHK">3 BHK</option>
+                    <option value="4 BHK">4 BHK</option>
+                  </select>
+                </div>
+
+                {/* Search Bar - 3/5 width */}
+                <div className="flex-1 max-w-[60%] relative">
+                  <input
+                    type="text"
+                    placeholder="Search properties..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full px-6 py-4 pr-24 bg-white/95 backdrop-blur-sm text-gray-900 rounded-xl border-0 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
+                  />
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 flex gap-2">
+                    <CollapsibleTrigger asChild>
+                      <button className="p-2 bg-gray-600 rounded-lg hover:bg-gray-700 transition-colors">
+                        <Filter className="w-5 h-5 text-white" />
+                      </button>
+                    </CollapsibleTrigger>
+                    <button className="p-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
+                      <Search className="w-5 h-5 text-white" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Collapsible Filter Content */}
+              <CollapsibleContent className="space-y-4">
+                <div className="border-t border-white/20 pt-4">
+                  <div className="filter-section-override">
+                    <FilterSection
+                      selectedBHK={selectedBHK}
+                      setSelectedBHK={setSelectedBHK}
+                      selectedPropertyType={selectedPropertyType}
+                      setSelectedPropertyType={setSelectedPropertyType}
+                      priceRange={priceRange}
+                      setPriceRange={setPriceRange}
+                      selectedAmenities={selectedAmenities}
+                      setSelectedAmenities={setSelectedAmenities}
+                    />
+                  </div>
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
           </div>
         </div>
       </div>
