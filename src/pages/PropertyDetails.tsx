@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, MapPin, Bed, Bath, Square, Phone, MessageCircle, Wifi, Car, Dumbbell, Shield, TreePine, Waves } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -35,7 +34,6 @@ const PropertyDetails = () => {
   const { isAuthenticated } = useAuth();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [ctaTransform, setCtaTransform] = useState(0);
 
   const propertyId = id ? parseInt(id, 10) : null;
   const property = propertyId ? mockProperties.find(p => p.id === propertyId) : null;
@@ -45,33 +43,6 @@ const PropertyDetails = () => {
   // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
-
-  // Handle scroll animation for CTA buttons
-  useEffect(() => {
-    let lastScrollY = window.scrollY;
-    
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const scrollDiff = currentScrollY - lastScrollY;
-      
-      if (currentScrollY > 100) { // Only animate after scrolling past header
-        if (scrollDiff > 0) {
-          // Scrolling down - move buttons down
-          setCtaTransform(prev => Math.min(prev + scrollDiff * 0.3, 80));
-        } else {
-          // Scrolling up - move buttons up
-          setCtaTransform(prev => Math.max(prev + scrollDiff * 0.3, 0));
-        }
-      } else {
-        setCtaTransform(0);
-      }
-      
-      lastScrollY = currentScrollY;
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   if (!property) {
@@ -143,8 +114,8 @@ const PropertyDetails = () => {
           </div>
         </div>
 
-        {/* Image Gallery - increased height to 2.5x */}
-        <div className="relative h-[35rem] sm:h-[40rem] overflow-hidden">
+        {/* Image Gallery - increased height for better proportions */}
+        <div className="relative h-56 sm:h-64 overflow-hidden">
           <PropertyImageCarousel 
             images={images} 
             alt="Property"
@@ -161,7 +132,7 @@ const PropertyDetails = () => {
         </div>
 
         {/* Property Information - minimal top spacing */}
-        <div className="p-4 pt-2 space-y-6 pb-32">
+        <div className="p-4 pt-2 space-y-6">
           {/* Price and Basic Info */}
           <div>
             <div className="flex items-center justify-between mb-2">
@@ -225,14 +196,9 @@ const PropertyDetails = () => {
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Contact Buttons - Fixed position with scroll animation */}
-        <div 
-          className="fixed bottom-0 left-0 right-0 z-20 bg-background/95 backdrop-blur-sm border-t border-border p-4 transition-transform duration-300 ease-out"
-          style={{ transform: `translateY(${ctaTransform}px)` }}
-        >
-          <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
+          {/* Contact Buttons */}
+          <div className="grid grid-cols-2 gap-4 pt-4">
             <Button
               onClick={handleCall}
               variant="outline"
