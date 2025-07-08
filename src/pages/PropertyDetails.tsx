@@ -37,6 +37,7 @@ const PropertyDetails = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [isScrollingUp, setIsScrollingUp] = useState(false);
+  const [showCTAButtons, setShowCTAButtons] = useState(true);
 
   const propertyId = id ? parseInt(id, 10) : null;
   const property = propertyId ? mockProperties.find(p => p.id === propertyId) : null;
@@ -49,8 +50,17 @@ const PropertyDetails = () => {
     
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      setIsScrollingUp(currentScrollY < lastScrollY);
+      const isScrollingUp = currentScrollY < lastScrollY;
+      setIsScrollingUp(isScrollingUp);
       setScrollY(currentScrollY);
+      
+      // Show/hide CTA buttons based on scroll direction
+      if (currentScrollY > 100) {
+        setShowCTAButtons(isScrollingUp);
+      } else {
+        setShowCTAButtons(true);
+      }
+      
       lastScrollY = currentScrollY;
     };
 
@@ -132,8 +142,8 @@ const PropertyDetails = () => {
           </div>
         </div>
 
-        {/* Enhanced Image Gallery with proper aspect ratios */}
-        <div className="relative h-96 sm:h-[32rem] overflow-hidden">
+        {/* Enhanced Image Gallery with proper height */}
+        <div className="relative h-[60vh] sm:h-[70vh] overflow-hidden">
           <PropertyImageCarousel 
             images={images} 
             alt="Property"
@@ -149,7 +159,7 @@ const PropertyDetails = () => {
           </div>
         </div>
 
-        {/* Property Information - no gap from image */}
+        {/* Property Information - directly connected to image */}
         <div className="p-4 space-y-6">
           {/* Price and Basic Info */}
           <div>
@@ -216,17 +226,17 @@ const PropertyDetails = () => {
           </div>
         </div>
 
-        {/* Fixed CTA Buttons with scroll animation - positioned above navbar */}
+        {/* CTA Buttons with smooth slide animation */}
         <div className={cn(
-          "fixed bottom-16 sm:bottom-4 left-0 right-0 z-40 px-4 transition-all duration-300 ease-in-out",
-          isScrollingUp ? "transform translate-y-0" : "transform translate-y-2"
+          "fixed bottom-16 sm:bottom-4 left-0 right-0 z-40 px-4 transition-all duration-500 ease-in-out",
+          showCTAButtons ? "transform translate-y-0 opacity-100" : "transform translate-y-full opacity-0"
         )}>
           <div className="max-w-md mx-auto">
-            <div className="grid grid-cols-2 gap-4 bg-background/95 backdrop-blur-sm p-4 rounded-t-2xl border border-border shadow-lg">
+            <div className="grid grid-cols-2 gap-4 bg-background/95 backdrop-blur-sm p-4 rounded-t-2xl shadow-lg">
               <Button
                 onClick={handleCall}
                 variant="outline"
-                className="flex items-center gap-2 h-12 border-green-500 text-green-500 hover:bg-green-500 hover:text-white"
+                className="flex items-center gap-2 h-12 text-green-500 hover:bg-green-500 hover:text-white"
               >
                 <Phone className="w-5 h-5" />
                 Call
