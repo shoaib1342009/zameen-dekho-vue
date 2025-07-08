@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, MapPin, Bed, Bath, Square, Phone, MessageCircle, Wifi, Car, Dumbbell, Shield, TreePine, Waves } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -36,8 +35,7 @@ const PropertyDetails = () => {
   const { isInWishlist, toggleWishlist } = useWishlist();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [scrollY, setScrollY] = useState(0);
-  const [isScrollingUp, setIsScrollingUp] = useState(false);
-  const [showCTAButtons, setShowCTAButtons] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   const propertyId = id ? parseInt(id, 10) : null;
   const property = propertyId ? mockProperties.find(p => p.id === propertyId) : null;
@@ -46,22 +44,10 @@ const PropertyDetails = () => {
 
   // Handle scroll for CTA button animations
   useEffect(() => {
-    let lastScrollY = window.scrollY;
-    
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      const isScrollingUp = currentScrollY < lastScrollY;
-      setIsScrollingUp(isScrollingUp);
       setScrollY(currentScrollY);
-      
-      // Show/hide CTA buttons based on scroll direction
-      if (currentScrollY > 100) {
-        setShowCTAButtons(isScrollingUp);
-      } else {
-        setShowCTAButtons(true);
-      }
-      
-      lastScrollY = currentScrollY;
+      setLastScrollY(currentScrollY);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -117,6 +103,9 @@ const PropertyDetails = () => {
 
   const images = property.images || [property.image];
 
+  // Calculate button position based on scroll
+  const buttonTransform = Math.min(scrollY * 0.5, 100);
+
   return (
     <>
       <div className="min-h-screen bg-background pb-32 sm:pb-4">
@@ -150,7 +139,7 @@ const PropertyDetails = () => {
             className="w-full h-full"
           />
           
-          {/* Labels positioned properly */}
+          {/* Labels positioned inside the image area */}
           <div className="absolute top-4 left-4 px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full">
             <span className="text-white text-sm font-medium">{property.label}</span>
           </div>
@@ -226,13 +215,15 @@ const PropertyDetails = () => {
           </div>
         </div>
 
-        {/* CTA Buttons with smooth slide animation */}
-        <div className={cn(
-          "fixed bottom-16 sm:bottom-4 left-0 right-0 z-40 px-4 transition-all duration-500 ease-in-out",
-          showCTAButtons ? "transform translate-y-0 opacity-100" : "transform translate-y-full opacity-0"
-        )}>
+        {/* CTA Buttons with scroll-matched animation */}
+        <div 
+          className="fixed bottom-16 sm:bottom-4 left-0 right-0 z-40 px-4 transition-transform duration-100 ease-out"
+          style={{
+            transform: `translateY(${buttonTransform}px)`
+          }}
+        >
           <div className="max-w-md mx-auto">
-            <div className="grid grid-cols-2 gap-4 bg-background/95 backdrop-blur-sm p-4 rounded-t-2xl shadow-lg">
+            <div className="grid grid-cols-2 gap-4 bg-background/95 backdrop-blur-sm rounded-t-2xl shadow-lg">
               <Button
                 onClick={handleCall}
                 variant="outline"
