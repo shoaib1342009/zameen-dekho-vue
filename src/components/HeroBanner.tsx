@@ -1,5 +1,6 @@
+
 import { useState, useEffect } from 'react';
-import { Search, ChevronLeft, ChevronRight, Filter, ChevronDown } from 'lucide-react';
+import { Search, Filter, ChevronDown, Waves, Dumbbell, Gamepad2, Bus, Camera, Zap, Wifi, Car, Shield, TreePine, Coffee, Utensils, Wind, Sun, Users, Baby, Dog, Music } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
 
@@ -46,6 +47,27 @@ interface HeroBannerProps {
 const propertyTypes = ['Apartment/Flat', 'Bungalow', 'Land', 'Villa', 'Townhouse', 'Studio'];
 const bhkOptions = ['1 BHK', '2 BHK', '3 BHK', '4 BHK'];
 
+const amenities = [
+  { name: 'Pool', icon: Waves },
+  { name: 'Gym', icon: Dumbbell },
+  { name: 'Play Area', icon: Gamepad2 },
+  { name: 'Bus Stop', icon: Bus },
+  { name: 'CCTV', icon: Camera },
+  { name: 'Lift', icon: Zap },
+  { name: 'WiFi', icon: Wifi },
+  { name: 'Parking', icon: Car },
+  { name: 'Security', icon: Shield },
+  { name: 'Garden', icon: TreePine },
+  { name: 'Cafe', icon: Coffee },
+  { name: 'Restaurant', icon: Utensils },
+  { name: 'AC', icon: Wind },
+  { name: 'Solar', icon: Sun },
+  { name: 'Club', icon: Users },
+  { name: 'Daycare', icon: Baby },
+  { name: 'Pet Area', icon: Dog },
+  { name: 'Music Room', icon: Music },
+];
+
 const HeroBanner = ({
   searchQuery,
   setSearchQuery,
@@ -72,14 +94,6 @@ const HeroBanner = ({
     return () => clearInterval(timer);
   }, []);
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % bannerImages.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + bannerImages.length) % bannerImages.length);
-  };
-
   const formatPriceValue = (value: number) => {
     if (value >= 10) {
       return `₹${(value).toFixed(2)} Cr`;
@@ -88,13 +102,20 @@ const HeroBanner = ({
     }
   };
 
+  const toggleAmenity = (amenity: string) => {
+    const newAmenities = selectedAmenities.includes(amenity)
+      ? selectedAmenities.filter(a => a !== amenity)
+      : [...selectedAmenities, amenity];
+    setSelectedAmenities(newAmenities);
+  };
+
   return (
-    <div className="relative h-screen overflow-hidden">
+    <div className="relative h-screen overflow-hidden rounded-3xl border-2 border-border/50 dark:border-border/30 m-4">
       {/* Background Images */}
       {bannerImages.map((banner, index) => (
         <div
           key={banner.id}
-          className={`absolute inset-0 transition-opacity duration-1000 ${
+          className={`absolute inset-0 transition-opacity duration-1000 rounded-3xl overflow-hidden ${
             index === currentSlide ? 'opacity-100' : 'opacity-0'
           }`}
         >
@@ -106,20 +127,6 @@ const HeroBanner = ({
           <div className="absolute inset-0 bg-black/40" />
         </div>
       ))}
-
-      {/* Navigation Arrows */}
-      <button
-        onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors z-10"
-      >
-        <ChevronLeft className="w-6 h-6 text-white" />
-      </button>
-      <button
-        onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors z-10"
-      >
-        <ChevronRight className="w-6 h-6 text-white" />
-      </button>
 
       {/* Dots Indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-10">
@@ -157,7 +164,7 @@ const HeroBanner = ({
                   <div className="relative flex-1 max-w-[20%]">
                     <button
                       onClick={() => setShowPropertyTypeDropdown(!showPropertyTypeDropdown)}
-                      className="w-full px-2 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg border border-white/30 flex items-center justify-between text-sm"
+                      className="w-full px-2 py-1.5 bg-white/20 backdrop-blur-sm text-white rounded-lg border border-white/30 flex items-center justify-between text-sm"
                     >
                       <span className="font-medium truncate">Property Type</span>
                       <ChevronDown className={cn(
@@ -190,7 +197,7 @@ const HeroBanner = ({
                   <div className="relative flex-1 max-w-[20%]">
                     <button
                       onClick={() => setShowBHKDropdown(!showBHKDropdown)}
-                      className="w-full px-2 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg border border-white/30 flex items-center justify-between text-sm"
+                      className="w-full px-2 py-1.5 bg-white/20 backdrop-blur-sm text-white rounded-lg border border-white/30 flex items-center justify-between text-sm"
                     >
                       <span className="font-medium truncate">{selectedBHK}</span>
                       <ChevronDown className={cn(
@@ -225,7 +232,7 @@ const HeroBanner = ({
                     placeholder="Search properties..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full px-4 py-2 pr-20 bg-white/20 backdrop-blur-sm text-white placeholder-white/70 rounded-lg border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/50 text-sm"
+                    className="w-full px-4 py-1.5 pr-20 bg-white/20 backdrop-blur-sm text-white placeholder-white/70 rounded-lg border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/50 text-sm"
                   />
                   <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1">
                     <CollapsibleTrigger asChild>
@@ -240,10 +247,11 @@ const HeroBanner = ({
                 </div>
               </div>
 
-              {/* Collapsible Filter Content - Price Range */}
+              {/* Collapsible Filter Content - Price Range and Amenities */}
               <CollapsibleContent>
                 {isFilterOpen && (
-                  <div className="mt-3 pt-3 border-t border-white/20">
+                  <div className="mt-3 pt-3 border-t border-white/20 space-y-3">
+                    {/* Price Range */}
                     <div 
                       className="relative px-3 py-2 bg-white/20 backdrop-blur-sm rounded-lg border border-white/30"
                       onMouseEnter={() => setShowPriceBubble(true)}
@@ -272,6 +280,44 @@ const HeroBanner = ({
                           }}
                         >
                           {formatPriceValue(priceRange[0])}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Amenities - Horizontal Scroll */}
+                    <div className="w-full">
+                      <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+                        {amenities.map((amenity) => {
+                          const IconComponent = amenity.icon;
+                          const isSelected = selectedAmenities.includes(amenity.name);
+                          
+                          return (
+                            <button
+                              key={amenity.name}
+                              onClick={() => toggleAmenity(amenity.name)}
+                              className={cn(
+                                "flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center transition-all border-2",
+                                isSelected
+                                  ? "bg-white/20 border-white text-white shadow-lg"
+                                  : "bg-white/10 border-white/30 text-white/70 hover:border-white/50"
+                              )}
+                            >
+                              <IconComponent className="w-5 h-5" strokeWidth={2} />
+                            </button>
+                          );
+                        })}
+                      </div>
+                      
+                      {selectedAmenities.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-1">
+                          {selectedAmenities.map((amenity) => (
+                            <span
+                              key={amenity}
+                              className="px-2 py-1 bg-white/20 text-white text-xs rounded-full border border-white/30"
+                            >
+                              {amenity}
+                            </span>
+                          ))}
                         </div>
                       )}
                     </div>
