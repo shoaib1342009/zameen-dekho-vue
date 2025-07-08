@@ -1,3 +1,4 @@
+
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, MapPin, Bed, Bath, Square, Phone, MessageCircle, Wifi, Car, Dumbbell, Shield, TreePine, Waves } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -34,11 +35,28 @@ const PropertyDetails = () => {
   const { isAuthenticated } = useAuth();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+  const [isScrollingUp, setIsScrollingUp] = useState(false);
 
   const propertyId = id ? parseInt(id, 10) : null;
   const property = propertyId ? mockProperties.find(p => p.id === propertyId) : null;
 
   const isLiked = property ? isInWishlist(property.id) : false;
+
+  // Handle scroll for CTA button animations
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      setIsScrollingUp(currentScrollY < lastScrollY);
+      setScrollY(currentScrollY);
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Scroll to top when component mounts
   useEffect(() => {
@@ -91,7 +109,7 @@ const PropertyDetails = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background pb-32 sm:pb-4">
         {/* Header */}
         <div className="sticky top-16 z-10 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3">
           <div className="flex items-center justify-between">
@@ -114,25 +132,25 @@ const PropertyDetails = () => {
           </div>
         </div>
 
-        {/* Image Gallery - increased height for better proportions */}
-        <div className="relative h-56 sm:h-64 overflow-hidden">
+        {/* Enhanced Image Gallery with proper aspect ratios */}
+        <div className="relative h-96 sm:h-[32rem] overflow-hidden">
           <PropertyImageCarousel 
             images={images} 
             alt="Property"
             className="w-full h-full"
           />
           
-          {/* Labels with proper spacing from top */}
-          <div className="absolute top-6 left-4 px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full">
+          {/* Labels positioned properly */}
+          <div className="absolute top-4 left-4 px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full">
             <span className="text-white text-sm font-medium">{property.label}</span>
           </div>
-          <div className="absolute top-6 right-4 px-2 py-1 bg-zameen-gradient rounded-full">
+          <div className="absolute top-4 right-4 px-2 py-1 bg-zameen-gradient rounded-full">
             <span className="text-white text-xs font-medium">{property.tag}</span>
           </div>
         </div>
 
-        {/* Property Information - minimal top spacing */}
-        <div className="p-4 pt-2 space-y-6">
+        {/* Property Information - no gap from image */}
+        <div className="p-4 space-y-6">
           {/* Price and Basic Info */}
           <div>
             <div className="flex items-center justify-between mb-2">
@@ -196,24 +214,31 @@ const PropertyDetails = () => {
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Contact Buttons */}
-          <div className="grid grid-cols-2 gap-4 pt-4">
-            <Button
-              onClick={handleCall}
-              variant="outline"
-              className="flex items-center gap-2 h-12 border-green-500 text-green-500 hover:bg-green-500 hover:text-white"
-            >
-              <Phone className="w-5 h-5" />
-              Call
-            </Button>
-            <Button
-              onClick={handleWhatsApp}
-              className="flex items-center gap-2 h-12 bg-green-500 hover:bg-green-600 text-white"
-            >
-              <MessageCircle className="w-5 h-5" />
-              WhatsApp
-            </Button>
+        {/* Fixed CTA Buttons with scroll animation - positioned above navbar */}
+        <div className={cn(
+          "fixed bottom-16 sm:bottom-4 left-0 right-0 z-40 px-4 transition-all duration-300 ease-in-out",
+          isScrollingUp ? "transform translate-y-0" : "transform translate-y-2"
+        )}>
+          <div className="max-w-md mx-auto">
+            <div className="grid grid-cols-2 gap-4 bg-background/95 backdrop-blur-sm p-4 rounded-t-2xl border border-border shadow-lg">
+              <Button
+                onClick={handleCall}
+                variant="outline"
+                className="flex items-center gap-2 h-12 border-green-500 text-green-500 hover:bg-green-500 hover:text-white"
+              >
+                <Phone className="w-5 h-5" />
+                Call
+              </Button>
+              <Button
+                onClick={handleWhatsApp}
+                className="flex items-center gap-2 h-12 bg-green-500 hover:bg-green-600 text-white"
+              >
+                <MessageCircle className="w-5 h-5" />
+                WhatsApp
+              </Button>
+            </div>
           </div>
         </div>
       </div>
