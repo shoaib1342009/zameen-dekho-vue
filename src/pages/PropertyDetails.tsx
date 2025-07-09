@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, MapPin, Bed, Bath, Square, Phone, MessageCircle, Wifi, Car, Dumbbell, Shield, TreePine, Waves } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -75,6 +74,14 @@ const PropertyDetails = () => {
       return formatRentPrice(price);
     }
     return formatPrice(price);
+  };
+
+  const handleContactSeller = () => {
+    handleCall();
+  };
+
+  const handleWhatsAppFromVideo = () => {
+    handleWhatsApp();
   };
 
   const amenityIcons: { [key: string]: any } = {
@@ -211,7 +218,20 @@ const PropertyDetails = () => {
           {property.videoUrl && (
             <div className="space-y-3">
               <h3 className="text-lg font-semibold text-foreground">Property Video</h3>
-              <VideoPlayer videoUrl={property.videoUrl} />
+              <VideoPlayer 
+                video={{
+                  id: property.id,
+                  videoUrl: property.videoUrl,
+                  property: {
+                    title: property.title,
+                    price: property.price,
+                    location: property.location,
+                    seller: property.seller || 'Property Owner'
+                  }
+                }}
+                onContactSeller={handleContactSeller}
+                onWhatsApp={handleWhatsAppFromVideo}
+              />
             </div>
           )}
         </div>
