@@ -1,53 +1,31 @@
+
 import { useState } from 'react';
-import { User, Edit, LogOut, Phone, Mail, Plus, Building, Bell, Download, Calendar, Filter } from 'lucide-react';
-import { useTheme } from '@/contexts/ThemeContext';
-import { useAuth } from '@/contexts/AuthContext';
+import { User, Settings, Heart, Home, LogOut, MapPin, Phone, Mail, Edit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { useAuth } from '@/contexts/AuthContext';
+import { useUserProperties } from '@/hooks/useSupabaseProperties';
+import { useWishlist } from '@/contexts/WishlistContext';
 import AuthModal from '@/components/AuthModal';
-import EnhancedListPropertyModal from '@/components/EnhancedListPropertyModal';
-import NotificationPanel from '@/components/NotificationPanel';
-import LeadDownloadModal from '@/components/LeadDownloadModal';
+import PropertyCard from '@/components/PropertyCard';
+import { formatPrice, formatRentPrice } from '@/utils/priceFormatter';
 
 const Profile = () => {
-  const { theme, toggleTheme } = useTheme();
-  const { user, isAuthenticated, logout, updateUser } = useAuth();
+  const { isAuthenticated, user, signOut } = useAuth();
+  const { userProperties, loading } = useUserProperties();
+  const { wishlist } = useWishlist();
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [showListPropertyModal, setShowListPropertyModal] = useState(false);
-  const [showNotificationPanel, setShowNotificationPanel] = useState(false);
-  const [showLeadDownloadModal, setShowLeadDownloadModal] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editForm, setEditForm] = useState({
-    name: user?.name || '',
-    email: user?.email || '',
-  });
-
-  const handleSaveProfile = () => {
-    if (user) {
-      updateUser(editForm);
-      setIsEditing(false);
-    }
-  };
-
-  const handleLogout = () => {
-    logout();
-  };
+  const [activeTab, setActiveTab] = useState('listings');
 
   if (!isAuthenticated) {
     return (
       <>
         <div className="min-h-screen bg-background flex items-center justify-center">
-          <div className="text-center p-6">
-            <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-              <User className="w-12 h-12 text-muted-foreground" />
-            </div>
-            <h2 className="text-2xl font-bold text-foreground mb-2">Welcome to Zameen Dekho</h2>
-            <p className="text-muted-foreground mb-6">Please login to access your profile and manage your properties</p>
-            <Button 
-              onClick={() => setShowAuthModal(true)}
-              className="bg-zameen-gradient text-white"
-            >
-              Login / Sign Up
+          <div className="text-center">
+            <User className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-foreground mb-2">Sign in to view your profile</h2>
+            <p className="text-muted-foreground mb-6">Access your listings, wishlist, and account settings</p>
+            <Button onClick={() => setShowAuthModal(true)} className="bg-zameen-gradient text-white">
+              Sign In
             </Button>
           </div>
         </div>
@@ -56,208 +34,200 @@ const Profile = () => {
     );
   }
 
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
+  const formatPropertyPrice = (price: string | number, label: string) => {
+    const priceStr = price.toString();
+    if (label.toLowerCase().includes('rent')) {
+      return formatRentPrice(priceStr);
+    }
+    return formatPrice(priceStr);
+  };
+
   return (
-    <>
-      <div className="min-h-screen bg-background">
-        <div className="px-3 sm:px-4 py-2 sm:py-3 space-y-3 sm:space-y-4">
-          {/* Profile Header */}
-          <div className="bg-card rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-border">
-            <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
-              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-zameen-gradient rounded-full flex items-center justify-center">
-                <span className="text-white text-lg sm:text-xl font-bold">
-                  {user?.name?.charAt(0).toUpperCase()}
-                </span>
-              </div>
-              <div className="flex-1">
-                {isEditing ? (
-                  <div className="space-y-2">
-                    <Input
-                      value={editForm.name}
-                      onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                      placeholder="Full Name"
-                      className="text-sm"
-                    />
-                    <Input
-                      value={editForm.email}
-                      onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
-                      placeholder="Email"
-                      type="email"
-                      className="text-sm"
-                    />
-                  </div>
-                ) : (
-                  <>
-                    <h2 className="text-lg sm:text-xl font-bold text-foreground">{user?.name}</h2>
-                    <div className="flex items-center gap-1 text-xs sm:text-sm text-muted-foreground">
-                      <Phone className="w-3 h-3 sm:w-4 sm:h-4" />
-                      <span>{user?.phone}</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-xs sm:text-sm text-muted-foreground">
-                      <Mail className="w-3 h-3 sm:w-4 sm:h-4" />
-                      <span>{user?.email}</span>
-                    </div>
-                  </>
-                )}
-              </div>
-              <div className="flex gap-1 sm:gap-2">
-                {isEditing ? (
-                  <>
-                    <Button
-                      onClick={handleSaveProfile}
-                      size="sm"
-                      className="bg-zameen-gradient text-white text-xs"
-                    >
-                      Save
-                    </Button>
-                    <Button
-                      onClick={() => setIsEditing(false)}
-                      size="sm"
-                      variant="outline"
-                      className="text-xs"
-                    >
-                      Cancel
-                    </Button>
-                  </>
-                ) : (
-                  <button 
-                    onClick={() => setIsEditing(true)}
-                    className="p-1.5 sm:p-2 hover:bg-muted/20 rounded-full transition-colors tap-scale"
-                  >
-                    <Edit className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
-                  </button>
-                )}
-              </div>
+    <div className="min-h-screen bg-background">
+      <div className="px-4 py-6 max-w-6xl mx-auto">
+        {/* Profile Header */}
+        <div className="bg-card rounded-2xl p-6 mb-6 border border-border">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 bg-zameen-gradient rounded-full flex items-center justify-center">
+              <User className="w-8 h-8 text-white" />
             </div>
-
-            {/* List Property Button */}
-            <button 
-              onClick={() => setShowListPropertyModal(true)}
-              className="w-full py-2.5 sm:py-3 bg-zameen-gradient text-white font-medium rounded-lg sm:rounded-xl hover:shadow-lg transition-all tap-scale flex items-center justify-center gap-2 text-sm sm:text-base"
-            >
-              <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
-              List My Property
-            </button>
-          </div>
-
-          {/* Quick Actions */}
-          <div className="grid grid-cols-2 gap-3 sm:gap-4">
-            <button 
-              onClick={() => setShowNotificationPanel(true)}
-              className="bg-card rounded-lg sm:rounded-2xl p-3 sm:p-4 border border-border hover:border-primary/50 transition-all tap-scale"
-            >
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
-                  <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
-                </div>
-                <div className="text-left">
-                  <h3 className="font-semibold text-foreground text-sm sm:text-base">Notifications</h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground">View updates</p>
-                </div>
-              </div>
-            </button>
-
-            <button 
-              onClick={() => setShowLeadDownloadModal(true)}
-              className="bg-card rounded-lg sm:rounded-2xl p-3 sm:p-4 border border-border hover:border-primary/50 transition-all tap-scale"
-            >
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
-                  <Download className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
-                </div>
-                <div className="text-left">
-                  <h3 className="font-semibold text-foreground text-sm sm:text-base">Download Leads</h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground">Export data</p>
-                </div>
-              </div>
-            </button>
-          </div>
-
-          {/* Property Management */}
-          <div className="bg-card rounded-lg sm:rounded-2xl border border-border overflow-hidden">
-            <div className="p-3 sm:p-4 border-b border-border">
-              <h3 className="text-base sm:text-lg font-semibold text-foreground flex items-center gap-2">
-                <Building className="w-4 h-4 sm:w-5 sm:h-5" />
-                Property Management
-              </h3>
+            <div className="flex-1">
+              <h1 className="text-2xl font-bold text-foreground">{user?.email}</h1>
+              <p className="text-muted-foreground">Property Owner</p>
             </div>
-
-            <button className="flex items-center justify-between w-full p-3 sm:p-4 hover:bg-muted/20 transition-colors border-b border-border">
-              <span className="text-foreground text-sm sm:text-base">My Listed Properties</span>
-              <span className="text-xs sm:text-sm text-muted-foreground">3 active</span>
-            </button>
-
-            <button className="flex items-center justify-between w-full p-3 sm:p-4 hover:bg-muted/20 transition-colors border-b border-border">
-              <span className="text-foreground text-sm sm:text-base">Property Analytics</span>
-              <span className="text-xs sm:text-sm text-muted-foreground">View stats</span>
-            </button>
-
-            <button className="flex items-center justify-between w-full p-3 sm:p-4 hover:bg-muted/20 transition-colors">
-              <span className="text-foreground text-sm sm:text-base">Lead Management</span>
-              <span className="text-xs sm:text-sm text-muted-foreground">12 new</span>
-            </button>
-          </div>
-
-          {/* Settings */}
-          <div className="bg-card rounded-lg sm:rounded-2xl border border-border overflow-hidden">
-            <div className="p-3 sm:p-4 border-b border-border">
-              <h3 className="text-base sm:text-lg font-semibold text-foreground">Settings</h3>
-            </div>
-
-            {/* Dark Mode Toggle */}
-            <div className="flex items-center justify-between p-3 sm:p-4 border-b border-border">
-              <span className="text-foreground font-medium text-sm sm:text-base">
-                {theme === 'dark' ? 'Dark Mode' : 'Light Mode'}
-              </span>
-              <button
-                onClick={toggleTheme}
-                className={`relative inline-flex h-5 w-9 sm:h-6 sm:w-11 items-center rounded-full transition-colors focus:outline-none ${
-                  theme === 'dark' ? 'bg-zameen-gradient' : 'bg-muted'
-                }`}
-              >
-                <span
-                  className={`inline-block h-3 w-3 sm:h-4 sm:w-4 transform rounded-full bg-white transition-transform ${
-                    theme === 'dark' ? 'translate-x-5 sm:translate-x-6' : 'translate-x-1'
-                  }`}
-                />
-              </button>
-            </div>
-
-            <button className="flex items-center justify-between w-full p-3 sm:p-4 hover:bg-muted/20 transition-colors border-b border-border">
-              <span className="text-foreground text-sm sm:text-base">Privacy Settings</span>
-              <span className="text-xs sm:text-sm text-muted-foreground">Manage</span>
-            </button>
-
-            <button className="flex items-center justify-between w-full p-3 sm:p-4 hover:bg-muted/20 transition-colors border-b border-border">
-              <span className="text-foreground text-sm sm:text-base">Account Settings</span>
-              <span className="text-xs sm:text-sm text-muted-foreground">Update</span>
-            </button>
-
-            {/* Logout */}
-            <button 
-              onClick={handleLogout}
-              className="flex items-center gap-2 sm:gap-3 w-full p-3 sm:p-4 text-red-500 hover:bg-red-500/10 transition-colors"
-            >
-              <LogOut className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="font-medium text-sm sm:text-base">Logout</span>
-            </button>
+            <Button variant="outline" size="sm" className="flex items-center gap-2">
+              <Edit className="w-4 h-4" />
+              Edit Profile
+            </Button>
           </div>
         </div>
-      </div>
 
-      {/* Modals */}
-      <EnhancedListPropertyModal 
-        isOpen={showListPropertyModal} 
-        onClose={() => setShowListPropertyModal(false)} 
-      />
-      <NotificationPanel 
-        isOpen={showNotificationPanel} 
-        onClose={() => setShowNotificationPanel(false)} 
-      />
-      <LeadDownloadModal 
-        isOpen={showLeadDownloadModal} 
-        onClose={() => setShowLeadDownloadModal(false)} 
-      />
-    </>
+        {/* Navigation Tabs */}
+        <div className="flex gap-2 mb-6">
+          <Button
+            variant={activeTab === 'listings' ? 'default' : 'ghost'}
+            onClick={() => setActiveTab('listings')}
+            className="flex items-center gap-2"
+          >
+            <Home className="w-4 h-4" />
+            My Listings ({userProperties.length})
+          </Button>
+          <Button
+            variant={activeTab === 'wishlist' ? 'default' : 'ghost'}
+            onClick={() => setActiveTab('wishlist')}
+            className="flex items-center gap-2"
+          >
+            <Heart className="w-4 h-4" />
+            Wishlist ({wishlist.length})
+          </Button>
+          <Button
+            variant={activeTab === 'settings' ? 'default' : 'ghost'}
+            onClick={() => setActiveTab('settings')}
+            className="flex items-center gap-2"
+          >
+            <Settings className="w-4 h-4" />
+            Settings
+          </Button>
+        </div>
+
+        {/* Tab Content */}
+        <div className="space-y-6">
+          {/* My Listings Tab */}
+          {activeTab === 'listings' && (
+            <div className="bg-card rounded-2xl p-6 border border-border">
+              <h2 className="text-xl font-semibold text-foreground mb-4">My Property Listings</h2>
+              
+              {loading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {[...Array(3)].map((_, i) => (
+                    <div key={i} className="bg-muted rounded-lg p-4 animate-pulse">
+                      <div className="h-48 bg-muted-foreground/20 rounded-lg mb-3"></div>
+                      <div className="h-4 bg-muted-foreground/20 rounded mb-2"></div>
+                      <div className="h-3 bg-muted-foreground/20 rounded mb-2"></div>
+                      <div className="h-3 bg-muted-foreground/20 rounded"></div>
+                    </div>
+                  ))}
+                </div>
+              ) : userProperties.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {userProperties.map((property) => (
+                    <div key={property.id} className="relative">
+                      <PropertyCard property={property} />
+                      <div className="absolute top-2 right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded">
+                        Your Listing
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <Home className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-foreground mb-2">No listings yet</h3>
+                  <p className="text-muted-foreground mb-4">Start by adding your first property</p>
+                  <Button className="bg-zameen-gradient text-white">
+                    + Add Property
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Wishlist Tab */}
+          {activeTab === 'wishlist' && (
+            <div className="bg-card rounded-2xl p-6 border border-border">
+              <h2 className="text-xl font-semibold text-foreground mb-4">Saved Properties</h2>
+              
+              {wishlist.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {wishlist.map((propertyId) => {
+                    // Find the property in the global properties list
+                    // This is a simplified approach - in production, you'd want to fetch these specifically
+                    return (
+                      <div key={propertyId} className="bg-muted rounded-lg p-4">
+                        <p className="text-sm text-muted-foreground">Property ID: {propertyId}</p>
+                        <p className="text-xs text-muted-foreground mt-2">
+                          Property details would be loaded here
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <Heart className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-foreground mb-2">No saved properties</h3>
+                  <p className="text-muted-foreground mb-4">Save properties you're interested in</p>
+                  <Button variant="outline">
+                    Browse Properties
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Settings Tab */}
+          {activeTab === 'settings' && (
+            <div className="bg-card rounded-2xl p-6 border border-border">
+              <h2 className="text-xl font-semibold text-foreground mb-4">Account Settings</h2>
+              
+              <div className="space-y-4">
+                <div className="flex items-center justify-between py-3 border-b border-border">
+                  <div className="flex items-center gap-3">
+                    <Mail className="w-5 h-5 text-muted-foreground" />
+                    <div>
+                      <p className="font-medium text-foreground">Email</p>
+                      <p className="text-sm text-muted-foreground">{user?.email}</p>
+                    </div>
+                  </div>
+                  <Button variant="outline" size="sm">Change</Button>
+                </div>
+                
+                <div className="flex items-center justify-between py-3 border-b border-border">
+                  <div className="flex items-center gap-3">
+                    <Phone className="w-5 h-5 text-muted-foreground" />
+                    <div>
+                      <p className="font-medium text-foreground">Phone</p>
+                      <p className="text-sm text-muted-foreground">Not provided</p>
+                    </div>
+                  </div>
+                  <Button variant="outline" size="sm">Add</Button>
+                </div>
+                
+                <div className="flex items-center justify-between py-3 border-b border-border">
+                  <div className="flex items-center gap-3">
+                    <MapPin className="w-5 h-5 text-muted-foreground" />
+                    <div>
+                      <p className="font-medium text-foreground">Location</p>
+                      <p className="text-sm text-muted-foreground">Not provided</p>
+                    </div>
+                  </div>
+                  <Button variant="outline" size="sm">Add</Button>
+                </div>
+                
+                <div className="pt-4">
+                  <Button
+                    onClick={handleSignOut}
+                    variant="destructive"
+                    className="flex items-center gap-2"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Sign Out
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
 

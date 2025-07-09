@@ -1,31 +1,29 @@
+
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, MapPin, Bed, Bath, Square, Phone, MessageCircle, Wifi, Car, Dumbbell, Shield, TreePine, Waves } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { mockProperties } from '@/data/mockData';
 import { formatPrice, formatRentPrice } from '@/utils/priceFormatter';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWishlist } from '@/contexts/WishlistContext';
+import { useProperty } from '@/contexts/PropertyContext';
 import AuthModal from '@/components/AuthModal';
 import PropertyImageCarousel from '@/components/PropertyImageCarousel';
 
 const amenityIcons = {
-  wifi: Wifi,
-  parking: Car,
-  gym: Dumbbell,
-  security: Shield,
-  garden: TreePine,
-  pool: Waves,
-};
-
-const amenityLabels = {
-  wifi: 'WiFi',
-  parking: 'Parking',
-  gym: 'Gymnasium',
-  security: '24/7 Security',
-  garden: 'Garden',
-  pool: 'Swimming Pool',
+  'Swimming Pool': Waves,
+  'Gym': Dumbbell,
+  'Parking': Car,
+  'Security': Shield,
+  'Garden': TreePine,
+  'Internet': Wifi,
+  'wifi': Wifi,
+  'parking': Car,
+  'gym': Dumbbell,
+  'security': Shield,
+  'garden': TreePine,
+  'pool': Waves,
 };
 
 const PropertyDetails = () => {
@@ -33,21 +31,18 @@ const PropertyDetails = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const { isInWishlist, toggleWishlist } = useWishlist();
+  const { properties, loading } = useProperty();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [scrollY, setScrollY] = useState(0);
-  const [lastScrollY, setLastScrollY] = useState(0);
 
-  const propertyId = id ? parseInt(id, 10) : null;
-  const property = propertyId ? mockProperties.find(p => p.id === propertyId) : null;
+  const property = properties.find(p => p.id === id);
 
   const isLiked = property ? isInWishlist(property.id) : false;
 
   // Handle scroll for CTA button animations
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      setScrollY(currentScrollY);
-      setLastScrollY(currentScrollY);
+      setScrollY(window.scrollY);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -58,6 +53,17 @@ const PropertyDetails = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading property details...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!property) {
     return (
@@ -83,7 +89,8 @@ const PropertyDetails = () => {
       setShowAuthModal(true);
       return;
     }
-    window.location.href = 'tel:+919876543210';
+    const phone = property.seller_phone || '+919876543210';
+    window.location.href = `tel:${phone}`;
   };
 
   const handleWhatsApp = () => {
@@ -91,17 +98,22 @@ const PropertyDetails = () => {
       setShowAuthModal(true);
       return;
     }
-    window.open('https://wa.me/919876543210?text=Hi, I am interested in this property', '_blank');
+    const phone = property.seller_phone || '919876543210';
+    const message = `Hi, I am interested in ${property.title}`;
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
   };
 
-  const formatPropertyPrice = (price: string, label: string) => {
+  const formatPropertyPrice = (price: string | number, label: string) => {
+    const priceStr = price.toString();
     if (label.toLowerCase().includes('rent')) {
-      return formatRentPrice(price);
+      return formatRentPrice(priceStr);
     }
-    return formatPrice(price);
+    return formatPrice(priceStr);
   };
 
-  const images = property.images || [property.image];
+  const images = property.images && property.images.length > 0 
+    ? property.images 
+    : [property.cover_image_url || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=300&fit=crop'];
 
   // Calculate button position based on scroll
   const buttonTransform = Math.min(scrollY * 0.5, 100);
@@ -141,7 +153,7 @@ const PropertyDetails = () => {
           
           {/* Labels positioned inside the image area */}
           <div className="absolute top-4 left-4 px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full">
-            <span className="text-white text-sm font-medium">{property.label}</span>
+            <span className="text-white text-sm font-medium">{property.listing_type}</span>
           </div>
           <div className="absolute top-4 right-4 px-2 py-1 bg-zameen-gradient rounded-full">
             <span className="text-white text-xs font-medium">{property.tag}</span>
@@ -154,7 +166,7 @@ const PropertyDetails = () => {
           <div>
             <div className="flex items-center justify-between mb-2">
               <span className="text-3xl font-bold text-foreground">
-                {formatPropertyPrice(property.price, property.label)}
+                {formatPropertyPrice(property.price, property.listing_type)}
               </span>
             </div>
             <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
@@ -168,13 +180,13 @@ const PropertyDetails = () => {
               </div>
               <div className="flex items-center gap-1">
                 <Square className="w-4 h-4" />
-                <span>{property.sqft.toLocaleString()} sqft</span>
+                <span>{property.sqft?.toLocaleString()} sqft</span>
               </div>
             </div>
-            <div className="text-lg font-medium text-foreground mb-1">{property.type}</div>
+            <div className="text-lg font-medium text-foreground mb-1">{property.property_type}</div>
             <div className="flex items-center gap-1 text-muted-foreground">
               <MapPin className="w-4 h-4" />
-              <span>{property.address}</span>
+              <span>{property.address || property.location}</span>
             </div>
             <div className="text-sm text-muted-foreground mt-1">by {property.builder}</div>
           </div>
@@ -186,22 +198,24 @@ const PropertyDetails = () => {
           </div>
 
           {/* Amenities */}
-          <div>
-            <h3 className="text-lg font-semibold text-foreground mb-3">Amenities</h3>
-            <div className="grid grid-cols-2 gap-3">
-              {property.amenities?.map((amenity) => {
-                const IconComponent = amenityIcons[amenity as keyof typeof amenityIcons];
-                return (
-                  <div key={amenity} className="flex items-center gap-3 p-3 bg-card rounded-lg border border-border dark:bg-card dark:border-border">
-                    <IconComponent className="w-5 h-5 text-primary" />
-                    <span className="text-sm font-medium text-foreground">
-                      {amenityLabels[amenity as keyof typeof amenityLabels]}
-                    </span>
-                  </div>
-                );
-              })}
+          {property.amenities && property.amenities.length > 0 && (
+            <div>
+              <h3 className="text-lg font-semibold text-foreground mb-3">Amenities</h3>
+              <div className="grid grid-cols-2 gap-3">
+                {property.amenities.map((amenity: any, index: number) => {
+                  const IconComponent = amenityIcons[amenity.name as keyof typeof amenityIcons] || Wifi;
+                  return (
+                    <div key={index} className="flex items-center gap-3 p-3 bg-card rounded-lg border border-border">
+                      <IconComponent className="w-5 h-5 text-primary" />
+                      <span className="text-sm font-medium text-foreground">
+                        {amenity.name}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Map Placeholder */}
           <div>
@@ -223,7 +237,7 @@ const PropertyDetails = () => {
           }}
         >
           <div className="max-w-md mx-auto">
-            <div className="grid grid-cols-2 gap-4 bg-background/95 backdrop-blur-sm rounded-t-2xl shadow-lg">
+            <div className="grid grid-cols-2 gap-4 bg-background/95 backdrop-blur-sm rounded-t-2xl shadow-lg p-4">
               <Button
                 onClick={handleCall}
                 variant="outline"

@@ -5,33 +5,59 @@ import FilterSection from '@/components/FilterSection';
 import PropertyCard from '@/components/PropertyCard';
 import MapView from '@/components/MapView';
 import { Button } from '@/components/ui/button';
-import { mockProperties } from '@/data/mockData';
 import { useProperty } from '@/contexts/PropertyContext';
 
 const Listings = () => {
-  const [selectedBHK, setSelectedBHK] = useState('1 BHK');
-  const [selectedPropertyType, setSelectedPropertyType] = useState('Apartment/Flat');
-  const [priceRange, setPriceRange] = useState([2.55]);
+  const [selectedBHK, setSelectedBHK] = useState('All');
+  const [selectedPropertyType, setSelectedPropertyType] = useState('All');
+  const [priceRange, setPriceRange] = useState([10]);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
   
-  const { getAllProperties } = useProperty();
-  const allProperties = getAllProperties();
-
-  // Combine mock properties with user properties
-  const combinedProperties = [...mockProperties, ...allProperties];
+  const { properties, loading, error } = useProperty();
 
   // Filter properties based on selected filters
-  const filteredProperties = combinedProperties.filter(property => {
+  const filteredProperties = properties.filter(property => {
     // BHK filter
     const bhkMatch = selectedBHK === 'All' || property.beds.toString() === selectedBHK.charAt(0);
     
-    // Price filter (simplified)
-    const priceInCr = parseInt(property.price) / 10000000;
+    // Property type filter
+    const typeMatch = selectedPropertyType === 'All' || property.property_type === selectedPropertyType;
+    
+    // Price filter (convert to crores for comparison)
+    const priceInCr = parseInt(property.price.toString()) / 10000000;
     const priceMatch = priceInCr <= priceRange[0];
     
-    return bhkMatch && priceMatch;
+    // Amenities filter
+    const amenitiesMatch = selectedAmenities.length === 0 || 
+      selectedAmenities.some(amenity => 
+        property.amenities?.some((propAmenity: any) => propAmenity.name === amenity)
+      );
+    
+    return bhkMatch && typeMatch && priceMatch && amenitiesMatch;
   });
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading properties...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-500 mb-4">Error loading properties: {error}</p>
+          <Button onClick={() => window.location.reload()}>Try Again</Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
