@@ -1,7 +1,9 @@
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 interface WishlistContextType {
   wishlistItems: number[];
+  wishlist: number[]; // Add this for backward compatibility
   addToWishlist: (propertyId: number) => void;
   removeFromWishlist: (propertyId: number) => void;
   isInWishlist: (propertyId: number) => boolean;
@@ -54,6 +56,7 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   return (
     <WishlistContext.Provider value={{
       wishlistItems,
+      wishlist: wishlistItems, // Alias for backward compatibility
       addToWishlist,
       removeFromWishlist,
       isInWishlist,
