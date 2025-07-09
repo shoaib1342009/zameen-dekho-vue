@@ -1,28 +1,44 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, MapPin, Bed, Bath, Square, Phone, MessageCircle, Wifi, Car, Dumbbell, Shield, TreePine, Waves } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { mockProperties } from '@/data/mockData';
 import { formatPrice, formatRentPrice } from '@/utils/priceFormatter';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWishlist } from '@/contexts/WishlistContext';
-import { useProperty } from '@/contexts/PropertyContext';
 import AuthModal from '@/components/AuthModal';
 import PropertyImageCarousel from '@/components/PropertyImageCarousel';
-import VideoPlayer from '@/components/VideoPlayer';
+
+const amenityIcons = {
+  wifi: Wifi,
+  parking: Car,
+  gym: Dumbbell,
+  security: Shield,
+  garden: TreePine,
+  pool: Waves,
+};
+
+const amenityLabels = {
+  wifi: 'WiFi',
+  parking: 'Parking',
+  gym: 'Gymnasium',
+  security: '24/7 Security',
+  garden: 'Garden',
+  pool: 'Swimming Pool',
+};
 
 const PropertyDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const { isInWishlist, toggleWishlist } = useWishlist();
-  const { getPropertyById } = useProperty();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [lastScrollY, setLastScrollY] = useState(0);
 
   const propertyId = id ? parseInt(id, 10) : null;
-  const property = propertyId ? getPropertyById(propertyId) : null;
+  const property = propertyId ? mockProperties.find(p => p.id === propertyId) : null;
 
   const isLiked = property ? isInWishlist(property.id) : false;
 
@@ -38,15 +54,17 @@ const PropertyDetails = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   if (!property) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center p-6">
-          <h2 className="text-2xl font-bold text-foreground mb-2">Property Not Found</h2>
-          <p className="text-muted-foreground mb-4">The property you're looking for doesn't exist.</p>
-          <Button onClick={() => navigate('/listings')} className="bg-zameen-gradient text-white">
-            Back to Listings
-          </Button>
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-foreground mb-4">Property Not Found</h2>
+          <Button onClick={() => navigate('/')}>Go Back Home</Button>
         </div>
       </div>
     );
@@ -61,12 +79,19 @@ const PropertyDetails = () => {
   };
 
   const handleCall = () => {
+    if (!isAuthenticated) {
+      setShowAuthModal(true);
+      return;
+    }
     window.location.href = 'tel:+919876543210';
   };
 
   const handleWhatsApp = () => {
-    const message = encodeURIComponent(`Hi, I'm interested in ${property.title} priced at ${formatPropertyPrice(property.price, property.label)}`);
-    window.open(`https://wa.me/919876543210?text=${message}`, '_blank');
+    if (!isAuthenticated) {
+      setShowAuthModal(true);
+      return;
+    }
+    window.open('https://wa.me/919876543210?text=Hi, I am interested in this property', '_blank');
   };
 
   const formatPropertyPrice = (price: string, label: string) => {
@@ -76,65 +101,41 @@ const PropertyDetails = () => {
     return formatPrice(price);
   };
 
-  const handleContactSeller = () => {
-    handleCall();
-  };
-
-  const handleWhatsAppFromVideo = () => {
-    handleWhatsApp();
-  };
-
-  const amenityIcons: { [key: string]: any } = {
-    'Swimming Pool': Waves,
-    'Gym': Dumbbell,
-    'WiFi': Wifi,
-    'Parking': Car,
-    'Security': Shield,
-    'Garden': TreePine,
-    'Internet': Wifi,
-    'Club House': TreePine,
-  };
-
   const images = property.images || [property.image];
 
-  // Calculate button position based on scroll - reverse direction
-  const scrollDirection = scrollY > lastScrollY ? 'down' : 'up';
-  const buttonTransform = scrollDirection === 'down' ? Math.min(scrollY * 0.3, 80) : 0;
+  // Calculate button position based on scroll
+  const buttonTransform = Math.min(scrollY * 0.5, 100);
 
   return (
     <>
-      <div className="min-h-screen bg-background pb-20">
+      <div className="min-h-screen bg-background pb-32 sm:pb-4">
         {/* Header */}
-        <div className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
-          <div className="flex items-center justify-between p-3 sm:p-4">
-            <button 
+        <div className="sticky top-16 z-10 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3">
+          <div className="flex items-center justify-between">
+            <button
               onClick={() => navigate(-1)}
-              className="p-2 hover:bg-muted/20 rounded-full transition-colors tap-scale"
+              className="p-2 rounded-xl tap-scale"
             >
-              <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6 text-foreground" />
+              <ArrowLeft className="w-6 h-6 text-foreground" />
             </button>
-            
-            <h1 className="text-sm sm:text-base font-semibold text-foreground truncate px-2">
-              {property.title}
-            </h1>
-            
+            <span className="text-lg font-semibold text-foreground">Property Details</span>
             <button
               onClick={toggleLike}
-              className="p-2 hover:bg-muted/20 rounded-full transition-colors tap-scale"
+              className="p-2 rounded-xl tap-scale"
             >
               <Heart className={cn(
-                "w-5 h-5 sm:w-6 sm:h-6 transition-colors",
+                "w-6 h-6 transition-colors",
                 isLiked ? "fill-red-500 text-red-500" : "text-muted-foreground"
               )} />
             </button>
           </div>
         </div>
 
-        {/* Hero Image Section */}
-        <div className="relative h-[50vh] sm:h-[60vh] w-full overflow-hidden">
-          <PropertyImageCarousel
-            images={images}
-            alt={property.title}
+        {/* Enhanced Image Gallery with proper height */}
+        <div className="relative h-[60vh] sm:h-[70vh] overflow-hidden">
+          <PropertyImageCarousel 
+            images={images} 
+            alt="Property"
             className="w-full h-full"
           />
           
@@ -142,29 +143,21 @@ const PropertyDetails = () => {
           <div className="absolute top-4 left-4 px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full">
             <span className="text-white text-sm font-medium">{property.label}</span>
           </div>
-          
-          <div className="absolute top-4 right-4 px-3 py-1 bg-zameen-gradient rounded-full">
-            <span className="text-white text-sm font-medium">{property.tag}</span>
+          <div className="absolute top-4 right-4 px-2 py-1 bg-zameen-gradient rounded-full">
+            <span className="text-white text-xs font-medium">{property.tag}</span>
           </div>
         </div>
 
-        {/* Content */}
-        <div className="px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6">
+        {/* Property Information - directly connected to image */}
+        <div className="p-4 space-y-6">
           {/* Price and Basic Info */}
-          <div className="space-y-3">
-            <div className="flex items-start justify-between">
-              <div>
-                <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-1">
-                  {formatPropertyPrice(property.price, property.label)}
-                </h2>
-                <div className="flex items-center gap-1 text-muted-foreground text-sm">
-                  <MapPin className="w-4 h-4" />
-                  <span>{property.address}</span>
-                </div>
-              </div>
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-3xl font-bold text-foreground">
+                {formatPropertyPrice(property.price, property.label)}
+              </span>
             </div>
-
-            <div className="flex items-center gap-4 sm:gap-6 text-sm text-muted-foreground">
+            <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
               <div className="flex items-center gap-1">
                 <Bed className="w-4 h-4" />
                 <span>{property.beds} beds</span>
@@ -178,62 +171,48 @@ const PropertyDetails = () => {
                 <span>{property.sqft.toLocaleString()} sqft</span>
               </div>
             </div>
+            <div className="text-lg font-medium text-foreground mb-1">{property.type}</div>
+            <div className="flex items-center gap-1 text-muted-foreground">
+              <MapPin className="w-4 h-4" />
+              <span>{property.address}</span>
+            </div>
+            <div className="text-sm text-muted-foreground mt-1">by {property.builder}</div>
           </div>
 
           {/* Description */}
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-foreground">About this property</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              {property.description || `Beautiful ${property.beds} bedroom ${property.type.toLowerCase()} located in ${property.location}. This property offers modern amenities and is perfect for ${property.label.toLowerCase().includes('rent') ? 'rental' : 'purchase'}.`}
-            </p>
+          <div>
+            <h3 className="text-lg font-semibold text-foreground mb-2">Description</h3>
+            <p className="text-muted-foreground leading-relaxed">{property.description}</p>
           </div>
 
-          {/* Builder Info */}
-          {property.builder && (
-            <div className="bg-card p-3 sm:p-4 rounded-xl border border-border">
-              <h3 className="text-sm font-semibold text-foreground mb-1">Built by</h3>
-              <p className="text-muted-foreground">{property.builder}</p>
-            </div>
-          )}
-
           {/* Amenities */}
-          {property.amenities && property.amenities.length > 0 && (
-            <div className="space-y-3">
-              <h3 className="text-lg font-semibold text-foreground">Amenities</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {property.amenities.map((amenity, index) => {
-                  const IconComponent = amenityIcons[amenity] || TreePine;
-                  return (
-                    <div key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <IconComponent className="w-4 h-4 text-primary" />
-                      <span>{amenity}</span>
-                    </div>
-                  );
-                })}
+          <div>
+            <h3 className="text-lg font-semibold text-foreground mb-3">Amenities</h3>
+            <div className="grid grid-cols-2 gap-3">
+              {property.amenities?.map((amenity) => {
+                const IconComponent = amenityIcons[amenity as keyof typeof amenityIcons];
+                return (
+                  <div key={amenity} className="flex items-center gap-3 p-3 bg-card rounded-lg border border-border dark:bg-card dark:border-border">
+                    <IconComponent className="w-5 h-5 text-primary" />
+                    <span className="text-sm font-medium text-foreground">
+                      {amenityLabels[amenity as keyof typeof amenityLabels]}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Map Placeholder */}
+          <div>
+            <h3 className="text-lg font-semibold text-foreground mb-3">Location</h3>
+            <div className="h-48 bg-muted rounded-lg flex items-center justify-center">
+              <div className="text-center">
+                <MapPin className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                <p className="text-sm text-muted-foreground">Map view will be displayed here</p>
               </div>
             </div>
-          )}
-
-          {/* Video Section */}
-          {property.videoUrl && (
-            <div className="space-y-3">
-              <h3 className="text-lg font-semibold text-foreground">Property Video</h3>
-              <VideoPlayer 
-                video={{
-                  id: property.id,
-                  videoUrl: property.videoUrl,
-                  property: {
-                    title: property.title,
-                    price: property.price,
-                    location: property.location,
-                    seller: property.seller || 'Property Owner'
-                  }
-                }}
-                onContactSeller={handleContactSeller}
-                onWhatsApp={handleWhatsAppFromVideo}
-              />
-            </div>
-          )}
+          </div>
         </div>
 
         {/* CTA Buttons with scroll-matched animation */}
@@ -244,21 +223,21 @@ const PropertyDetails = () => {
           }}
         >
           <div className="max-w-md mx-auto">
-            <div className="grid grid-cols-2 gap-4 bg-background/95 backdrop-blur-sm rounded-t-2xl shadow-lg p-4">
+            <div className="grid grid-cols-2 gap-4 bg-background/95 backdrop-blur-sm rounded-t-2xl shadow-lg">
               <Button
                 onClick={handleCall}
                 variant="outline"
-                className="flex items-center justify-center gap-2 bg-background text-foreground border-border hover:bg-muted/20"
+                className="flex items-center gap-2 h-12 text-green-500 hover:bg-green-500 hover:text-white"
               >
-                <Phone className="w-4 h-4" />
-                <span className="text-sm">Call</span>
+                <Phone className="w-5 h-5" />
+                Call
               </Button>
               <Button
                 onClick={handleWhatsApp}
-                className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white"
+                className="flex items-center gap-2 h-12 bg-green-500 hover:bg-green-600 text-white"
               >
-                <MessageCircle className="w-4 h-4" />
-                <span className="text-sm">WhatsApp</span>
+                <MessageCircle className="w-5 h-5" />
+                WhatsApp
               </Button>
             </div>
           </div>

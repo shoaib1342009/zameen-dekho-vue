@@ -19,7 +19,6 @@ interface Property {
   description: string;
   amenities?: string[];
   videoUrl?: string;
-  seller?: string;
   isLiked: boolean;
 }
 
@@ -27,7 +26,6 @@ interface PropertyContextType {
   userProperties: Property[];
   addProperty: (property: Omit<Property, 'id' | 'isLiked'>) => void;
   getAllProperties: () => Property[];
-  getPropertyById: (id: number) => Property | undefined;
 }
 
 const PropertyContext = createContext<PropertyContextType | undefined>(undefined);
@@ -51,7 +49,6 @@ const initialProperties: Property[] = [
     builder: "Lodha Developers",
     description: "Premium 3BHK apartment with modern amenities",
     amenities: ["Swimming Pool", "Gym", "Parking"],
-    seller: "Lodha Developers",
     isLiked: false
   },
   {
@@ -71,7 +68,6 @@ const initialProperties: Property[] = [
     builder: "Tata Housing",
     description: "Well-planned 2BHK with great connectivity",
     amenities: ["Parking", "Security", "Garden"],
-    seller: "Tata Housing",
     isLiked: false
   },
   {
@@ -91,7 +87,6 @@ const initialProperties: Property[] = [
     builder: "Godrej Properties",
     description: "Contemporary living in upcoming area",
     amenities: ["Gym", "Swimming Pool", "Club House"],
-    seller: "Godrej Properties",
     isLiked: false
   },
   {
@@ -111,7 +106,6 @@ const initialProperties: Property[] = [
     builder: "Oberoi Realty",
     description: "Premium sea-facing apartment in South Mumbai",
     amenities: ["Sea View", "Concierge", "Valet Parking"],
-    seller: "Oberoi Realty",
     isLiked: false
   },
   {
@@ -131,7 +125,6 @@ const initialProperties: Property[] = [
     builder: "Hiranandani Group",
     description: "Perfect family home with spacious rooms",
     amenities: ["Garden", "Parking", "Security"],
-    seller: "Hiranandani Group",
     isLiked: false
   },
   {
@@ -151,7 +144,6 @@ const initialProperties: Property[] = [
     builder: "DLF Limited",
     description: "Well-designed apartment in prime location",
     amenities: ["Swimming Pool", "Gym", "Mall Access"],
-    seller: "DLF Limited",
     isLiked: false
   },
   {
@@ -171,7 +163,6 @@ const initialProperties: Property[] = [
     builder: "Kalpataru Group",
     description: "Spacious apartment with great amenities",
     amenities: ["Club House", "Swimming Pool", "Parking"],
-    seller: "Kalpataru Group",
     isLiked: false
   },
   {
@@ -191,7 +182,6 @@ const initialProperties: Property[] = [
     builder: "MIDC",
     description: "Prime industrial plot for development",
     amenities: ["Road Access", "Utilities", "MIDC Approved"],
-    seller: "MIDC",
     isLiked: false
   },
   {
@@ -211,7 +201,6 @@ const initialProperties: Property[] = [
     builder: "Prestige Group",
     description: "Luxurious waterfront villa with private beach access",
     amenities: ["Private Beach", "Garden", "Boat Parking"],
-    seller: "Prestige Group",
     isLiked: false
   }
 ];
@@ -231,13 +220,9 @@ export const PropertyProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const addProperty = (property: Omit<Property, 'id' | 'isLiked'>) => {
-    // Generate a unique ID that doesn't conflict with existing ones
-    const existingIds = [...initialProperties, ...userProperties].map(p => p.id);
-    const newId = Math.max(...existingIds, 2000) + 1;
-    
     const newProperty = {
       ...property,
-      id: newId,
+      id: Date.now(), // Simple ID generation
       isLiked: false,
     };
     
@@ -252,12 +237,8 @@ export const PropertyProvider = ({ children }: { children: ReactNode }) => {
     return [...initialProperties, ...userProperties];
   };
 
-  const getPropertyById = (id: number) => {
-    return [...initialProperties, ...userProperties].find(p => p.id === id);
-  };
-
   return (
-    <PropertyContext.Provider value={{ userProperties, addProperty, getAllProperties, getPropertyById }}>
+    <PropertyContext.Provider value={{ userProperties, addProperty, getAllProperties }}>
       {children}
     </PropertyContext.Provider>
   );
