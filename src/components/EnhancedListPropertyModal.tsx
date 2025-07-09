@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { X, Upload, Video, Image } from 'lucide-react';
+import { X, Upload, Video, Image, Check, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useProperty } from '@/contexts/PropertyContext';
@@ -11,9 +11,17 @@ interface EnhancedListPropertyModalProps {
   onClose: () => void;
 }
 
+const availableAmenities = [
+  'Swimming Pool', 'Gym', 'Parking', 'Security', 'Garden', 'Elevator',
+  'Power Backup', 'Water Supply', 'Internet', 'Club House', 'Playground', 
+  'CCTV', 'WiFi', 'AC', 'Balcony', 'Furnished', 'Pet Friendly'
+];
+
 const EnhancedListPropertyModal = ({ isOpen, onClose }: EnhancedListPropertyModalProps) => {
   const { addProperty } = useProperty();
   const { toast } = useToast();
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [uploadedVideo, setUploadedVideo] = useState<string>('');
   const [formData, setFormData] = useState({
     title: '',
     price: '',
@@ -45,9 +53,16 @@ const EnhancedListPropertyModal = ({ isOpen, onClose }: EnhancedListPropertyModa
       return;
     }
 
+    // Use uploaded images or fallback to default
+    const propertyImages = uploadedImages.length > 0 
+      ? uploadedImages 
+      : ['https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=300&fit=crop'];
+
     addProperty({
       ...formData,
-      images: formData.images.length > 0 ? formData.images : [formData.image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=300&fit=crop']
+      image: propertyImages[0],
+      images: propertyImages,
+      videoUrl: uploadedVideo || formData.videoUrl
     });
 
     toast({
@@ -74,30 +89,68 @@ const EnhancedListPropertyModal = ({ isOpen, onClose }: EnhancedListPropertyModa
       images: [],
       videoUrl: ''
     });
+    setUploadedImages([]);
+    setUploadedVideo('');
 
     onClose();
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // In a real app, you'd upload to a server. For demo, we'll use a placeholder
-      const imageUrl = `https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=300&fit=crop&random=${Date.now()}`;
-      setFormData(prev => ({
-        ...prev,
-        image: imageUrl,
-        images: [...prev.images, imageUrl]
-      }));
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      // Simulate image upload - in real app, you'd upload to server
+      const newImages: string[] = [];
+      
+      Array.from(files).forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          if (event.target?.result) {
+            const imageUrl = event.target.result as string;
+            newImages.push(imageUrl);
+            
+            if (newImages.length === files.length) {
+              setUploadedImages(prev => [...prev, ...newImages]);
+              toast({
+                title: "Images Uploaded!",
+                description: `${files.length} image(s) uploaded successfully`,
+              });
+            }
+          }
+        };
+        reader.readAsDataURL(file);
+      });
     }
   };
 
   const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // In a real app, you'd upload to a server. For demo, we'll use a placeholder
-      const videoUrl = `https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4?random=${Date.now()}`;
-      setFormData(prev => ({ ...prev, videoUrl }));
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target?.result) {
+          const videoUrl = event.target.result as string;
+          setUploadedVideo(videoUrl);
+          toast({
+            title: "Video Uploaded!",
+            description: "Video uploaded successfully",
+          });
+        }
+      };
+      reader.readAsDataURL(file);
     }
+  };
+
+  const toggleAmenity = (amenity: string) => {
+    setFormData(prev => ({
+      ...prev,
+      amenities: prev.amenities.includes(amenity)
+        ? prev.amenities.filter(a => a !== amenity)
+        : [...prev.amenities, amenity]
+    }));
+  };
+
+  const removeImage = (index: number) => {
+    setUploadedImages(prev => prev.filter((_, i) => i !== index));
   };
 
   if (!isOpen) return null;
@@ -241,6 +294,41 @@ const EnhancedListPropertyModal = ({ isOpen, onClose }: EnhancedListPropertyModa
             </div>
           </div>
 
+          {/* Amenities Selection */}
+          <div>
+            <label className="block text-sm font-medium mb-2">Amenities</label>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-32 overflow-y-auto border border-border rounded-md p-3">
+              {availableAmenities.map((amenity) => (
+                <button
+                  key={amenity}
+                  type="button"
+                  onClick={() => toggleAmenity(amenity)}
+                  className={`flex items-center gap-2 p-2 text-sm rounded transition-colors ${
+                    formData.amenities.includes(amenity)
+                      ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20'
+                      : 'hover:bg-muted/50'
+                  }`}
+                >
+                  <div className={`w-4 h-4 border rounded ${
+                    formData.amenities.includes(amenity)
+                      ? 'bg-blue-500 border-blue-500'
+                      : 'border-muted-foreground'
+                  } flex items-center justify-center`}>
+                    {formData.amenities.includes(amenity) && (
+                      <Check className="w-3 h-3 text-white" />
+                    )}
+                  </div>
+                  {amenity}
+                </button>
+              ))}
+            </div>
+            {formData.amenities.length > 0 && (
+              <div className="mt-2 text-sm text-muted-foreground">
+                Selected: {formData.amenities.join(', ')}
+              </div>
+            )}
+          </div>
+
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-2">Property Images</label>
@@ -248,6 +336,7 @@ const EnhancedListPropertyModal = ({ isOpen, onClose }: EnhancedListPropertyModa
                 <input
                   type="file"
                   accept="image/*"
+                  multiple
                   onChange={handleImageUpload}
                   className="hidden"
                   id="image-upload"
@@ -255,8 +344,31 @@ const EnhancedListPropertyModal = ({ isOpen, onClose }: EnhancedListPropertyModa
                 <label htmlFor="image-upload" className="cursor-pointer flex flex-col items-center gap-2">
                   <Image className="w-8 h-8 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Click to upload images</span>
+                  <span className="text-xs text-muted-foreground">You can select multiple images</span>
                 </label>
               </div>
+              
+              {/* Show uploaded images */}
+              {uploadedImages.length > 0 && (
+                <div className="grid grid-cols-3 gap-2 mt-2">
+                  {uploadedImages.map((image, index) => (
+                    <div key={index} className="relative">
+                      <img 
+                        src={image} 
+                        alt={`Upload ${index + 1}`} 
+                        className="w-full h-20 object-cover rounded border"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(index)}
+                        className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div>
@@ -272,7 +384,7 @@ const EnhancedListPropertyModal = ({ isOpen, onClose }: EnhancedListPropertyModa
                 <label htmlFor="video-upload" className="cursor-pointer flex flex-col items-center gap-2">
                   <Video className="w-8 h-8 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Click to upload video</span>
-                  {formData.videoUrl && (
+                  {uploadedVideo && (
                     <span className="text-xs text-green-600">Video uploaded successfully</span>
                   )}
                 </label>

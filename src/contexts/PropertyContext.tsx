@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 interface Property {
@@ -26,6 +25,7 @@ interface PropertyContextType {
   userProperties: Property[];
   addProperty: (property: Omit<Property, 'id' | 'isLiked'>) => void;
   getAllProperties: () => Property[];
+  getPropertyById: (id: number) => Property | undefined;
 }
 
 const PropertyContext = createContext<PropertyContextType | undefined>(undefined);
@@ -220,9 +220,13 @@ export const PropertyProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const addProperty = (property: Omit<Property, 'id' | 'isLiked'>) => {
+    // Generate a unique ID that doesn't conflict with existing ones
+    const existingIds = [...initialProperties, ...userProperties].map(p => p.id);
+    const newId = Math.max(...existingIds, 2000) + 1;
+    
     const newProperty = {
       ...property,
-      id: Date.now(), // Simple ID generation
+      id: newId,
       isLiked: false,
     };
     
@@ -237,8 +241,12 @@ export const PropertyProvider = ({ children }: { children: ReactNode }) => {
     return [...initialProperties, ...userProperties];
   };
 
+  const getPropertyById = (id: number) => {
+    return [...initialProperties, ...userProperties].find(p => p.id === id);
+  };
+
   return (
-    <PropertyContext.Provider value={{ userProperties, addProperty, getAllProperties }}>
+    <PropertyContext.Provider value={{ userProperties, addProperty, getAllProperties, getPropertyById }}>
       {children}
     </PropertyContext.Provider>
   );

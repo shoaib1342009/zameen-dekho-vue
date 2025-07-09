@@ -21,16 +21,38 @@ const Listings = () => {
   // Combine mock properties with user properties
   const combinedProperties = [...mockProperties, ...allProperties];
 
-  // Filter properties based on selected filters
+  // More flexible filter logic
   const filteredProperties = combinedProperties.filter(property => {
-    // BHK filter
-    const bhkMatch = selectedBHK === 'All' || property.beds.toString() === selectedBHK.charAt(0);
+    // BHK filter - make it more flexible
+    let bhkMatch = true;
+    if (selectedBHK && selectedBHK !== 'All') {
+      const selectedBeds = parseInt(selectedBHK.charAt(0));
+      bhkMatch = property.beds === selectedBeds;
+    }
     
-    // Price filter (simplified)
-    const priceInCr = parseInt(property.price) / 10000000;
-    const priceMatch = priceInCr <= priceRange[0];
+    // Property type filter - make it more flexible
+    let typeMatch = true;
+    if (selectedPropertyType && selectedPropertyType !== 'All') {
+      typeMatch = property.type === selectedPropertyType;
+    }
     
-    return bhkMatch && priceMatch;
+    // Price filter - convert to consistent format and make more flexible
+    let priceMatch = true;
+    if (priceRange && priceRange.length > 0) {
+      const propertyPrice = parseInt(property.price) || 0;
+      const maxPriceInRupees = priceRange[0] * 10000000; // Convert Cr to rupees
+      priceMatch = propertyPrice <= maxPriceInRupees;
+    }
+    
+    // Amenities filter - only filter if amenities are selected
+    let amenitiesMatch = true;
+    if (selectedAmenities && selectedAmenities.length > 0 && property.amenities) {
+      amenitiesMatch = selectedAmenities.some(amenity => 
+        property.amenities?.includes(amenity)
+      );
+    }
+    
+    return bhkMatch && typeMatch && priceMatch && amenitiesMatch;
   });
 
   return (
