@@ -49,7 +49,7 @@ const Play = () => {
       setShowAuthModal(true);
       return;
     }
-    toggleWishlist(property.id);
+    toggleWishlist(property.id.toString());
   };
 
   const formatPropertyPrice = (price: string | number, label: string) => {
@@ -194,7 +194,7 @@ const Play = () => {
                   >
                     <Heart className={cn(
                       "w-6 h-6 transition-colors",
-                      isInWishlist(property.id) ? "fill-red-500 text-red-500" : "text-white"
+                      isInWishlist(property.id.toString()) ? "fill-red-500 text-red-500" : "text-white"
                     )} />
                   </button>
                 </div>

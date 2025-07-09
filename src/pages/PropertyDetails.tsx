@@ -35,9 +35,9 @@ const PropertyDetails = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [scrollY, setScrollY] = useState(0);
 
-  const property = properties.find(p => p.id === id);
+  const property = properties.find(p => p.id.toString() === id);
 
-  const isLiked = property ? isInWishlist(property.id) : false;
+  const isLiked = property ? isInWishlist(property.id.toString()) : false;
 
   // Handle scroll for CTA button animations
   useEffect(() => {
@@ -81,7 +81,7 @@ const PropertyDetails = () => {
       setShowAuthModal(true);
       return;
     }
-    toggleWishlist(property.id);
+    toggleWishlist(property.id.toString());
   };
 
   const handleCall = () => {
