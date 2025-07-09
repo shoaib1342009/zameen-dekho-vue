@@ -27,7 +27,7 @@ const amenityIcons = {
 };
 
 const PropertyDetails = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const { isInWishlist, toggleWishlist } = useWishlist();
