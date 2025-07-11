@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Tables, Json } from '@/integrations/supabase/types';
+import { Tables } from '@/integrations/supabase/types';
 import { useAuth } from '@/contexts/AuthContext';
 
 export type Property = Tables<'properties'> & {
@@ -10,26 +10,6 @@ export type Property = Tables<'properties'> & {
 };
 
 export type Amenity = Tables<'amenities'>;
-
-// Helper function to safely convert Json to string array
-const jsonToStringArray = (jsonData: Json): string[] => {
-  if (Array.isArray(jsonData)) {
-    return jsonData.filter((item): item is string => typeof item === 'string');
-  }
-  return [];
-};
-
-// Helper function to safely convert Json to amenities array
-const jsonToAmenitiesArray = (jsonData: Json): { name: string; icon: string; }[] => {
-  if (Array.isArray(jsonData)) {
-    return jsonData.filter((item): item is { name: string; icon: string; } => 
-      typeof item === 'object' && item !== null && 
-      typeof (item as any).name === 'string' && 
-      typeof (item as any).icon === 'string'
-    );
-  }
-  return [];
-};
 
 export const useSupabaseProperties = () => {
   const [properties, setProperties] = useState<Property[]>([]);
@@ -43,10 +23,10 @@ export const useSupabaseProperties = () => {
       
       if (error) throw error;
       
-      const formattedProperties: Property[] = data.map(prop => ({
+      const formattedProperties = data.map(prop => ({
         ...prop,
-        images: jsonToStringArray(prop.images),
-        amenities: jsonToAmenitiesArray(prop.amenities)
+        images: Array.isArray(prop.images) ? prop.images : [],
+        amenities: Array.isArray(prop.amenities) ? prop.amenities : []
       }));
       
       setProperties(formattedProperties);
@@ -105,10 +85,10 @@ export const useUserProperties = () => {
       
       if (error) throw error;
       
-      const userProps: Property[] = data.filter(prop => prop.user_id === user.id).map(prop => ({
+      const userProps = data.filter(prop => prop.user_id === user.id).map(prop => ({
         ...prop,
-        images: jsonToStringArray(prop.images),
-        amenities: jsonToAmenitiesArray(prop.amenities)
+        images: Array.isArray(prop.images) ? prop.images : [],
+        amenities: Array.isArray(prop.amenities) ? prop.amenities : []
       }));
       
       setUserProperties(userProps);
