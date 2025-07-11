@@ -10,8 +10,24 @@ import { useState } from 'react';
 import AuthModal from './AuthModal';
 import PropertyImageCarousel from './PropertyImageCarousel';
 
+interface Property {
+  id: number;
+  image: string;
+  images?: string[];
+  label: string;
+  price: string;
+  tag: string;
+  beds: number;
+  baths: number;
+  sqft: number;
+  type: string;
+  address: string;
+  builder: string;
+  isLiked: boolean;
+}
+
 interface PropertyCardProps {
-  property: any;
+  property: Property;
 }
 
 const PropertyCard = ({ property }: PropertyCardProps) => {
@@ -23,9 +39,7 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
   const isLiked = isInWishlist(property.id);
 
   // Create array of images for carousel
-  const propertyImages = property.images && property.images.length > 0 
-    ? property.images 
-    : [property.cover_image_url || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=300&fit=crop'];
+  const propertyImages = property.images || [property.image];
 
   const toggleLike = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -40,12 +54,11 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
     navigate(`/property/${property.id}`);
   };
 
-  const formatPropertyPrice = (price: string | number, label: string) => {
-    const priceStr = price.toString();
+  const formatPropertyPrice = (price: string, label: string) => {
     if (label.toLowerCase().includes('rent')) {
-      return formatRentPrice(priceStr);
+      return formatRentPrice(price);
     }
-    return formatPrice(priceStr);
+    return formatPrice(price);
   };
 
   return (
@@ -55,14 +68,14 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
         <div className="relative">
           <PropertyImageCarousel
             images={propertyImages}
-            alt={property.listing_type || property.label}
+            alt={property.label}
             autoPlay={true}
             className="h-40 sm:h-48"
           />
           
           {/* Label */}
           <div className="absolute top-2 sm:top-3 left-2 sm:left-3 px-2 sm:px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full z-10">
-            <span className="text-white text-xs sm:text-sm font-medium">{property.listing_type || property.label}</span>
+            <span className="text-white text-xs sm:text-sm font-medium">{property.label}</span>
           </div>
           
           {/* Heart Icon */}
@@ -82,7 +95,7 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
           {/* Price and Tag */}
           <div className="flex items-center justify-between">
             <span className="text-lg sm:text-xl font-bold text-foreground">
-              {formatPropertyPrice(property.price, property.listing_type || property.label)}
+              {formatPropertyPrice(property.price, property.label)}
             </span>
             <span className="px-2 py-1 bg-zameen-gradient text-white text-xs font-medium rounded-full">
               {property.tag}
@@ -91,12 +104,12 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
 
           {/* Property Details */}
           <div className="text-xs sm:text-sm text-muted-foreground">
-            {property.beds} bds | {property.baths} ba | {property.sqft?.toLocaleString()} sqft - {property.property_type || property.type}
+            {property.beds} bds | {property.baths} ba | {property.sqft.toLocaleString()} sqft - {property.type}
           </div>
 
           {/* Address */}
           <div className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
-            {property.address || property.location}
+            {property.address}
           </div>
 
           {/* Builder */}

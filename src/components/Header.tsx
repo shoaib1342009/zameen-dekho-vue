@@ -1,158 +1,72 @@
 
-import { useState } from 'react';
-import { Search, Plus, Bell, Menu, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useAuth } from '@/contexts/AuthContext';
+import { Bell, Moon, Sun } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { useState } from 'react';
 import AuthModal from './AuthModal';
-import SupabaseListPropertyModal from './SupabaseListPropertyModal';
-import { useProperty } from '@/contexts/PropertyContext';
+import NotificationPanel from './NotificationPanel';
 
 const Header = () => {
-  const { isAuthenticated, user, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  const { refetch } = useProperty();
+  const { isAuthenticated } = useAuth();
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [showListModal, setShowListModal] = useState(false);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showNotificationPanel, setShowNotificationPanel] = useState(false);
 
-  const handleListProperty = () => {
-    if (!isAuthenticated) {
+  const handleNotificationClick = () => {
+    if (isAuthenticated) {
+      setShowNotificationPanel(true);
+    } else {
       setShowAuthModal(true);
-      return;
-    }
-    setShowListModal(true);
-  };
-
-  const handlePropertyAdded = () => {
-    refetch();
-  };
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-    } catch (error) {
-      console.error('Error signing out:', error);
     }
   };
 
   return (
     <>
-      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border">
-        <div className="px-3 sm:px-6 py-2 sm:py-3">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-zameen-gradient rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">Z</span>
-              </div>
-              <span className="text-xl font-bold text-foreground hidden sm:inline">Zameen Dekho</span>
-            </div>
-
-            {/* Desktop Search Bar */}
-            <div className="hidden md:flex flex-1 max-w-md mx-6">
-              <div className="relative w-full">
-                <Input
-                  type="text"
-                  placeholder="Search properties..."
-                  className="w-full pl-10 pr-4 py-2 rounded-full border-muted-foreground/20 focus:border-primary"
-                />
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-              </div>
-            </div>
-
-            {/* Desktop Actions */}
-            <div className="hidden md:flex items-center gap-3">
-              <Button
-                onClick={handleListProperty}
-                className="bg-zameen-gradient text-white hover:opacity-90 flex items-center gap-2"
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+        <div className="flex items-center justify-between px-3 sm:px-4 py-1.5 sm:py-2">
+          {/* Mobile only logo */}
+          {isHomePage && (
+            <Link to="/" className="text-lg font-bold tap-scale text-blue-600 sm:hidden">
+              Zameen Dekho
+            </Link>
+          )}
+          {/* Desktop - empty space for logo (handled by TopNav) */}
+          {isHomePage && <div className="hidden sm:block"></div>}
+          {!isHomePage && <div></div>}
+          
+          {isHomePage && (
+            <div className="flex items-center gap-1 sm:gap-2">
+              <button 
+                onClick={toggleTheme}
+                className="p-1.5 sm:p-2 rounded-full hover:bg-muted/20 transition-colors tap-scale"
               >
-                <Plus className="w-4 h-4" />
-                List Property
-              </Button>
-              
-              <Button variant="ghost" size="sm" className="p-2">
-                <Bell className="w-5 h-5" />
-              </Button>
-
-              {isAuthenticated ? (
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">Hi, {user?.email}</span>
-                  <Button onClick={handleSignOut} variant="outline" size="sm">
-                    Sign Out
-                  </Button>
-                </div>
-              ) : (
-                <Button onClick={() => setShowAuthModal(true)} variant="outline" size="sm">
-                  Sign In
-                </Button>
-              )}
-            </div>
-
-            {/* Mobile Menu Toggle */}
-            <div className="md:hidden">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowMobileMenu(!showMobileMenu)}
-                className="p-2"
+                {theme === 'dark' ? (
+                  <Sun className="w-5 h-5 sm:w-6 sm:h-6 text-foreground" />
+                ) : (
+                  <Moon className="w-5 h-5 sm:w-6 sm:h-6 text-foreground" />
+                )}
+              </button>
+              <button 
+                onClick={handleNotificationClick}
+                className="p-1.5 sm:p-2 rounded-full hover:bg-muted/20 transition-colors tap-scale relative"
               >
-                {showMobileMenu ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-              </Button>
-            </div>
-          </div>
-
-          {/* Mobile Menu */}
-          {showMobileMenu && (
-            <div className="md:hidden mt-4 pb-4 border-t border-border pt-4">
-              <div className="flex flex-col gap-4">
-                {/* Mobile Search */}
-                <div className="relative">
-                  <Input
-                    type="text"
-                    placeholder="Search properties..."
-                    className="w-full pl-10 pr-4 py-2 rounded-full"
-                  />
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                </div>
-
-                {/* Mobile Actions */}
-                <div className="flex flex-col gap-2">
-                  <Button
-                    onClick={handleListProperty}
-                    className="bg-zameen-gradient text-white hover:opacity-90 flex items-center gap-2 justify-center"
-                  >
-                    <Plus className="w-4 h-4" />
-                    List Property
-                  </Button>
-                  
-                  {isAuthenticated ? (
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Hi, {user?.email}</span>
-                      <Button onClick={handleSignOut} variant="outline" size="sm">
-                        Sign Out
-                      </Button>
-                    </div>
-                  ) : (
-                    <Button onClick={() => setShowAuthModal(true)} variant="outline">
-                      Sign In
-                    </Button>
-                  )}
-                </div>
-              </div>
+                <Bell className="w-5 h-5 sm:w-6 sm:h-6 text-foreground" />
+                {isAuthenticated && (
+                  <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-red-500 rounded-full flex items-center justify-center">
+                    <span className="text-white text-[8px] sm:text-xs">3</span>
+                  </div>
+                )}
+              </button>
             </div>
           )}
         </div>
-      </div>
+      </header>
 
-      {/* Modals */}
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
-      <SupabaseListPropertyModal
-        isOpen={showListModal}
-        onClose={() => setShowListModal(false)}
-        onPropertyAdded={handlePropertyAdded}
-      />
+      <NotificationPanel isOpen={showNotificationPanel} onClose={() => setShowNotificationPanel(false)} />
     </>
   );
 };
