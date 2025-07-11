@@ -20,7 +20,7 @@ L.Icon.Default.mergeOptions({
 });
 
 interface MapProperty {
-  id: string; // Changed to string to match Supabase UUID
+  id: number;
   name: string;
   developer: string;
   lat: number;
@@ -68,17 +68,17 @@ const MapView = () => {
     const coordinates = locationCoordinates[locationKey] || { lat: 19.0760 + (Math.random() - 0.5) * 0.1, lng: 72.8777 + (Math.random() - 0.5) * 0.1 };
     
     return {
-      id: prop.id.toString(), // Convert to string
-      name: `${prop.builder} ${prop.property_type || prop.type || 'Property'}`,
+      id: prop.id,
+      name: `${prop.builder} ${prop.type}`,
       developer: prop.builder,
       lat: coordinates.lat + (Math.random() - 0.5) * 0.01, // Small random offset
       lng: coordinates.lng + (Math.random() - 0.5) * 0.01,
-      price_range: prop.price.toString(),
-      type: prop.property_type || prop.type || 'Property',
+      price_range: prop.price,
+      type: prop.type,
       city: ('location' in prop && prop.location) || prop.address.split(',').pop()?.trim() || 'Mumbai',
       rera_status: Math.random() > 0.3 ? 'Registered' : 'Pending',
       status: Math.random() > 0.4 ? 'Under Construction' : 'Ready',
-      thumbnail: prop.cover_image_url || (prop.images && prop.images[0]) || prop.image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=300&fit=crop',
+      thumbnail: prop.image || (prop.images && prop.images[0]) || '',
       beds: prop.beds,
       baths: prop.baths,
       sqft: prop.sqft,
@@ -118,7 +118,7 @@ const MapView = () => {
             <span class="px-2 py-1 text-xs rounded bg-blue-100 text-blue-800">${property.status}</span>
           </div>
           <div class="text-lg font-bold text-blue-600 mb-2">₹${parseInt(property.price_range).toLocaleString()}</div>
-          <button onclick="window.viewPropertyDetails('${property.id}')" class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+          <button onclick="window.viewPropertyDetails(${property.id})" class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
             View Details
           </button>
         </div>
@@ -131,7 +131,7 @@ const MapView = () => {
     map.addLayer(markers);
 
     // Add global function for property details
-    (window as any).viewPropertyDetails = (id: string) => {
+    (window as any).viewPropertyDetails = (id: number) => {
       navigate(`/property/${id}`);
     };
 
@@ -144,7 +144,7 @@ const MapView = () => {
     };
   }, [navigate, mapProperties.length]);
 
-  const handleViewDetails = (propertyId: string) => {
+  const handleViewDetails = (propertyId: number) => {
     navigate(`/property/${propertyId}`);
   };
 

@@ -10,7 +10,6 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signUp: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
-  login: (user: any) => void; // Added missing login method
   loading: boolean;
 }
 
@@ -66,12 +65,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await supabase.auth.signOut();
   };
 
-  // Legacy login method for compatibility
-  const login = (userData: any) => {
-    // This is a legacy method - actual auth is handled by Supabase
-    console.log('Legacy login called:', userData);
-  };
-
   const isAuthenticated = !!user;
 
   return (
@@ -82,7 +75,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       signIn, 
       signUp, 
       signOut, 
-      login,
       loading 
     }}>
       {children}
