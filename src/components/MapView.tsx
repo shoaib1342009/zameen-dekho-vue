@@ -67,32 +67,18 @@ const MapView = () => {
     const locationKey = ('location' in prop && prop.location) || prop.address.split(',')[0];
     const coordinates = locationCoordinates[locationKey] || { lat: 19.0760 + (Math.random() - 0.5) * 0.1, lng: 72.8777 + (Math.random() - 0.5) * 0.1 };
     
-    // Handle different property types from mock data vs Supabase
-    const getPropertyType = (property: any) => {
-      if ('property_type' in property) return property.property_type;
-      if ('type' in property) return property.type;
-      return 'Property';
-    };
-
-    const getPropertyImage = (property: any) => {
-      if ('cover_image_url' in property && property.cover_image_url) return property.cover_image_url;
-      if ('images' in property && property.images && property.images.length > 0) return property.images[0];
-      if ('image' in property && property.image) return property.image;
-      return 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=300&fit=crop';
-    };
-    
     return {
       id: prop.id.toString(), // Convert to string
-      name: `${prop.builder} ${getPropertyType(prop)}`,
+      name: `${prop.builder} ${prop.property_type || prop.type || 'Property'}`,
       developer: prop.builder,
       lat: coordinates.lat + (Math.random() - 0.5) * 0.01, // Small random offset
       lng: coordinates.lng + (Math.random() - 0.5) * 0.01,
       price_range: prop.price.toString(),
-      type: getPropertyType(prop),
+      type: prop.property_type || prop.type || 'Property',
       city: ('location' in prop && prop.location) || prop.address.split(',').pop()?.trim() || 'Mumbai',
       rera_status: Math.random() > 0.3 ? 'Registered' : 'Pending',
       status: Math.random() > 0.4 ? 'Under Construction' : 'Ready',
-      thumbnail: getPropertyImage(prop),
+      thumbnail: prop.cover_image_url || (prop.images && prop.images[0]) || prop.image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=300&fit=crop',
       beds: prop.beds,
       baths: prop.baths,
       sqft: prop.sqft,
